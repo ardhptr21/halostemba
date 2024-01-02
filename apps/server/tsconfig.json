@@ -1,0 +1,10 @@
+{
+  "extends": ["@halostemba/ts-config/nestjs.json"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "paths": {
+      "~/*": ["src/*"],
+    }
+  }
+}

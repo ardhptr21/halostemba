@@ -1,0 +1,16 @@
+{
+  "name": "@halostemba/db",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "db:migrate": "prisma migrate dev --skip-generate",
+    "db:generate": "prisma generate"
+  },
+  "devDependencies": {
+    "prisma": "^5.7.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.7.1"
+  }
+}
