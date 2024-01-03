@@ -1,16 +1,22 @@
 {
   "name": "@halostemba/db",
   "private": true,
-  "main": "./index.ts",
-  "types": "./index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "dev": "pnpm run build:watch",
+    "build": "rimraf ./dist && tsc",
+    "build:watch": "rmiraf ./dist && tsc -w --preserveWatchOutput",
     "db:migrate": "prisma migrate dev --skip-generate",
     "db:generate": "prisma generate"
   },
   "devDependencies": {
-    "prisma": "^5.7.1"
+    "prisma": "^5.7.1",
+    "rimraf": "^5.0.5"
   },
   "dependencies": {
-    "@prisma/client": "^5.7.1"
+    "@halostemba/ts-config": "workspace:*",
+    "@prisma/client": "^5.7.1",
+    "ts-node": "^10.9.1"
   }
 }
