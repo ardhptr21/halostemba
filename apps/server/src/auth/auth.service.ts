@@ -6,7 +6,6 @@ import { plainToClass } from 'class-transformer';
 import { UserEntity } from '~/commons/entities/user.entity';
 import { UserService } from '~/core/user/user.service';
 import { DatabaseService } from '~/providers/database/database.service';
-import { jwtConstant } from './auth.constant';
 import { LoginDto } from './dtos/login.dto';
 import { RegisterDto } from './dtos/register.dto';
 
@@ -33,10 +32,7 @@ export class AuthService {
 
     return {
       user: plainToClass(UserEntity, user),
-      access_token: this.jwtService.sign(payload, {
-        secret: jwtConstant.secret,
-        expiresIn: jwtConstant.expiresIn,
-      }),
+      access_token: this.jwtService.sign(payload),
     };
   }
 
