@@ -6,17 +6,17 @@
   "scripts": {
     "dev": "pnpm run build:watch",
     "build": "rimraf ./dist && tsc",
-    "build:watch": "rmiraf ./dist && tsc -w --preserveWatchOutput",
+    "build:watch": "rimraf ./dist && tsc -w --preserveWatchOutput",
     "db:migrate": "prisma migrate dev --skip-generate",
     "db:generate": "prisma generate"
   },
   "devDependencies": {
     "prisma": "^5.7.1",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
   },
   "dependencies": {
     "@halostemba/ts-config": "workspace:*",
-    "@prisma/client": "^5.7.1",
-    "ts-node": "^10.9.1"
+    "@prisma/client": "^5.7.1"
   }
 }
