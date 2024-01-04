@@ -33,6 +33,7 @@ export class MenfessService {
         anonymous: true,
         createdAt: true,
         author: { select: { name: true, username: true } },
+        votes: { select: { userId: true, type: true } },
       },
     });
 

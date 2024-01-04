@@ -6,6 +6,7 @@ import { ProfileModule } from './core/profile/profile.module';
 import { VerificationService } from './core/verification/verification.service';
 import { VerificationModule } from './core/verification/verification.module';
 import { MenfessModule } from './core/menfess/menfess.module';
+import { VoteModule } from './core/vote/vote.module';
 @Module({
   imports: [
     DatabaseModule,
@@ -14,6 +15,7 @@ import { MenfessModule } from './core/menfess/menfess.module';
     ProfileModule,
     VerificationModule,
     MenfessModule,
+    VoteModule,
   ],
   controllers: [],
   providers: [VerificationService],
