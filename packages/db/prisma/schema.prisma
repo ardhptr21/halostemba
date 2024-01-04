@@ -22,6 +22,8 @@ model User {
 
   student             Student?
   verificationRequest VerificationRequest[]
+  menfesses           Menfess[]
+  votes               Vote[]
 
   @@map("users")
 }
@@ -71,6 +73,31 @@ model Major {
   @@map("majors")
 }
 
+model Menfess {
+  id        String  @id @default(uuid())
+  authorId  String  @map("author_id")
+  content   String  @db.Text()
+  anonymous Boolean @default(true)
+
+  author User   @relation(fields: [authorId], references: [id])
+  votes  Vote[]
+
+  @@map("menfesses")
+}
+
+model Vote {
+  id        Int      @id @default(autoincrement())
+  userId    String   @map("user_id")
+  menfessId String   @map("menfess_id")
+  type      VoteType
+
+  menfess Menfess @relation(fields: [menfessId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@unique([userId, menfessId])
+  @@map("votes")
+}
+
 enum Role {
   STUDENT @map("student")
   TEACHER @map("teacher")
@@ -82,4 +109,9 @@ enum Status {
   PENDING  @map("pending")
   APPROVED @map("approved")
   REJECTED @map("rejected")
+}
+
+enum VoteType {
+  UP   @map("up")
+  DOWN @map("down")
 }
