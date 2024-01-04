@@ -6,3 +6,41 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        String   @id @default(uuid())
+  avatar    String?  @db.Text()
+  name      String
+  username  String   @unique
+  email     String   @unique
+  password  String
+  banned    Boolean  @default(false)
+  role      Role     @default(GUEST)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  student Student?
+
+  @@map("users")
+}
+
+model Student {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  verified  Boolean  @default(false)
+  idCard    String?  @map("id_card") @db.Text()
+  nis       String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("students")
+}
+
+enum Role {
+  STUDENT @map("student")
+  TEACHER @map("teacher")
+  ADMIN   @map("admin")
+  GUEST   @map("guest")
+}

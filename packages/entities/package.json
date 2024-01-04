@@ -1,0 +1,17 @@
+{
+  "name": "@halostemba/entities",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "rimraf dist && pnpm run build:watch",
+    "build:watch": "tsc -w --preserveWatchOutput"
+  },
+  "dependencies": {
+    "@halostemba/ts-config": "workspace:*"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  }
+}
