@@ -8,17 +8,17 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  avatar    String?  @db.Text()
+  id        String    @id @default(uuid())
+  avatar    String?   @db.Text()
   name      String
-  username  String   @unique
-  email     String   @unique
+  username  String    @unique
+  email     String    @unique
   password  String
-  banned    Boolean  @default(false)
-  role      Role     @default(GUEST)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  bannedAt  DateTime @map("banned_at")
+  banned    Boolean   @default(false)
+  role      Role      @default(GUEST)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  bannedAt  DateTime? @map("banned_at")
 
   student             Student?
   verificationRequest VerificationRequest[]
@@ -43,15 +43,17 @@ model Student {
 
 model VerificationRequest {
   id        String   @id @default(uuid())
-  userId    String   @unique @map("user_id")
+  userId    String   @map("user_id")
   majorId   String   @map("major_id")
+  nis       String
   idCard    String   @map("id_card") @db.Text()
   note      String?  @db.Text()
   status    Status   @default(PENDING)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+  major Major @relation(fields: [majorId], references: [id])
 
   @@map("verify_requests")
 }
@@ -63,7 +65,8 @@ model Major {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  students Student[]
+  students             Student[]
+  verificationRequests VerificationRequest[]
 
   @@map("majors")
 }
