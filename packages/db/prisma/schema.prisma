@@ -18,8 +18,10 @@ model User {
   role      Role     @default(GUEST)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  bannedAt  DateTime @map("banned_at")
 
-  student Student?
+  student             Student?
+  verificationRequest VerificationRequest[]
 
   @@map("users")
 }
@@ -27,15 +29,43 @@ model User {
 model Student {
   id        String   @id @default(uuid())
   userId    String   @unique @map("user_id")
-  verified  Boolean  @default(false)
-  idCard    String?  @map("id_card") @db.Text()
+  majorId   String   @map("major_id")
+  idCard    String   @map("id_card") @db.Text()
   nis       String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user  User  @relation(fields: [userId], references: [id])
+  major Major @relation(fields: [majorId], references: [id])
+
+  @@map("students")
+}
+
+model VerificationRequest {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  majorId   String   @map("major_id")
+  idCard    String   @map("id_card") @db.Text()
+  note      String?  @db.Text()
+  status    Status   @default(PENDING)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id])
 
-  @@map("students")
+  @@map("verify_requests")
+}
+
+model Major {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  logo      String?  @db.Text()
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  students Student[]
+
+  @@map("majors")
 }
 
 enum Role {
@@ -43,4 +73,10 @@ enum Role {
   TEACHER @map("teacher")
   ADMIN   @map("admin")
   GUEST   @map("guest")
+}
+
+enum Status {
+  PENDING  @map("pending")
+  APPROVED @map("approved")
+  REJECTED @map("rejected")
 }

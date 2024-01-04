@@ -9,7 +9,7 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "format": "turbo run format",
-    "db:migrate": "turbo run db:migrate -- ",
+    "db:migrate": "turbo run db:migrate",
     "db:generate": "turbo run db:generate -- "
   },
   "keywords": [],

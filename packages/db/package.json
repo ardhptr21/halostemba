@@ -7,7 +7,7 @@
     "dev": "pnpm run build:watch",
     "build": "rimraf ./dist && tsc",
     "build:watch": "rimraf ./dist && tsc -w --preserveWatchOutput",
-    "db:migrate": "prisma migrate dev --skip-generate",
+    "db:migrate": "prisma migrate deploy",
     "db:generate": "prisma generate"
   },
   "devDependencies": {
