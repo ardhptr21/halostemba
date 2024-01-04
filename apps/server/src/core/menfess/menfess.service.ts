@@ -34,6 +34,14 @@ export class MenfessService {
         createdAt: true,
         author: { select: { name: true, username: true } },
         votes: { select: { userId: true, type: true } },
+        comments: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+          },
+          orderBy: { createdAt: 'desc' },
+        },
       },
     });
 

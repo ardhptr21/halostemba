@@ -24,6 +24,7 @@ model User {
   verificationRequest VerificationRequest[]
   menfesses           Menfess[]
   votes               Vote[]
+  comments            Comment[]
 
   @@map("users")
 }
@@ -80,10 +81,24 @@ model Menfess {
   anonymous Boolean  @default(true)
   createdAt DateTime @default(now()) @map("created_at")
 
-  author User   @relation(fields: [authorId], references: [id])
-  votes  Vote[]
+  author   User      @relation(fields: [authorId], references: [id])
+  votes    Vote[]
+  comments Comment[]
 
   @@map("menfesses")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  authorId  String   @map("author_id")
+  menfessId String   @map("menfess_id")
+  content   String   @db.Text()
+  createdAt DateTime @default(now()) @map("created_at")
+
+  author  User    @relation(fields: [authorId], references: [id])
+  menfess Menfess @relation(fields: [menfessId], references: [id])
+
+  @@map("comments")
 }
 
 model Vote {
