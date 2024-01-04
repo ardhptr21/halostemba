@@ -74,10 +74,11 @@ model Major {
 }
 
 model Menfess {
-  id        String  @id @default(uuid())
-  authorId  String  @map("author_id")
-  content   String  @db.Text()
-  anonymous Boolean @default(true)
+  id        String   @id @default(uuid())
+  authorId  String   @map("author_id")
+  content   String   @db.Text()
+  anonymous Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
 
   author User   @relation(fields: [authorId], references: [id])
   votes  Vote[]
