@@ -79,6 +79,7 @@ model Menfess {
   authorId  String   @map("author_id")
   content   String   @db.Text()
   anonymous Boolean  @default(true)
+  score     Int      @default(0)
   createdAt DateTime @default(now()) @map("created_at")
 
   author   User      @relation(fields: [authorId], references: [id])

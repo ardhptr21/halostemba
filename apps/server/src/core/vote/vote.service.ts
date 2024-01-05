@@ -1,3 +1,4 @@
+import { VoteType } from '@halostemba/db';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '~/providers/database/database.service';
 import { VoteDto } from './dtos/vote.dto';
@@ -13,11 +14,21 @@ export class VoteService {
 
     const menfess = await this.db.menfess.findFirst({
       where: { id: voteDto.menfessId },
+      select: {
+        id: true,
+        votes: { select: { type: true } },
+      },
     });
+    let score = menfess.votes.reduce(
+      (acc, vote) => (vote.type === VoteType.UP ? acc + 1 : acc - 1),
+      0,
+    );
 
     if (!menfess) {
       throw new NotFoundException('Menfess not found.');
     }
+
+    let message = '';
 
     if (!existingVote) {
       await this.db.vote.create({
@@ -27,25 +38,26 @@ export class VoteService {
           userId,
         },
       });
-
-      return {
-        message: 'Vote successful.',
-      };
-    }
-
-    if (existingVote.type === voteDto.type) {
+      score = voteDto.type === VoteType.UP ? score + 1 : score - 1;
+      message = 'Vote successful.';
+    } else if (existingVote.type === voteDto.type) {
       await this.db.vote.delete({ where: { id: existingVote.id } });
-      return {
-        message: 'Unvote successful.',
-      };
+      score = voteDto.type === VoteType.UP ? score - 1 : score + 1;
+      message = 'Unvote successful.';
+    } else {
+      await this.db.vote.update({
+        where: { id: existingVote.id },
+        data: { type: voteDto.type },
+      });
+      score = voteDto.type === VoteType.UP ? score + 2 : score - 2;
+      message = 'Vote updated.';
     }
 
-    await this.db.vote.update({
-      where: { id: existingVote.id },
-      data: { type: voteDto.type },
+    await this.db.menfess.update({
+      where: { id: voteDto.menfessId },
+      data: { score },
     });
-    return {
-      message: 'Vote updated.',
-    };
+
+    return { message };
   }
 }
