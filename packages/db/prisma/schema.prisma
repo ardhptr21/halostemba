@@ -82,10 +82,10 @@ model Menfess {
   score     Int      @default(0)
   createdAt DateTime @default(now()) @map("created_at")
 
-  author   User                  @relation(fields: [authorId], references: [id])
+  author   User      @relation(fields: [authorId], references: [id])
   votes    Vote[]
   comments Comment[]
-  hashtags HashtagsOnMenfesses[]
+  hashtags Hashtag[]
 
   @@map("menfesses")
 }
@@ -117,22 +117,11 @@ model Vote {
 }
 
 model Hashtag {
-  id        Int                   @id @default(autoincrement())
-  name      String                @unique
-  menfesses HashtagsOnMenfesses[]
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  menfesses Menfess[]
 
   @@map("hashtags")
-}
-
-model HashtagsOnMenfesses {
-  menfessId String @map("menfess_id")
-  hashtagId Int    @map("hashtag_id")
-
-  menfess Menfess @relation(fields: [menfessId], references: [id])
-  hashtag Hashtag @relation(fields: [hashtagId], references: [id])
-
-  @@id([menfessId, hashtagId])
-  @@map("hashtags_on_menfesses")
 }
 
 enum Role {

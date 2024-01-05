@@ -5,11 +5,11 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { endOfWeek, startOfWeek } from 'date-fns';
 import { paginator } from '~/providers/database/database.paginator';
 import { DatabaseService } from '~/providers/database/database.service';
 import { CreateMenfessDto } from './dtos/create-menfess.dto';
 import { ListMenfessParamsDto } from './dtos/list-menfess-params.dto';
-import { startOfWeek, endOfWeek } from 'date-fns';
 
 const paginate = paginator({ perPage: 10 });
 
@@ -19,7 +19,13 @@ export class MenfessService {
 
   async createMenfess(createMenfessDto: CreateMenfessDto, userId: string) {
     const menfess = await this.db.menfess.create({
-      data: { ...createMenfessDto, author: { connect: { id: userId } } },
+      data: {
+        ...createMenfessDto,
+        author: { connect: { id: userId } },
+        hashtags: {
+          connectOrCreate: this.parseHashtags(createMenfessDto.content),
+        },
+      },
       select: { id: true, content: true, anonymous: true },
     });
 
@@ -175,5 +181,15 @@ export class MenfessService {
     }
 
     return popularMenfess;
+  }
+
+  private parseHashtags(content: string) {
+    const regex = new RegExp(/(?:^|\s)(#[^\s#]+)(?=\s|$)/gm);
+    const hashtags = [...new Set(content.match(regex))].map((h) => {
+      const tag = h.trim().replace('#', '');
+      return { where: { name: tag }, create: { name: tag } };
+    });
+
+    return hashtags;
   }
 }
