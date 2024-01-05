@@ -25,6 +25,7 @@
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "date-fns": "^3.0.6",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
@@ -41,6 +42,7 @@
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
+    "@types/passport-jwt": "^4.0.0",
     "@types/supertest": "^2.0.12",
     "eslint": "^8.42.0",
     "jest": "^29.5.0",
