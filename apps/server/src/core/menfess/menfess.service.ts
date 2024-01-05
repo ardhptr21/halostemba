@@ -5,23 +5,41 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { endOfWeek, startOfWeek } from 'date-fns';
 import { paginator } from '~/providers/database/database.paginator';
 import { DatabaseService } from '~/providers/database/database.service';
 import { CreateMenfessDto } from './dtos/create-menfess.dto';
 import { ListMenfessParamsDto } from './dtos/list-menfess-params.dto';
-import { startOfWeek, endOfWeek } from 'date-fns';
+import { HashtagService } from '../hashtag/hashtag.service';
 
 const paginate = paginator({ perPage: 10 });
 
 @Injectable()
 export class MenfessService {
-  constructor(private readonly db: DatabaseService) {}
+  constructor(
+    private readonly db: DatabaseService,
+    private readonly hashtagService: HashtagService,
+  ) {}
 
   async createMenfess(createMenfessDto: CreateMenfessDto, userId: string) {
+    const hashtags = this.hashtagService.parseHashtags(
+      createMenfessDto.content,
+    );
     const menfess = await this.db.menfess.create({
-      data: { ...createMenfessDto, author: { connect: { id: userId } } },
+      data: {
+        ...createMenfessDto,
+        author: { connect: { id: userId } },
+        hashtags: {
+          connectOrCreate: hashtags.map((hashtag) => ({
+            where: { name: hashtag },
+            create: { name: hashtag },
+          })),
+        },
+      },
       select: { id: true, content: true, anonymous: true },
     });
+
+    await this.hashtagService.modifyHashtagsScore(hashtags, 'increment');
 
     if (!menfess) {
       throw new InternalServerErrorException('Failed to create menfess.');
@@ -64,12 +82,16 @@ export class MenfessService {
 
   async removeMenfess(menfessId: string, userId: string) {
     try {
-      await this.db.menfess.delete({
+      const deleted = await this.db.menfess.delete({
         where: {
           id: menfessId,
           authorId: userId,
         },
       });
+
+      const hashtags = this.hashtagService.parseHashtags(deleted.content);
+
+      await this.hashtagService.modifyHashtagsScore(hashtags, 'decrement');
 
       return { message: 'Menfess removed.' };
     } catch (error) {

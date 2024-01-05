@@ -85,6 +85,7 @@ model Menfess {
   author   User      @relation(fields: [authorId], references: [id])
   votes    Vote[]
   comments Comment[]
+  hashtags Hashtag[]
 
   @@map("menfesses")
 }
@@ -113,6 +114,15 @@ model Vote {
 
   @@unique([userId, menfessId])
   @@map("votes")
+}
+
+model Hashtag {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  score     Int       @default(0)
+  menfesses Menfess[]
+
+  @@map("hashtags")
 }
 
 enum Role {

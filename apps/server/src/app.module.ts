@@ -8,6 +8,7 @@ import { VerificationModule } from './core/verification/verification.module';
 import { MenfessModule } from './core/menfess/menfess.module';
 import { VoteModule } from './core/vote/vote.module';
 import { CommentModule } from './core/comment/comment.module';
+import { HashtagModule } from './core/hashtag/hashtag.module';
 @Module({
   imports: [
     DatabaseModule,
@@ -18,6 +19,7 @@ import { CommentModule } from './core/comment/comment.module';
     MenfessModule,
     VoteModule,
     CommentModule,
+    HashtagModule,
   ],
   controllers: [],
   providers: [VerificationService],
