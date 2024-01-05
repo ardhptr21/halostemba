@@ -50,9 +50,13 @@ export class MenfessController {
     return this.menfessService.createMenfess(createMenfessDto, user.id);
   }
 
+  @UseInterceptors(ParseUserInterceptor)
   @Get('/:menfessId')
-  getMenfess(@Param('menfessId', ParseUUIDPipe) menfessId: string) {
-    return this.menfessService.getMenfess(menfessId);
+  getMenfess(
+    @Param('menfessId', ParseUUIDPipe) menfessId: string,
+    @User() user: UserEntity,
+  ) {
+    return this.menfessService.getMenfess(menfessId, user);
   }
 
   @Auth(Role.STUDENT)

@@ -4,12 +4,12 @@ export class CreateVerificationDto {
   @IsUUID()
   @IsNotEmpty()
   @IsString()
-  readonly major_id: string;
+  readonly majorId: string;
 
   @IsUrl()
   @IsNotEmpty()
   @IsString()
-  readonly id_card: string;
+  readonly idCard: string;
 
   @Length(10)
   @IsNotEmpty()
