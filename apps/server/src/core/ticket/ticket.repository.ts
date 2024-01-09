@@ -43,4 +43,30 @@ export class TicketRepository {
       where: { id: ticketId },
     });
   }
+
+  async createTicketReply(ticketId: string, authorId: string, message: string) {
+    return await this.db.ticketReply.create({
+      data: { ticketId, authorId, message },
+    });
+  }
+
+  async getTicketReplies(ticketId: string) {
+    return await this.db.ticketReply.findMany({
+      where: { ticketId },
+      select: {
+        id: true,
+        authorId: true,
+        message: true,
+        createdAt: true,
+        author: { select: { name: true, avatar: true } },
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+  }
+
+  async deleteTicketReply(replyId: string, authorId: string) {
+    return await this.db.ticketReply.delete({
+      where: { id: replyId, authorId },
+    });
+  }
 }

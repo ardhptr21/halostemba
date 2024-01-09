@@ -16,6 +16,7 @@ import { Auth } from '~/commons/decorators/validators/auth.decorator';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
 import { TicketService } from './ticket.service';
+import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
 
 @Controller('tickets')
 export class TicketController {
@@ -62,5 +63,37 @@ export class TicketController {
     @User() user: UserEntity,
   ) {
     return this.ticketService.responseTicket(ticketId, user.id);
+  }
+
+  @Auth(Role.TEACHER, Role.STUDENT)
+  @Post('/:ticketId/replies')
+  async createTicketReply(
+    @Param('ticketId', ParseUUIDPipe) ticketId: string,
+    @Body() createTicketReplyDto: CreateTicketReplyDto,
+    @User() user: UserEntity,
+  ) {
+    return this.ticketService.createTicketReply(
+      ticketId,
+      user.id,
+      createTicketReplyDto.message,
+    );
+  }
+
+  @Auth(Role.TEACHER, Role.STUDENT)
+  @Get('/:ticketId/replies')
+  async getTicketReplies(
+    @Param('ticketId', ParseUUIDPipe) ticketId: string,
+    @User() user: UserEntity,
+  ) {
+    return this.ticketService.getTicketReplies(ticketId, user.id);
+  }
+
+  @Auth(Role.TEACHER, Role.STUDENT)
+  @Delete('/replies/:replyId')
+  async deleteTicketReply(
+    @Param('replyId') replyId: string,
+    @User() user: UserEntity,
+  ) {
+    return this.ticketService.deleteTicketReply(user.id, replyId);
   }
 }
