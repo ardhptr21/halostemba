@@ -26,7 +26,8 @@ model User {
   votes               Vote[]
   comments            Comment[]
   ticketReplies       TicketReply[]
-  tickets             Ticket[]
+  reportTickets       Ticket[]              @relation("reporter")
+  respondTickets      Ticket[]              @relation("responder")
 
   @@map("users")
 }
@@ -139,7 +140,8 @@ model Ticket {
   closedAt    DateTime?
 
   ticketReplies TicketReply[]
-  reporter      User          @relation(fields: [reporterId], references: [id])
+  reporter      User          @relation("reporter", fields: [reporterId], references: [id])
+  responder     User?         @relation("responder", fields: [responderId], references: [id])
 
   @@map("tickets")
 }

@@ -7,6 +7,7 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
@@ -52,5 +53,14 @@ export class TicketController {
     @User() user: UserEntity,
   ) {
     return this.ticketService.deleteTicket(ticketId, user.id);
+  }
+
+  @Auth(Role.TEACHER)
+  @Patch('/:ticketId/respond')
+  async responseTicket(
+    @Param('ticketId', ParseUUIDPipe) ticketId: string,
+    @User() user: UserEntity,
+  ) {
+    return this.ticketService.responseTicket(ticketId, user.id);
   }
 }

@@ -1,4 +1,4 @@
-import { Role, Status } from '@halostemba/db';
+import { Role, VerificationStatus } from '@halostemba/db';
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '~/providers/database/database.service';
 import { CreateVerificationDto } from './dtos/create-verification.dto';
@@ -47,7 +47,7 @@ export class VerificationRepository {
 
   async updateStatusVerification(
     verificationId: string,
-    status: Status,
+    status: VerificationStatus,
     note?: string,
   ) {
     return await this.db.verificationRequest.update({

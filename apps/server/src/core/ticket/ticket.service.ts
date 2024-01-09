@@ -48,4 +48,23 @@ export class TicketService {
 
     return { message: 'Delete ticket successfully' };
   }
+
+  async responseTicket(ticketId: string, userId: string) {
+    const ticket = await this.ticketRepository.getTicketById(ticketId);
+
+    if (!ticket) throw new InternalServerErrorException('Ticket not found');
+
+    if (ticket.responderId)
+      throw new InternalServerErrorException('Ticket already responded');
+
+    const updated = await this.ticketRepository.updateTicketResponder(
+      userId,
+      ticketId,
+    );
+
+    if (!updated)
+      throw new InternalServerErrorException('Response ticket failed');
+
+    return { message: 'Response ticket successfully' };
+  }
 }

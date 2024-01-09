@@ -2,13 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '~/providers/database/database.service';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
+import { TicketStatus } from '@halostemba/db';
 
 @Injectable()
 export class TicketRepository {
   constructor(private readonly db: DatabaseService) {}
 
   async getListTicketByReporterId(reporterId: string) {
-    return await this.db.ticket.findMany({ where: { reporterId } });
+    return await this.db.ticket.findMany({
+      where: { reporterId },
+      include: { responder: { select: { name: true, avatar: true } } },
+    });
   }
 
   async createTicket(data: CreateTicketDto & { reporterId: string }) {
@@ -26,6 +30,17 @@ export class TicketRepository {
   async deleteTicket(ticketId: string, reporterId: string) {
     return await this.db.ticket.delete({
       where: { id: ticketId, reporterId },
+    });
+  }
+
+  async getTicketById(ticketId: string) {
+    return await this.db.ticket.findFirst({ where: { id: ticketId } });
+  }
+
+  async updateTicketResponder(responderId: string, ticketId: string) {
+    return await this.db.ticket.update({
+      data: { responderId, status: TicketStatus.OPEN },
+      where: { id: ticketId },
     });
   }
 }
