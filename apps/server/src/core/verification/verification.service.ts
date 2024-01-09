@@ -1,4 +1,4 @@
-import { Role, Status } from '@halostemba/db';
+import { Role, VerificationStatus } from '@halostemba/db';
 import {
   BadRequestException,
   Injectable,
@@ -23,7 +23,10 @@ export class VerificationService {
     const lastVerification =
       await this.verificationRepository.getVerificationByUserId(userId);
 
-    if (lastVerification && lastVerification?.status !== Status.REJECTED)
+    if (
+      lastVerification &&
+      lastVerification?.status !== VerificationStatus.REJECTED
+    )
       throw new BadRequestException('Verification request is still pending');
 
     const verification = await this.verificationRepository.createVerification({
@@ -51,13 +54,13 @@ export class VerificationService {
       throw new NotFoundException('Verification request not found');
     }
 
-    if (verification.status !== Status.PENDING) {
+    if (verification.status !== VerificationStatus.PENDING) {
       throw new BadRequestException('Verification request is not pending');
     }
 
     await this.verificationRepository.updateStatusVerification(
       verification.id,
-      Status.APPROVED,
+      VerificationStatus.APPROVED,
     );
 
     await this.userRepository.updateUserGuestToStudent(userId, verification);
@@ -80,12 +83,12 @@ export class VerificationService {
     if (!verification)
       throw new NotFoundException('Verification request not found');
 
-    if (verification.status !== Status.PENDING)
+    if (verification.status !== VerificationStatus.PENDING)
       throw new BadRequestException('Verification request is not pending');
 
     await this.verificationRepository.updateStatusVerification(
       verification.id,
-      Status.REJECTED,
+      VerificationStatus.REJECTED,
       rejectVerificationDto.note,
     );
 
