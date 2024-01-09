@@ -26,6 +26,7 @@ model User {
   votes               Vote[]
   comments            Comment[]
   ticketReplies       TicketReply[]
+  tickets             Ticket[]
 
   @@map("users")
 }
@@ -127,16 +128,18 @@ model Hashtag {
 }
 
 model Ticket {
-  id            String        @id @default(uuid())
-  reporterId    String        @map("reporter_id")
-  responderId   String?       @map("responder_id")
-  title         String
-  detail        String        @db.Text()
-  status        TicketStatus  @default(WAITING)
-  createdAt     DateTime      @default(now()) @map("created_at")
-  updatedAt     DateTime      @updatedAt @map("updated_at")
-  closedAt      DateTime?
+  id          String       @id @default(uuid())
+  reporterId  String       @map("reporter_id")
+  responderId String?      @map("responder_id")
+  title       String
+  detail      String       @db.Text()
+  status      TicketStatus @default(WAITING)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  closedAt    DateTime?
+
   ticketReplies TicketReply[]
+  reporter      User          @relation(fields: [reporterId], references: [id])
 
   @@map("tickets")
 }

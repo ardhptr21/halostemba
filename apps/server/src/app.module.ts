@@ -9,6 +9,7 @@ import { MenfessModule } from './core/menfess/menfess.module';
 import { VoteModule } from './core/vote/vote.module';
 import { CommentModule } from './core/comment/comment.module';
 import { HashtagModule } from './core/hashtag/hashtag.module';
+import { TicketModule } from './core/ticket/ticket.module';
 @Module({
   imports: [
     DatabaseModule,
@@ -20,6 +21,7 @@ import { HashtagModule } from './core/hashtag/hashtag.module';
     VoteModule,
     CommentModule,
     HashtagModule,
+    TicketModule,
   ],
   controllers: [],
   providers: [VerificationService],
