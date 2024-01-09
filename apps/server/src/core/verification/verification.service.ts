@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { DatabaseService } from '~/providers/database/database.service';
 import { CreateVerificationDto } from './dtos/create-verification.dto';
-import { Role, Status } from '@halostemba/db';
+import { Role, VerificationStatus } from '@halostemba/db';
 import { RejectVerificationDto } from './dtos/reject-verification.dto';
 
 @Injectable()
@@ -30,7 +30,10 @@ export class VerificationService {
       },
     });
 
-    if (lastVerification && lastVerification?.status !== Status.REJECTED) {
+    if (
+      lastVerification &&
+      lastVerification?.status !== VerificationStatus.REJECTED
+    ) {
       throw new BadRequestException('Verification request is still pending');
     }
 
@@ -91,7 +94,7 @@ export class VerificationService {
       throw new NotFoundException('Verification request not found');
     }
 
-    if (verification.status !== Status.PENDING) {
+    if (verification.status !== VerificationStatus.PENDING) {
       throw new BadRequestException('Verification request is not pending');
     }
 
@@ -100,7 +103,7 @@ export class VerificationService {
         id: verification.id,
       },
       data: {
-        status: Status.APPROVED,
+        status: VerificationStatus.APPROVED,
       },
     });
 
@@ -149,7 +152,7 @@ export class VerificationService {
       throw new NotFoundException('Verification request not found');
     }
 
-    if (verification.status !== Status.PENDING) {
+    if (verification.status !== VerificationStatus.PENDING) {
       throw new BadRequestException('Verification request is not pending');
     }
 
@@ -158,7 +161,7 @@ export class VerificationService {
         id: verification.id,
       },
       data: {
-        status: Status.REJECTED,
+        status: VerificationStatus.REJECTED,
         note: rejectVerificationDto.note,
       },
     });
