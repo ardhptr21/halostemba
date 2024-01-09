@@ -9,6 +9,7 @@ import { UserModule } from './core/user/user.module';
 import { VerificationModule } from './core/verification/verification.module';
 import { VoteModule } from './core/vote/vote.module';
 import { DatabaseModule } from './providers/database/database.module';
+import { MailModule } from './mail/mail.module';
 @Module({
   imports: [
     DatabaseModule,
@@ -21,6 +22,7 @@ import { DatabaseModule } from './providers/database/database.module';
     CommentModule,
     HashtagModule,
     TicketModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],
