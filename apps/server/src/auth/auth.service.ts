@@ -5,14 +5,14 @@ import { compare, hash } from 'bcryptjs';
 import { plainToClass } from 'class-transformer';
 import { UserEntity } from '~/commons/entities/user.entity';
 import { UserService } from '~/core/user/user.service';
-import { DatabaseService } from '~/providers/database/database.service';
+import { AuthRepository } from './auth.repository';
 import { LoginDto } from './dtos/login.dto';
 import { RegisterDto } from './dtos/register.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly db: DatabaseService,
+    private readonly authRepository: AuthRepository,
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
   ) {}
@@ -44,10 +44,10 @@ export class AuthService {
     const hashPassword = await hash(registerDto.password, 10);
     registerDto.password = hashPassword;
 
-    const user = await this.db.user.create({
-      data: { ...registerDto, username },
+    const user = await this.authRepository.registerUser({
+      ...registerDto,
+      username,
     });
-
     return new UserEntity(user);
   }
 }

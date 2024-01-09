@@ -1,3 +1,5 @@
+import { Role } from '@halostemba/db';
+import { UserEntity } from '@halostemba/entities';
 import {
   Body,
   Controller,
@@ -6,12 +8,10 @@ import {
   ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
-import { CommentService } from './comment.service';
-import { Auth } from '~/commons/decorators/validators/auth.decorator';
-import { Role } from '@halostemba/db';
-import { CreateCommentDto } from './dtos/create-comment.dto';
 import { User } from '~/commons/decorators/requests/user.decorator';
-import { UserEntity } from '@halostemba/entities';
+import { Auth } from '~/commons/decorators/validators/auth.decorator';
+import { CommentService } from './comment.service';
+import { CreateCommentDto } from './dtos/create-comment.dto';
 
 @Controller('comments')
 export class CommentController {

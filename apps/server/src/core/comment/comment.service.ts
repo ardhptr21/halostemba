@@ -1,44 +1,40 @@
+import { Prisma } from '@halostemba/db';
 import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { DatabaseService } from '~/providers/database/database.service';
+import { CommentRepository } from './comment.repository';
 import { CreateCommentDto } from './dtos/create-comment.dto';
-import { Prisma } from '@halostemba/db';
 
 @Injectable()
 export class CommentService {
-  constructor(private readonly db: DatabaseService) {}
+  constructor(
+    private readonly commentRepository: CommentRepository,
+    private readonly db: DatabaseService,
+  ) {}
 
   async createComment(
     createCommentDto: CreateCommentDto,
     menfessId: string,
-    userId: string,
+    authorId: string,
   ) {
-    const comment = await this.db.comment.create({
-      data: {
-        authorId: userId,
-        menfessId,
-        ...createCommentDto,
-      },
+    const comment = await this.commentRepository.createComment({
+      ...createCommentDto,
+      menfessId,
+      authorId,
     });
 
-    if (!comment) {
+    if (!comment)
       throw new InternalServerErrorException('Failed to create comment.');
-    }
 
     return { message: 'Comment created.', data: comment };
   }
 
   async removeComment(commentId: string, userId: string) {
     try {
-      await this.db.comment.delete({
-        where: {
-          id: commentId,
-          authorId: userId,
-        },
-      });
+      await this.commentRepository.removeComment(commentId, userId);
 
       return { message: 'Comment removed.' };
     } catch (error) {

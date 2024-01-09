@@ -8,9 +8,8 @@ export class TicketService {
   constructor(private readonly ticketRepository: TicketRepository) {}
 
   async getCurrentUserTickets(userId: string) {
-    const tickets = await this.ticketRepository.getListTicketByReporterId(
-      userId,
-    );
+    const tickets =
+      await this.ticketRepository.getListTicketByReporterId(userId);
 
     return { data: tickets };
   }

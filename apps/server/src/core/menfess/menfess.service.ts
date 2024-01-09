@@ -6,92 +6,56 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { endOfWeek, startOfWeek } from 'date-fns';
-import { paginator } from '~/providers/database/database.paginator';
-import { DatabaseService } from '~/providers/database/database.service';
+import { HashtagRepository } from '../hashtag/hashtag.repository';
+import { HashtagService } from '../hashtag/hashtag.service';
 import { CreateMenfessDto } from './dtos/create-menfess.dto';
 import { ListMenfessParamsDto } from './dtos/list-menfess-params.dto';
-import { HashtagService } from '../hashtag/hashtag.service';
-
-const paginate = paginator({ perPage: 10 });
+import { MenfessRepository } from './menfess.repository';
 
 @Injectable()
 export class MenfessService {
   constructor(
-    private readonly db: DatabaseService,
+    private readonly menfessRepository: MenfessRepository,
     private readonly hashtagService: HashtagService,
+    private readonly hashtagRepository: HashtagRepository,
   ) {}
 
   async createMenfess(createMenfessDto: CreateMenfessDto, userId: string) {
     const hashtags = this.hashtagService.parseHashtags(
       createMenfessDto.content,
     );
-    const menfess = await this.db.menfess.create({
-      data: {
-        ...createMenfessDto,
-        author: { connect: { id: userId } },
-        hashtags: {
-          connectOrCreate: hashtags.map((hashtag) => ({
-            where: { name: hashtag },
-            create: { name: hashtag },
-          })),
-        },
-      },
-      select: { id: true, content: true, anonymous: true },
+    const menfess = await this.menfessRepository.createMenfess({
+      ...createMenfessDto,
+      userId,
+      hashtags,
     });
 
-    await this.hashtagService.modifyHashtagsScore(hashtags, 'increment');
+    await this.hashtagRepository.modifyHashtagsScore(hashtags, 'increment');
 
-    if (!menfess) {
+    if (!menfess)
       throw new InternalServerErrorException('Failed to create menfess.');
-    }
 
     return { message: 'Menfess created.', data: menfess };
   }
 
-  async getMenfess(menfessId: string) {
-    const menfess = await this.db.menfess.findFirst({
-      where: { id: menfessId },
-      select: {
-        id: true,
-        content: true,
-        anonymous: true,
-        createdAt: true,
-        author: { select: { name: true, username: true } },
-        votes: { select: { userId: true, type: true } },
-        comments: {
-          select: {
-            id: true,
-            content: true,
-            createdAt: true,
-          },
-          orderBy: { createdAt: 'desc' },
-        },
-      },
-    });
+  async getMenfess(menfessId: string, user: UserEntity) {
+    const menfess = await this.menfessRepository.getMenfess(menfessId, !!user);
 
-    if (!menfess) {
-      throw new NotFoundException('Menfess not found.');
-    }
+    if (!menfess) throw new NotFoundException('Menfess not found.');
+    if (menfess.anonymous) menfess.author = null;
 
-    if (menfess.anonymous) {
-      menfess.author = null;
-    }
-
-    return { data: menfess };
+    return { data: this.serializeMenfess(menfess, user) };
   }
 
   async removeMenfess(menfessId: string, userId: string) {
     try {
-      const deleted = await this.db.menfess.delete({
-        where: {
-          id: menfessId,
-          authorId: userId,
-        },
-      });
+      const deleted = await this.menfessRepository.removeMenfess(
+        menfessId,
+        userId,
+      );
 
       const hashtags = this.hashtagService.parseHashtags(deleted.content);
-
-      await this.hashtagService.modifyHashtagsScore(hashtags, 'decrement');
+      await this.hashtagRepository.modifyHashtagsScore(hashtags, 'decrement');
 
       return { message: 'Menfess removed.' };
     } catch (error) {
@@ -105,47 +69,9 @@ export class MenfessService {
   }
 
   async getListMenfess(user: UserEntity, params: ListMenfessParamsDto) {
-    const paginated = await paginate<any, Prisma.MenfessFindManyArgs>(
-      this.db.menfess,
-      {
-        where: {
-          content: {
-            contains: params.search || undefined,
-            mode: 'insensitive',
-          },
-        },
-        select: {
-          id: true,
-          content: true,
-          score: true,
-          anonymous: true,
-          createdAt: true,
-          author: { select: { name: true, username: true, avatar: true } },
-          ...(user && { votes: { select: { userId: true, type: true } } }),
-        },
-        orderBy: { createdAt: 'desc' },
-      },
-      {
-        page: params.page,
-        perPage: params.perPage,
-      },
-    );
-
-    paginated.data = paginated.data.map((menfess) =>
-      menfess.anonymous ? { ...menfess, author: null } : menfess,
-    );
-
-    if (user) {
-      paginated.data = paginated.data.map((menfess) => {
-        const vote = menfess.votes.find(
-          (vote: Vote) => vote.userId === user.id,
-        );
-        delete menfess.votes;
-        return { ...menfess, voted: vote ? vote.type : null };
-      });
-    }
-
-    return { paginated };
+    const menfesses = await this.menfessRepository.listMenfess(params, !!user);
+    menfesses.data = this.serializeMenfess(menfesses.data, user);
+    return menfesses;
   }
 
   async getListPopularMenfess(user: UserEntity, params: ListMenfessParamsDto) {
@@ -153,49 +79,37 @@ export class MenfessService {
     const start = startOfWeek(today);
     const end = endOfWeek(today);
 
-    const popularMenfess = await paginate<any, Prisma.MenfessFindManyArgs>(
-      this.db.menfess,
+    const popularMenfess = await this.menfessRepository.listMenfess(
+      params,
+      !!user,
       {
-        where: {
-          score: {
-            gte: 50,
-          },
-          createdAt: {
-            gte: start,
-            lte: end,
-          },
-        },
-        select: {
-          id: true,
-          content: true,
-          score: true,
-          anonymous: true,
-          createdAt: true,
-          author: { select: { name: true, username: true, avatar: true } },
-          ...(user && { votes: { select: { userId: true, type: true } } }),
-        },
-        orderBy: { createdAt: 'desc' },
-      },
-      {
-        page: params.page,
-        perPage: params.perPage,
+        score: { gte: 50 },
+        createdAt: { gte: start, lte: end },
       },
     );
 
-    popularMenfess.data = popularMenfess.data.map((menfess) =>
-      menfess.anonymous ? { ...menfess, author: null } : menfess,
-    );
-
-    if (user) {
-      popularMenfess.data = popularMenfess.data.map((menfess) => {
-        const vote = menfess.votes.find(
-          (vote: Vote) => vote.userId === user.id,
-        );
-        delete menfess.votes;
-        return { ...menfess, voted: vote ? vote.type : null };
-      });
-    }
+    popularMenfess.data = this.serializeMenfess(popularMenfess.data, user);
 
     return popularMenfess;
+  }
+
+  private serializeMenfess(data: any | any[], user: UserEntity) {
+    const serializeAuthor = (menfess: any) =>
+      menfess.anonymous ? { ...menfess, author: null } : menfess;
+    const serializeVotes = (menfess: any) => {
+      const vote = menfess.votes.find((vote: Vote) => vote.userId === user.id);
+      delete menfess.votes;
+      return { ...menfess, voted: vote ? vote.type : null };
+    };
+
+    if (!Array.isArray(data)) {
+      let processed = serializeAuthor(data);
+      if (user) processed = serializeVotes(data);
+      return processed;
+    }
+
+    let processed = data.map(serializeAuthor);
+    if (user) processed = data.map(serializeVotes);
+    return processed;
   }
 }
