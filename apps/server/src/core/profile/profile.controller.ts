@@ -5,7 +5,7 @@ import { Auth } from '~/commons/decorators/validators/auth.decorator';
 
 @Controller('profile')
 export class ProfileController {
-  @Auth()
+  @Auth(false)
   @HttpCode(HttpStatus.OK)
   @Get('/me')
   async getMe(@User() user: UserEntity) {

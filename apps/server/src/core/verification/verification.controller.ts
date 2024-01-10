@@ -21,7 +21,7 @@ import { RejectVerificationDto } from './dtos/reject-verification.dto';
 export class VerificationController {
   constructor(private readonly verificationService: VerificationService) {}
 
-  @Auth(Role.GUEST)
+  @Auth(true, Role.GUEST)
   @HttpCode(HttpStatus.CREATED)
   @Post('/')
   async createVerification(
@@ -34,21 +34,21 @@ export class VerificationController {
     );
   }
 
-  @Auth(Role.GUEST, Role.STUDENT)
+  @Auth(true, Role.GUEST, Role.STUDENT)
   @HttpCode(HttpStatus.OK)
   @Get('/me')
   async getCurrentUserVerifications(@User() user: UserEntity) {
     return await this.verificationService.getCurrentUserVerifications(user.id);
   }
 
-  @Auth(Role.ADMIN)
+  @Auth(true, Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @Patch('/approve/:userId')
   async approveVerification(@Param('userId', ParseUUIDPipe) userId: string) {
     return await this.verificationService.approveVerificationRequest(userId);
   }
 
-  @Auth(Role.ADMIN)
+  @Auth(true, Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @Patch('/reject/:userId')
   async rejectVerification(
