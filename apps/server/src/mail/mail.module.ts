@@ -4,11 +4,13 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 import { MagiclinkModule } from '~/providers/magiclink/magiclink.module';
+import { OtpModule } from '~/providers/otp/otp.module';
 
 @Global()
 @Module({
   imports: [
     MagiclinkModule,
+    OtpModule,
     MailerModule.forRoot({
       transport: {
         host: process.env.MAIL_HOST,

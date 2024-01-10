@@ -13,6 +13,7 @@ import { MailModule } from './mail/mail.module';
 import { MagiclinkModule } from './providers/magiclink/magiclink.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { OtpModule } from './providers/otp/otp.module';
 @Module({
   imports: [
     ThrottlerModule.forRoot([
@@ -33,6 +34,7 @@ import { APP_GUARD } from '@nestjs/core';
     TicketModule,
     MailModule,
     MagiclinkModule,
+    OtpModule,
   ],
   controllers: [],
   providers: [

@@ -15,6 +15,7 @@ import { RegisterDto } from './dtos/register.dto';
 import { MailService } from '~/mail/mail.service';
 import { UserEntity as UserEntityLib } from '@halostemba/entities';
 import { MagicLinkRepository } from '~/providers/magiclink/magiclink.repository';
+import { OtpRepository } from '~/providers/otp/otp.repository';
 
 @Injectable()
 export class AuthService {
@@ -24,6 +25,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly mailService: MailService,
     private readonly magicLinkRepository: MagicLinkRepository,
+    private readonly otpRepository: OtpRepository,
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -86,5 +88,62 @@ export class AuthService {
     return {
       message: 'Email has been verified.',
     };
+  }
+
+  async forgotPasswordOtp(email: string) {
+    const user = await this.userService.findUser(email);
+
+    await this.mailService.sendForgotPasswordOtp(user);
+
+    return {
+      message: 'Email has already sent. Please check your email.',
+    };
+  }
+
+  async verifyForgotPasswordOtp(token: string, email: string) {
+    const user = await this.userService.findUser(email);
+
+    const otp = await this.otpRepository.getOtp(token, user.id);
+
+    if (!otp) throw new UnauthorizedException('Invalid token.');
+
+    const forgotPasswordToken = this.jwtService.sign(
+      {
+        sub: user.id,
+        email: user.email,
+        otpId: otp.id,
+      },
+      {
+        expiresIn: '5m',
+      },
+    );
+
+    return {
+      message: 'OTP is valid.',
+      token: forgotPasswordToken,
+    };
+  }
+
+  async resetPasswordFromForgotPassword(token: string, password: string) {
+    try {
+      const payload = this.jwtService.verify(token);
+
+      const otp = await this.otpRepository.getOtpById(payload.otpId);
+
+      if (!otp) throw new UnauthorizedException('Invalid token.');
+
+      const hashPassword = await hash(password, 10);
+      password = hashPassword;
+
+      await this.authRepository.resetPassword(payload.sub, password);
+
+      await this.otpRepository.deleteOtpByUserId(payload.sub);
+
+      return {
+        message: 'Password has been reset.',
+      };
+    } catch (error) {
+      throw new UnauthorizedException('Invalid token.');
+    }
   }
 }

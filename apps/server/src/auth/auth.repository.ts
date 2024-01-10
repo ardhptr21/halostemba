@@ -20,4 +20,15 @@ export class AuthRepository {
       },
     });
   }
+
+  async resetPassword(userId: string, password: string) {
+    return await this.db.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        password,
+      },
+    });
+  }
 }
