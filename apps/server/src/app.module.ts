@@ -10,8 +10,17 @@ import { VerificationModule } from './core/verification/verification.module';
 import { VoteModule } from './core/vote/vote.module';
 import { DatabaseModule } from './providers/database/database.module';
 import { MailModule } from './mail/mail.module';
+import { MagiclinkModule } from './providers/magiclink/magiclink.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 @Module({
   imports: [
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
     DatabaseModule,
     AuthModule,
     UserModule,
@@ -23,8 +32,14 @@ import { MailModule } from './mail/mail.module';
     HashtagModule,
     TicketModule,
     MailModule,
+    MagiclinkModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -1,7 +1,19 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
 import { RegisterDto } from './dtos/register.dto';
+import { Auth } from '~/commons/decorators/validators/auth.decorator';
+import { User } from '~/commons/decorators/requests/user.decorator';
+import { UserEntity } from '@halostemba/entities';
+import { Throttle } from '@nestjs/throttler';
+import { VerifyEmailDto } from './dtos/verify-email.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -17,5 +29,28 @@ export class AuthController {
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
     return await this.authService.register(registerDto);
+  }
+
+  @Throttle({
+    default: {
+      ttl: 60000,
+      limit: 1,
+    },
+  })
+  @Auth(false)
+  @HttpCode(HttpStatus.CREATED)
+  @Post('request-verify-email')
+  async verifyEmail(@User() user: UserEntity) {
+    return await this.authService.requestVerifyEmail(user);
+  }
+
+  @Auth(false)
+  @HttpCode(HttpStatus.OK)
+  @Post('verify-email')
+  async verifyEmailToken(
+    @Query() params: VerifyEmailDto,
+    @User() user: UserEntity,
+  ) {
+    return await this.authService.verifyEmail(params.token, user);
   }
 }

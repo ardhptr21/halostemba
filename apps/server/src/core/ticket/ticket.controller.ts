@@ -22,7 +22,7 @@ import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
-  @Auth(Role.STUDENT)
+  @Auth(true, Role.STUDENT)
   @Post('/')
   async createTicket(
     @Body() createTicketDto: CreateTicketDto,
@@ -31,13 +31,13 @@ export class TicketController {
     return this.ticketService.createTicket(user.id, createTicketDto);
   }
 
-  @Auth(Role.STUDENT)
+  @Auth(true, Role.STUDENT)
   @Get('/me')
   async getCurrentUserTickets(@User() user: UserEntity) {
     return this.ticketService.getCurrentUserTickets(user.id);
   }
 
-  @Auth(Role.STUDENT)
+  @Auth(true, Role.STUDENT)
   @Put('/:ticketId')
   async updateTicket(
     @Param('ticketId', ParseUUIDPipe) ticketId: string,
@@ -47,7 +47,7 @@ export class TicketController {
     return this.ticketService.updateTicket(user.id, ticketId, updateTicketDto);
   }
 
-  @Auth(Role.STUDENT)
+  @Auth(true, Role.STUDENT)
   @Delete('/:ticketId')
   async deleteTicket(
     @Param('ticketId', ParseUUIDPipe) ticketId: string,
@@ -56,7 +56,7 @@ export class TicketController {
     return this.ticketService.deleteTicket(ticketId, user.id);
   }
 
-  @Auth(Role.TEACHER)
+  @Auth(true, Role.TEACHER)
   @Patch('/:ticketId/respond')
   async responseTicket(
     @Param('ticketId', ParseUUIDPipe) ticketId: string,
@@ -65,7 +65,7 @@ export class TicketController {
     return this.ticketService.responseTicket(ticketId, user.id);
   }
 
-  @Auth(Role.TEACHER, Role.STUDENT)
+  @Auth(true, Role.TEACHER, Role.STUDENT)
   @Post('/:ticketId/replies')
   async createTicketReply(
     @Param('ticketId', ParseUUIDPipe) ticketId: string,
@@ -79,7 +79,7 @@ export class TicketController {
     );
   }
 
-  @Auth(Role.TEACHER, Role.STUDENT)
+  @Auth(true, Role.TEACHER, Role.STUDENT)
   @Get('/:ticketId/replies')
   async getTicketReplies(
     @Param('ticketId', ParseUUIDPipe) ticketId: string,
@@ -88,7 +88,7 @@ export class TicketController {
     return this.ticketService.getTicketReplies(ticketId, user.id);
   }
 
-  @Auth(Role.TEACHER, Role.STUDENT)
+  @Auth(true, Role.TEACHER, Role.STUDENT)
   @Delete('/replies/:replyId')
   async deleteTicketReply(
     @Param('replyId') replyId: string,

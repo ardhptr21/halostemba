@@ -1,5 +1,9 @@
 import { JwtPayloadEntity } from '@halostemba/entities';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcryptjs';
 import { plainToClass } from 'class-transformer';
@@ -8,6 +12,9 @@ import { UserService } from '~/core/user/user.service';
 import { AuthRepository } from './auth.repository';
 import { LoginDto } from './dtos/login.dto';
 import { RegisterDto } from './dtos/register.dto';
+import { MailService } from '~/mail/mail.service';
+import { UserEntity as UserEntityLib } from '@halostemba/entities';
+import { MagicLinkRepository } from '~/providers/magiclink/magiclink.repository';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +22,8 @@ export class AuthService {
     private readonly authRepository: AuthRepository,
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
+    private readonly mailService: MailService,
+    private readonly magicLinkRepository: MagicLinkRepository,
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -49,5 +58,33 @@ export class AuthService {
       username,
     });
     return new UserEntity(user);
+  }
+
+  async requestVerifyEmail(user: UserEntityLib) {
+    if (user.emailVerifiedAt)
+      throw new BadRequestException('Email has already verified.');
+
+    await this.mailService.sendEmailVerification(user);
+
+    return {
+      message: 'Email has already sent. Please check your email.',
+    };
+  }
+
+  async verifyEmail(token: string, user: UserEntityLib) {
+    const magicLink = await this.magicLinkRepository.getMagicLink(
+      token,
+      user.id,
+    );
+
+    if (!magicLink) throw new UnauthorizedException('Invalid token.');
+
+    await this.authRepository.verifyEmail(user.id);
+
+    await this.magicLinkRepository.deleteMagicLinkByUserId(user.id);
+
+    return {
+      message: 'Email has been verified.',
+    };
   }
 }

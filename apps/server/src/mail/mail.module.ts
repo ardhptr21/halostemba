@@ -3,10 +3,12 @@ import { MailService } from './mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
+import { MagiclinkModule } from '~/providers/magiclink/magiclink.module';
 
 @Global()
 @Module({
   imports: [
+    MagiclinkModule,
     MailerModule.forRoot({
       transport: {
         host: process.env.MAIL_HOST,

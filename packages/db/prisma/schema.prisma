@@ -8,17 +8,18 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  avatar    String?   @db.Text()
-  name      String
-  username  String    @unique
-  email     String    @unique
-  password  String
-  banned    Boolean   @default(false)
-  role      Role      @default(GUEST)
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  bannedAt  DateTime? @map("banned_at")
+  id              String    @id @default(uuid())
+  avatar          String?   @db.Text()
+  name            String
+  username        String    @unique
+  email           String    @unique
+  password        String
+  banned          Boolean   @default(false)
+  role            Role      @default(GUEST)
+  emailVerifiedAt DateTime? @map("email_verified_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  bannedAt        DateTime? @map("banned_at")
 
   student             Student?
   verificationRequest VerificationRequest[]
@@ -28,6 +29,8 @@ model User {
   ticketReplies       TicketReply[]
   reportTickets       Ticket[]              @relation("reporter")
   respondTickets      Ticket[]              @relation("responder")
+  magicLinks          MagicLink[]
+  otps                OTP[]
 
   @@map("users")
 }
@@ -157,6 +160,32 @@ model TicketReply {
   author User   @relation(fields: [authorId], references: [id])
 
   @@map("ticket_replies")
+}
+
+model MagicLink {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  type      String
+  expiredAt DateTime @map("expired_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("magic_links")
+}
+
+model OTP {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  value     String   @unique
+  type      String
+  expiredAt DateTime @map("expired_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("otps")
 }
 
 enum Role {

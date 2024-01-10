@@ -9,7 +9,7 @@ import { UserEntity } from '@halostemba/entities';
 export class VoteController {
   constructor(private readonly voteService: VoteService) {}
 
-  @Auth()
+  @Auth(false)
   @Patch('/')
   async vote(@Body() voteDto: VoteDto, @User() user: UserEntity) {
     return this.voteService.vote(voteDto, user.id);

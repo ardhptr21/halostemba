@@ -9,4 +9,15 @@ export class AuthRepository {
   async registerUser(data: RegisterDto & { username: string }) {
     return await this.db.user.create({ data });
   }
+
+  async verifyEmail(userId: string) {
+    return await this.db.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        emailVerifiedAt: new Date(),
+      },
+    });
+  }
 }

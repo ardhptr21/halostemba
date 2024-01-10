@@ -17,7 +17,7 @@ import { CreateCommentDto } from './dtos/create-comment.dto';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Auth(Role.ADMIN, Role.STUDENT, Role.TEACHER)
+  @Auth(true, Role.ADMIN, Role.STUDENT, Role.TEACHER)
   @Post('/:menfessId')
   async createComment(
     @Body() createCommentDto: CreateCommentDto,
@@ -31,7 +31,7 @@ export class CommentController {
     );
   }
 
-  @Auth(Role.ADMIN, Role.STUDENT, Role.TEACHER)
+  @Auth(true, Role.ADMIN, Role.STUDENT, Role.TEACHER)
   @Delete('/:commentId')
   async removeComment(
     @Param('commentId', ParseUUIDPipe) commentId: string,
