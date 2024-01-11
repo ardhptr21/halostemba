@@ -46,4 +46,15 @@ export class MailService {
       },
     });
   }
+
+  async sendResetPasswordSuccess(user: UserEntity) {
+    await this.mailerService.sendMail({
+      to: user.email,
+      subject: 'halostemba : password telah diubah',
+      template: './reset-password-success',
+      context: {
+        name: user.name,
+      },
+    });
+  }
 }

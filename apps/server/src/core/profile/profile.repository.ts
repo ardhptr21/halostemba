@@ -19,4 +19,11 @@ export class ProfileRepository {
       data: { emailVerifiedAt: null },
     });
   }
+
+  async changePassword(userId: string, password: string) {
+    return await this.db.user.update({
+      where: { id: userId },
+      data: { password },
+    });
+  }
 }
