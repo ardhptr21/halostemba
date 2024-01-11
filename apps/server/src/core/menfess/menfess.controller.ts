@@ -28,7 +28,6 @@ export class MenfessController {
     @User() user: UserEntity,
     @Query() params: ListMenfessParamsDto,
   ) {
-    console.log(params);
     return this.menfessService.getListMenfess(user, params);
   }
 
@@ -41,7 +40,7 @@ export class MenfessController {
     return this.menfessService.getListPopularMenfess(user, params);
   }
 
-  @Auth(Role.STUDENT)
+  @Auth(true, Role.STUDENT)
   @Post('/')
   createMenfess(
     @Body() createMenfessDto: CreateMenfessDto,
@@ -50,12 +49,16 @@ export class MenfessController {
     return this.menfessService.createMenfess(createMenfessDto, user.id);
   }
 
+  @UseInterceptors(ParseUserInterceptor)
   @Get('/:menfessId')
-  getMenfess(@Param('menfessId', ParseUUIDPipe) menfessId: string) {
-    return this.menfessService.getMenfess(menfessId);
+  getMenfess(
+    @Param('menfessId', ParseUUIDPipe) menfessId: string,
+    @User() user: UserEntity,
+  ) {
+    return this.menfessService.getMenfess(menfessId, user);
   }
 
-  @Auth(Role.STUDENT)
+  @Auth(true, Role.STUDENT)
   @Delete('/:menfessId')
   removeMenfess(
     @Param('menfessId', ParseUUIDPipe) menfessId: string,

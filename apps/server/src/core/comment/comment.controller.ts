@@ -1,3 +1,5 @@
+import { Role } from '@halostemba/db';
+import { UserEntity } from '@halostemba/entities';
 import {
   Body,
   Controller,
@@ -6,18 +8,16 @@ import {
   ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
-import { CommentService } from './comment.service';
-import { Auth } from '~/commons/decorators/validators/auth.decorator';
-import { Role } from '@halostemba/db';
-import { CreateCommentDto } from './dtos/create-comment.dto';
 import { User } from '~/commons/decorators/requests/user.decorator';
-import { UserEntity } from '@halostemba/entities';
+import { Auth } from '~/commons/decorators/validators/auth.decorator';
+import { CommentService } from './comment.service';
+import { CreateCommentDto } from './dtos/create-comment.dto';
 
 @Controller('comments')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Auth(Role.ADMIN, Role.STUDENT, Role.TEACHER)
+  @Auth(true, Role.ADMIN, Role.STUDENT, Role.TEACHER)
   @Post('/:menfessId')
   async createComment(
     @Body() createCommentDto: CreateCommentDto,
@@ -31,7 +31,7 @@ export class CommentController {
     );
   }
 
-  @Auth(Role.ADMIN, Role.STUDENT, Role.TEACHER)
+  @Auth(true, Role.ADMIN, Role.STUDENT, Role.TEACHER)
   @Delete('/:commentId')
   async removeComment(
     @Param('commentId', ParseUUIDPipe) commentId: string,

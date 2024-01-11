@@ -6,6 +6,7 @@ export class UserEntity {
   role: 'GUEST' | 'STUDENT' | 'TEACHER' | 'ADMIN';
   avatar: string;
   banned: boolean;
+  emailVerifiedAt: Date | string;
   createdAt: Date;
   updatedAt: Date;
 }

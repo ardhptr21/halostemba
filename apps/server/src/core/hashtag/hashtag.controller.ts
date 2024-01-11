@@ -7,7 +7,7 @@ import { SearchQueryHashtagDto } from './dtos/search-query-hashtag.dto';
 export class HashtagController {
   constructor(private readonly hashtagService: HashtagService) {}
 
-  @Auth()
+  @Auth(true)
   @Get('/search')
   async searchHashtags(@Query() searchQueryHashtagDto: SearchQueryHashtagDto) {
     return this.hashtagService.searchHashtags(searchQueryHashtagDto.q);

@@ -5,9 +5,14 @@ import { jwtConstant } from './auth.constant';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { AuthRepository } from './auth.repository';
+import { MagiclinkModule } from '~/providers/magiclink/magiclink.module';
+import { OtpModule } from '~/providers/otp/otp.module';
 
 @Module({
   imports: [
+    MagiclinkModule,
+    OtpModule,
     JwtModule.register({
       global: true,
       secret: jwtConstant.secret,
@@ -15,6 +20,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, UserService],
+  providers: [AuthService, AuthRepository, JwtStrategy, UserService],
 })
 export class AuthModule {}
