@@ -3,10 +3,11 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import RegisterForm from "~/components/organisms/auth/RegisterForm";
+import withGuestRequired from "~/guards/auth/withGuestRequired";
 
 export const metadata: Metadata = { title: "Daftar" };
 
-export default function Daftar() {
+function Daftar() {
   return (
     <main
       className="flex h-screen flex-col items-center justify-center bg-cover bg-center px-5 py-12"
@@ -38,3 +39,5 @@ export default function Daftar() {
     </main>
   );
 }
+
+export default withGuestRequired(Daftar);

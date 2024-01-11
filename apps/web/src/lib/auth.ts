@@ -1,4 +1,4 @@
-import { AuthOptions, Session } from "next-auth";
+import { AuthOptions, Session, getServerSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { loginApiHandler } from "~/apis/auth/login-api";
 
@@ -60,3 +60,5 @@ export const authOptions: AuthOptions = {
     signIn: "/masuk",
   },
 };
+
+export const getAuthServer = () => getServerSession(authOptions);

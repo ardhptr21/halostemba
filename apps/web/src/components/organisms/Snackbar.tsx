@@ -25,7 +25,7 @@ const Snackbar = forwardRef(
         <CalloutText>{props.message}</CalloutText>
       </CalloutRoot>
     );
-  }
+  },
 );
 Snackbar.displayName = "Snackbar";
 

@@ -3,12 +3,13 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import LoginForm from "~/components/organisms/auth/LoginForm";
+import withGuestRequired from "~/guards/auth/withGuestRequired";
 
 export const metadata: Metadata = {
   title: "Masuk",
 };
 
-export default function Masuk() {
+function Masuk() {
   return (
     <main
       className="flex flex-col items-center justify-center h-screen px-5 py-12 bg-center bg-cover"
@@ -40,3 +41,5 @@ export default function Masuk() {
     </main>
   );
 }
+
+export default withGuestRequired(Masuk);
