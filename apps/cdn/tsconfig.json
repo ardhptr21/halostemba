@@ -1,0 +1,9 @@
+{
+  "extends": ["@halostemba/ts-config/express.json"],
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "outDir": "./dist"
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+}
