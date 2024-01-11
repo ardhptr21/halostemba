@@ -13,6 +13,7 @@ import { Auth } from '~/commons/decorators/validators/auth.decorator';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { ProfileService } from './profile.service';
 import { ChangePasswordDto } from './dtos/change-password.dto';
+import { ChangeProfilePictureDto } from './dtos/change-profile-picture.dto';
 
 @Controller('profile')
 export class ProfileController {
@@ -45,6 +46,19 @@ export class ProfileController {
     return this.profileService.changePassword(
       user.id,
       changePasswordDto.password,
+    );
+  }
+
+  @Auth(false)
+  @HttpCode(HttpStatus.OK)
+  @Patch('/change-avatar')
+  async changeAvatar(
+    @Body() changeProfilePictureDto: ChangeProfilePictureDto,
+    @User() user: UserEntity,
+  ) {
+    return this.profileService.changeAvatar(
+      user.id,
+      changeProfilePictureDto.avatar,
     );
   }
 }

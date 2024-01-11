@@ -47,4 +47,12 @@ export class ProfileService {
       message: 'Password changed',
     };
   }
+
+  async changeAvatar(userId: string, avatar: string) {
+    await this.profileRepository.changeProfilePicture(userId, avatar);
+
+    return {
+      message: 'Profile picture changed',
+    };
+  }
 }

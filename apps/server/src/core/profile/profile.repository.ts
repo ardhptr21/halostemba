@@ -26,4 +26,11 @@ export class ProfileRepository {
       data: { password },
     });
   }
+
+  async changeProfilePicture(userId: string, avatar: string) {
+    return await this.db.user.update({
+      where: { id: userId },
+      data: { avatar },
+    });
+  }
 }
