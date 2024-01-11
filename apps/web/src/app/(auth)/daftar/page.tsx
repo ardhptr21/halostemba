@@ -1,19 +1,8 @@
-import { EyeOpenIcon } from "@radix-ui/react-icons";
-import {
-  Box,
-  Button,
-  Card,
-  Flex,
-  Heading,
-  Link as RLink,
-  Text,
-  TextFieldInput,
-  TextFieldRoot,
-  TextFieldSlot,
-} from "@radix-ui/themes";
+import { Card, Flex, Heading, Link as RLink, Text } from "@radix-ui/themes";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import RegisterForm from "~/components/organisms/auth/RegisterForm";
 
 export const metadata: Metadata = { title: "Daftar" };
 
@@ -43,81 +32,7 @@ export default function Daftar() {
               </RLink>
             </Text>
           </Flex>
-
-          <form className="mx-auto flex w-full flex-col gap-6 px-5 md:w-3/4">
-            <Box>
-              <Text as="label" htmlFor="name" mb="2" className="block">
-                Nama Lengkap
-              </Text>
-              <TextFieldRoot size="3" className="flex">
-                <TextFieldInput
-                  name="name"
-                  id="name"
-                  placeholder="Masukkan nama lengkapmu"
-                />
-              </TextFieldRoot>
-            </Box>
-            <Box>
-              <Text as="label" htmlFor="email" mb="2" className="block">
-                Email
-              </Text>
-              <TextFieldRoot size="3" className="flex">
-                <TextFieldInput
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="Masukkan email"
-                />
-              </TextFieldRoot>
-            </Box>
-
-            <Box>
-              <Text as="label" htmlFor="password" mb="2" className="block">
-                Kata Sandi
-              </Text>
-              <TextFieldRoot size="3" className="flex">
-                <TextFieldInput
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="Masukkan kata sandi"
-                />
-                <TextFieldSlot>
-                  <button className="p-3">
-                    <EyeOpenIcon />
-                  </button>
-                </TextFieldSlot>
-              </TextFieldRoot>
-            </Box>
-
-            <Box>
-              <Text
-                as="label"
-                htmlFor="confirmPassword"
-                mb="2"
-                className="block"
-              >
-                Ulangi Kata Sandi
-              </Text>
-              <TextFieldRoot size="3" className="flex">
-                <TextFieldInput
-                  type="password"
-                  name="confirmPassword"
-                  id="confirmPassword"
-                  placeholder="Konfirmasi kata sandi"
-                />
-                <TextFieldSlot>
-                  <button className="p-3">
-                    <EyeOpenIcon />
-                  </button>
-                </TextFieldSlot>
-              </TextFieldRoot>
-            </Box>
-
-            <Button size="3" type="submit" style={{ cursor: "pointer" }}>
-              Daftar
-            </Button>
-          </form>
+          <RegisterForm />
         </Flex>
       </Card>
     </main>

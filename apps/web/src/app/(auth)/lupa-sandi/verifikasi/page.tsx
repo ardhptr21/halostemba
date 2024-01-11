@@ -17,7 +17,7 @@ export const metadata: Metadata = { title: "Lupa Kata Sandi" };
 export default function LupaSandi() {
   return (
     <main
-      className="flex h-screen flex-col items-center justify-center bg-cover bg-center px-5 py-12"
+      className="flex flex-col items-center justify-center h-screen px-5 py-12 bg-center bg-cover"
       style={{
         backgroundImage: "url(/assets/images/svg/grid-pattern.svg)",
       }}
@@ -42,7 +42,7 @@ export default function LupaSandi() {
             </Text>
           </Flex>
 
-          <form className="mx-auto flex w-full flex-col gap-6 px-5 md:w-3/4">
+          <form className="flex flex-col w-full gap-6 px-5 mx-auto md:w-3/4">
             <Box>
               <Flex justify="between">
                 <Text as="label" htmlFor="email" mb="2" className="block">
