@@ -1,6 +1,8 @@
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
+import NextTopLoader from "nextjs-toploader";
+import GlobalProvider from "~/components/organisms/GlobalProvider";
 
 export default function RootLayout({
   children,
@@ -10,7 +12,10 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body>
-        <Theme>{children}</Theme>
+        <Theme appearance="dark">
+          <NextTopLoader color="#3E63DD" />
+          <GlobalProvider>{children}</GlobalProvider>
+        </Theme>
       </body>
     </html>
   );

@@ -1,7 +1,6 @@
 {
-  "$schema": "https://json.schemastore.org/prettierrc",
-  "plugins": [
-    "prettier-plugin-tailwindcss"
-  ],
-  "endOfLine": "lf"
+  "endOfLine": "lf",
+  "printWidth": 80,
+  "singleQuote": false,
+  "trailingComma": "all"
 }

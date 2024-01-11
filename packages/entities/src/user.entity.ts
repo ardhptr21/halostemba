@@ -3,7 +3,7 @@ export class UserEntity {
   name: string;
   email: string;
   username: string;
-  role: string;
+  role: 'GUEST' | 'STUDENT' | 'TEACHER' | 'ADMIN';
   avatar: string;
   banned: boolean;
   emailVerifiedAt: Date | string;
