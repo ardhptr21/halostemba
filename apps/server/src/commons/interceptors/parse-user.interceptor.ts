@@ -27,9 +27,9 @@ export class ParseUserInterceptor implements NestInterceptor {
     if (!token) return next.handle();
 
     try {
-      const { username } = this.jwtService.verify(token) as JwtPayloadEntity;
+      const { sub } = this.jwtService.verify(token) as JwtPayloadEntity;
       const user = await this.db.user.findFirst({
-        where: { OR: [{ username }, { email: username }] },
+        where: { id: sub },
       });
       request.user = user;
     } catch {}

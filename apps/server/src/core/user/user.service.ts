@@ -10,4 +10,8 @@ export class UserService {
       where: { OR: [{ username }, { email: username }] },
     });
   }
+
+  async findUserById(id: string) {
+    return await this.db.user.findFirst({ where: { id } });
+  }
 }
