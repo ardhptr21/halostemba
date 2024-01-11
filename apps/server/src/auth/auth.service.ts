@@ -49,7 +49,7 @@ export class AuthService {
 
   async register(registerDto: RegisterDto) {
     const username =
-      registerDto.name.split('@')[0].toLowerCase().replace(' ', '_') +
+      registerDto.name.toLowerCase().split(' ').slice(0, 2).join('_') +
       Math.floor(Math.random() * 1000);
 
     const hashPassword = await hash(registerDto.password, 10);
