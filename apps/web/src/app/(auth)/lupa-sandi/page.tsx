@@ -1,21 +1,13 @@
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import {
-  Box,
-  Button,
-  Card,
-  Flex,
-  Heading,
-  Text,
-  TextFieldInput,
-  TextFieldRoot,
-} from "@radix-ui/themes";
+import { Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-
+import ForgotPasswordAction from "~/components/organisms/auth/ForgotPasswordAction";
+import withGuestRequired from "~/guards/auth/withGuestRequired";
 export const metadata: Metadata = { title: "Lupa Kata Sandi" };
 
-export default function LupaSandi() {
+function LupaSandi() {
   return (
     <main
       className="flex h-screen flex-col items-center justify-center bg-cover bg-center px-5 py-12"
@@ -47,32 +39,11 @@ export default function LupaSandi() {
             </Text>
           </Flex>
 
-          <form className="mx-auto flex w-full flex-col gap-6 px-5 md:w-3/4">
-            <Box>
-              <Text as="label" htmlFor="email" mb="2" className="block">
-                Email
-              </Text>
-              <TextFieldRoot size="3" className="flex">
-                <TextFieldInput
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="Masukkan email"
-                />
-              </TextFieldRoot>
-            </Box>
-
-            <Button
-              asChild
-              size="3"
-              type="submit"
-              style={{ cursor: "pointer" }}
-            >
-              <Link href="/lupa-sandi/verifikasi">Kirim</Link>
-            </Button>
-          </form>
+          <ForgotPasswordAction />
         </Flex>
       </Card>
     </main>
   );
 }
+
+export default withGuestRequired(LupaSandi);

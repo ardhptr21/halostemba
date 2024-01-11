@@ -1,7 +1,6 @@
 import { UserEntity } from "@halostemba/entities";
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import LoginApiDto from "~/dtos/auth/login-api.dto";
 import http from "~/lib/axios";
 import ErrorResponseType from "~/types/error-response-type";
 import { LoginValidatorType } from "~/validators/auth/login-validator";
@@ -19,7 +18,7 @@ export const loginApiHandler = async (
 };
 
 export const useLogin = (
-  body: LoginApiDto,
+  body: LoginValidatorType,
   options?: UseMutationOptions<
     LoginApiHandlerResponse,
     AxiosError<ErrorResponseType>
