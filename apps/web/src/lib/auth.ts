@@ -27,7 +27,10 @@ export const authOptions: AuthOptions = {
 
         try {
           const data = await loginApiHandler(creds);
-          return { ...data.user, token: data.access_token };
+          return {
+            ...data.user,
+            token: data.access_token,
+          };
         } catch (error) {
           return null;
         }
@@ -35,9 +38,8 @@ export const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    jwt: async ({ token, user }) => {
       if (!user) return token;
-
       const { id, ...properties } = user;
       return { sub: id, ...properties };
     },
@@ -51,7 +53,7 @@ export const authOptions: AuthOptions = {
           id: sub,
           ...properties,
         },
-        token: access_token,
+        token: access_token as string,
         expires: exp as string,
       } satisfies Session;
     },
