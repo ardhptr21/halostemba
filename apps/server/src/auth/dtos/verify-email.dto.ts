@@ -1,11 +1,7 @@
-import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 import { validatorMapper } from '~/commons/lang/id/validator';
 
 export class VerifyEmailDto {
-  @IsNotEmpty()
-  @IsEmail()
-  readonly email: string;
-
   @Length(32, 32, {
     message: validatorMapper('length'),
   })

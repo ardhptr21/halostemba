@@ -32,12 +32,11 @@ export class MagicLinkRepository {
     });
   }
 
-  async getMagicLink(token: string, userId: string) {
+  async getMagicLink(token: string) {
     return await this.db.magicLink.findFirst({
       where: {
         token,
         type: 'EMAIL_VERIFICATION',
-        userId,
         expiredAt: {
           gte: new Date(),
         },

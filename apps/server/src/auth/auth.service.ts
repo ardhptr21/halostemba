@@ -82,20 +82,15 @@ export class AuthService {
   }
 
   async verifyEmail(verifyEmailDto: VerifyEmailDto) {
-    const user = await this.userRepository.findUser(verifyEmailDto.email);
-
-    if (!user) throw new UserNotFoundException();
-
     const magicLink = await this.magicLinkRepository.getMagicLink(
       verifyEmailDto.token,
-      user.id,
     );
 
     if (!magicLink) throw new InvalidTokenException();
 
-    await this.authRepository.verifyEmail(user.id);
+    await this.authRepository.verifyEmail(magicLink.userId);
 
-    await this.magicLinkRepository.deleteMagicLinkByUserId(user.id);
+    await this.magicLinkRepository.deleteMagicLinkByUserId(magicLink.userId);
 
     return {
       message: 'Email telah diverifikasi.',
