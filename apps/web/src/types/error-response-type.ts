@@ -1,5 +1,8 @@
 export default interface ErrorResponseType {
-  message: string;
-  error: string;
+  errors?: {
+    [key: string]: string;
+  } | null;
+  message?: string | null;
+  error: string | null;
   statusCode: number;
 }

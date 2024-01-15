@@ -1,6 +1,7 @@
 import { AuthOptions, Session, getServerSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { loginApiHandler } from "~/apis/auth/login-api";
+import { meAuthApi } from "~/apis/auth/me-api";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -40,19 +41,16 @@ export const authOptions: AuthOptions = {
   callbacks: {
     jwt: async ({ token, user }) => {
       if (!user) return token;
-      const { id, ...properties } = user;
-      return { sub: id, ...properties };
+      const { id } = user;
+      return { sub: id, token: user.token };
     },
-    session: ({ token, session }) => {
+    session: async ({ token, session }) => {
       if (!token) return session;
-
-      const { sub, exp, token: access_token, ...properties } = token;
+      const { exp, token: access_token } = token;
+      const user = await meAuthApi(access_token as string);
 
       return {
-        user: {
-          id: sub,
-          ...properties,
-        },
+        user,
         token: access_token as string,
         expires: exp as string,
       } satisfies Session;

@@ -31,7 +31,7 @@ Snackbar.displayName = "Snackbar";
 
 export const SnackbarProvider = ({ children }: PropsWithChildren) => (
   <NotistackProvider
-    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+    anchorOrigin={{ horizontal: "center", vertical: "top" }}
     autoHideDuration={3000}
     Components={{
       success: Snackbar,

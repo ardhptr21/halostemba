@@ -1,4 +1,5 @@
 import {
+  Button,
   CalloutRoot,
   CalloutText,
   Flex,
@@ -6,7 +7,7 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { Session } from "next-auth";
-import SendEmailVerification from "~/components/organisms/auth/SendEmailVerification";
+import Link from "next/link";
 import withAuthRequired from "~/guards/auth/withAuthRequired";
 
 interface Props {
@@ -26,20 +27,15 @@ function Home({ session }: Props) {
         <Heading weight="regular">
           Halo, <Text weight="bold">{session.user.name}</Text> 👋
         </Heading>
-        {!session.user.emailVerifiedAt ? (
-          <CalloutRoot color="red">
-            <CalloutText>
-              Email is not verified. Please verify your email.{" "}
-              <SendEmailVerification
-                className="inline-block"
-                color="green"
-                variant="surface"
-                size="1"
-              >
-                Verify Email
-              </SendEmailVerification>
-            </CalloutText>
-          </CalloutRoot>
+        {!!!session.user.emailVerifiedAt ? (
+          <Flex align="center" direction="column" gap="3">
+            <CalloutRoot color="red">
+              <CalloutText>Email belum terverifikasi.</CalloutText>
+            </CalloutRoot>
+            <Button asChild size="3" variant="ghost">
+              <Link href="/verifikasi-email">Verifikasi Sekarang</Link>
+            </Button>
+          </Flex>
         ) : null}
       </Flex>
     </main>

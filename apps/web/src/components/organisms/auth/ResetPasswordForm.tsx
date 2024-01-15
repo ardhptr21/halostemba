@@ -28,20 +28,18 @@ export default function ResetPasswordForm() {
   });
 
   const { mutate: resetPasswordHandler, isPending } = useResetPassword({
-    onSuccess: () => {
+    onSuccess: (data) => {
       reset();
-      toast("Berhasil mengganti kata sandi, silahkan login.", {
-        variant: "success",
-        anchorOrigin: { horizontal: "center", vertical: "top" },
-      });
+      const message =
+        data.message || "Berhasil mengganti kata sandi, silahkan login.";
+      toast(message, { variant: "success" });
       router.replace("/masuk");
     },
-    onError: () => {
+    onError: (error) => {
       reset();
-      toast("Gagal mengganti kata sandi.", {
-        variant: "error",
-        anchorOrigin: { horizontal: "center", vertical: "top" },
-      });
+      const message =
+        error.response?.data.error || "Gagal mengganti kata sandi.";
+      toast(message, { variant: "error" });
     },
   });
 

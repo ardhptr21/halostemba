@@ -1,5 +1,7 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import http from "~/lib/axios";
+import ErrorResponseType from "~/types/error-response-type";
 
 export interface VerifyForgotPasswordOTPApiHandlerResponse {
   message: string;
@@ -21,7 +23,7 @@ export const verifyForgotPasswordOTPApiHandler = async (
 export const useVerifyForgotPasswordOTP = (
   options?: UseMutationOptions<
     VerifyForgotPasswordOTPApiHandlerResponse,
-    any,
+    AxiosError<ErrorResponseType>,
     VerifyForgotPasswordOTPBody
   >,
 ) => {

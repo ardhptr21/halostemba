@@ -38,15 +38,11 @@ export default function LoginForm() {
       router.push("/");
       toast("Berhasil masuk, selamat datang di halostemba.", {
         variant: "success",
-        anchorOrigin: { horizontal: "center", vertical: "top" },
       });
       return;
     }
 
-    toast("Gagal masuk, coba lagi.", {
-      variant: "error",
-      anchorOrigin: { horizontal: "center", vertical: "bottom" },
-    });
+    toast("Gagal masuk, coba lagi.", { variant: "error" });
   });
 
   return (

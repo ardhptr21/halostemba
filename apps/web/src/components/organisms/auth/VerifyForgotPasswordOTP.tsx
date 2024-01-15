@@ -1,75 +1,51 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Flex, Text, TextFieldInput } from "@radix-ui/themes";
 import { useSnackbar } from "notistack";
-import { ChangeEvent } from "react";
-import { useForm } from "react-hook-form";
+import { FormEvent, useState } from "react";
+import OtpInput from "react-otp-input";
+import { useForgotPassword } from "~/apis/auth/forgot-password-api";
 import { useVerifyForgotPasswordOTP } from "~/apis/auth/verify-forgot-password-otp-api";
 import { useForgotPasswordStore } from "~/store/auth/forgot-password-store";
-import {
-  VerifyOTPValidator,
-  VerifyOTPValidatorType,
-} from "~/validators/auth/verify-forgot-password-otp-validator";
 
-export default function VerifyOTP() {
+export default function VerifyForgotPasswordOTP() {
   const { email, setToken } = useForgotPasswordStore();
   const { enqueueSnackbar: toast } = useSnackbar();
+  const [otp, setOtp] = useState("");
 
   const {
-    register,
-    reset,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<VerifyOTPValidatorType>({
-    mode: "onChange",
-    resolver: zodResolver(VerifyOTPValidator),
+    mutate: sendForgotPasswordHandler,
+    isPending: sendForgotPasswordPending,
+  } = useForgotPassword({
+    onError: (error) => {
+      const message =
+        error.response?.data.error || "Gagal mengirim OTP, coba lagi.";
+      toast(message, { variant: "error" });
+    },
+    onSuccess: (data) => {
+      const message = data.message || "Berhasil mengirim OTP, cek email kamu.";
+      toast(message, { variant: "success" });
+    },
   });
-
-  const changeOTPFocus =
-    (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      if (value === "" && index === 1) return;
-      if (value === "" && index > 1) {
-        const prevSibling = e.target.parentElement?.previousElementSibling
-          ?.firstElementChild as HTMLInputElement;
-        prevSibling?.focus();
-        return;
-      }
-
-      const numValue = Number(value);
-      if (numValue < 0 || numValue > 9) return;
-
-      if (index < 6) {
-        const nextSibling = e.target.parentElement?.nextElementSibling
-          ?.firstElementChild as HTMLInputElement;
-        nextSibling?.focus();
-      }
-    };
 
   const { mutate: verifyForgotPasswordHandler, isPending } =
     useVerifyForgotPasswordOTP({
       onSuccess: (data) => {
         setToken(data.token);
-        reset();
-        toast("Verifikasi OTP berhasil.", {
-          variant: "success",
-          anchorOrigin: { horizontal: "center", vertical: "top" },
-        });
+        const message = data.message || "Berhasil verifikasi OTP.";
+        toast(message, { variant: "success" });
       },
-      onError: () => {
-        reset();
-        toast("Verifikasi OTP gagal, coba lagi.", {
-          variant: "error",
-          anchorOrigin: { horizontal: "center", vertical: "top" },
-        });
+      onError: (error) => {
+        const message =
+          error.response?.data.error || "Verifikasi OTP gagal, coba lagi.";
+        toast(message, { variant: "error" });
       },
     });
 
-  const onSubmit = handleSubmit((data) => {
-    const otp = Object.values(data).join("");
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     verifyForgotPasswordHandler({ otp, email: email as string });
-  });
+  };
 
   return (
     <form
@@ -81,87 +57,43 @@ export default function VerifyOTP() {
           <Text as="label" htmlFor="email" mb="2" className="block">
             Masukkan Kode Verifikasi
           </Text>
-
-          <Text className="block">01.00</Text>
         </Flex>
-        <Flex direction="row" gap="2">
-          <TextFieldInput
-            type="number"
-            size="3"
-            className="text-center"
-            disabled={isPending}
-            variant={errors.otp1 ? "soft" : "classic"}
-            color={errors.otp1 ? "red" : "indigo"}
-            onInput={changeOTPFocus(1)}
-            {...register("otp1")}
-          />
-          <TextFieldInput
-            type="number"
-            size="3"
-            className="text-center"
-            disabled={isPending}
-            variant={errors.otp2 ? "soft" : "classic"}
-            color={errors.otp2 ? "red" : "indigo"}
-            onInput={changeOTPFocus(2)}
-            {...register("otp2")}
-          />
-          <TextFieldInput
-            type="number"
-            size="3"
-            className="text-center"
-            disabled={isPending}
-            variant={errors.otp3 ? "soft" : "classic"}
-            color={errors.otp3 ? "red" : "indigo"}
-            onInput={changeOTPFocus(3)}
-            {...register("otp3")}
-          />
-          <TextFieldInput
-            type="number"
-            size="3"
-            className="text-center"
-            disabled={isPending}
-            variant={errors.otp4 ? "soft" : "classic"}
-            color={errors.otp4 ? "red" : "indigo"}
-            onInput={changeOTPFocus(4)}
-            {...register("otp4")}
-          />
-          <TextFieldInput
-            type="number"
-            size="3"
-            className="text-center"
-            disabled={isPending}
-            variant={errors.otp5 ? "soft" : "classic"}
-            color={errors.otp5 ? "red" : "indigo"}
-            onInput={changeOTPFocus(5)}
-            {...register("otp5")}
-          />
-          <TextFieldInput
-            type="number"
-            size="3"
-            className="text-center"
-            disabled={isPending}
-            variant={errors.otp6 ? "soft" : "classic"}
-            color={errors.otp6 ? "red" : "indigo"}
-            onInput={changeOTPFocus(6)}
-            {...register("otp6")}
-          />
-        </Flex>
+        <OtpInput
+          value={otp}
+          onChange={setOtp}
+          numInputs={6}
+          inputType="number"
+          containerStyle="gap-3"
+          inputStyle={{
+            width: "100%",
+            height: "100%",
+            aspectRatio: "1/1",
+            textIndent: 0,
+          }}
+          renderInput={(props) => (
+            <TextFieldInput
+              size="3"
+              disabled={isPending || sendForgotPasswordPending}
+              {...props}
+            />
+          )}
+        />
       </Box>
 
       <Button
         size="3"
         type="submit"
         style={{ cursor: "pointer" }}
-        disabled={isPending}
+        disabled={isPending || sendForgotPasswordPending}
       >
         Verifikasi OTP
       </Button>
       <Button
         variant="outline"
         size="3"
-        type="submit"
+        onClick={() => sendForgotPasswordHandler({ email: email as string })}
         style={{ cursor: "pointer" }}
-        disabled={isPending}
+        disabled={isPending || sendForgotPasswordPending}
       >
         Kirim Ulang
       </Button>
