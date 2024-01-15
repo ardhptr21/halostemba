@@ -18,7 +18,7 @@ export class MailService {
 
     await this.magicLinkRepository.createMagicLinkToken(user.id, token);
 
-    const url = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+    const url = `${process.env.FRONTEND_URL}/verifikasi-email/verify?token=${token}`;
 
     await this.mailerService.sendMail({
       to: user.email,
