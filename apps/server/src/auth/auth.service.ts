@@ -2,6 +2,7 @@ import { JwtPayloadEntity } from '@halostemba/entities';
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -13,9 +14,9 @@ import { AuthRepository } from './auth.repository';
 import { LoginDto } from './dtos/login.dto';
 import { RegisterDto } from './dtos/register.dto';
 import { MailService } from '~/mail/mail.service';
-import { UserEntity as UserEntityLib } from '@halostemba/entities';
 import { MagicLinkRepository } from '~/providers/magiclink/magiclink.repository';
 import { OtpRepository } from '~/providers/otp/otp.repository';
+import { VerifyEmailDto } from './dtos/verify-email.dto';
 
 @Injectable()
 export class AuthService {
@@ -62,7 +63,13 @@ export class AuthService {
     return new UserEntity(user);
   }
 
-  async requestVerifyEmail(user: UserEntityLib) {
+  async requestVerifyEmail(email: string) {
+    const user = await this.userService.findUser(email);
+
+    console.log(user);
+
+    if (!user) throw new NotFoundException('User not found.');
+
     if (user.emailVerifiedAt)
       throw new BadRequestException('Email has already verified.');
 
@@ -73,9 +80,13 @@ export class AuthService {
     };
   }
 
-  async verifyEmail(token: string, user: UserEntityLib) {
+  async verifyEmail(verifyEmailDto: VerifyEmailDto) {
+    const user = await this.userService.findUser(verifyEmailDto.email);
+
+    if (!user) throw new NotFoundException('User not found.');
+
     const magicLink = await this.magicLinkRepository.getMagicLink(
-      token,
+      verifyEmailDto.token,
       user.id,
     );
 
