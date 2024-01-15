@@ -15,6 +15,7 @@ import { OtpModule } from '~/providers/otp/otp.module';
       transport: {
         host: process.env.MAIL_HOST,
         secure: process.env.MAIL_SECURE === 'true',
+        port: Number(process.env.MAIL_PORT || 465),
         auth: {
           user: process.env.MAIL_USER,
           pass: process.env.MAIL_PASS,

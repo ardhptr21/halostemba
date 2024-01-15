@@ -1,32 +1,30 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { UserService } from '~/core/user/user.service';
-import { jwtConstant } from './auth.constant';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { AuthRepository } from './auth.repository';
+import { UserRepository } from '~/core/user/user.repository';
 import { MagiclinkModule } from '~/providers/magiclink/magiclink.module';
 import { OtpModule } from '~/providers/otp/otp.module';
-import { UserRepository } from '~/core/user/user.repository';
+import { AuthController } from './auth.controller';
+import { AuthRepository } from './auth.repository';
+import { AuthService } from './auth.service';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
     MagiclinkModule,
     OtpModule,
-    JwtModule.register({
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
       global: true,
-      secret: jwtConstant.secret,
-      signOptions: { expiresIn: jwtConstant.expiresIn },
+      useFactory: () => {
+        return {
+          secret: process.env.JWT_SECRET_KEY,
+          signOptions: { expiresIn: '3d' },
+        };
+      },
     }),
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    AuthRepository,
-    JwtStrategy,
-    UserService,
-    UserRepository,
-  ],
+  providers: [AuthService, AuthRepository, JwtStrategy, UserRepository],
 })
 export class AuthModule {}
