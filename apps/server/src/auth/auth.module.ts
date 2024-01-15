@@ -8,6 +8,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthRepository } from './auth.repository';
 import { MagiclinkModule } from '~/providers/magiclink/magiclink.module';
 import { OtpModule } from '~/providers/otp/otp.module';
+import { UserRepository } from '~/core/user/user.repository';
 
 @Module({
   imports: [
@@ -20,6 +21,12 @@ import { OtpModule } from '~/providers/otp/otp.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, AuthRepository, JwtStrategy, UserService],
+  providers: [
+    AuthService,
+    AuthRepository,
+    JwtStrategy,
+    UserService,
+    UserRepository,
+  ],
 })
 export class AuthModule {}

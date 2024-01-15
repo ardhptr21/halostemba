@@ -1,18 +1,8 @@
 import _NextAuth from "next-auth";
+import { UserEntity } from "@halostemba/entities";
 
 declare module "next-auth" {
-  interface User {
-    id: string;
-    name: string;
-    email: string;
-    username: string;
-    role: "GUEST" | "STUDENT" | "TEACHER" | "ADMIN";
-    avatar: string;
-    banned: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    token: string;
-  }
+  interface User extends UserEntity {}
 
   interface Session {
     user: Omit<User, "token">;
@@ -21,16 +11,7 @@ declare module "next-auth" {
 }
 
 declare module "next-auth/jwt" {
-  interface JWT {
+  interface JWT extends Omit<UserEntity, "id"> {
     sub: string;
-    name: string;
-    email: string;
-    username: string;
-    role: "GUEST" | "STUDENT" | "TEACHER" | "ADMIN";
-    avatar: string;
-    banned: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    token: string;
   }
 }
