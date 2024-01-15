@@ -14,6 +14,7 @@ import { MagiclinkModule } from './providers/magiclink/magiclink.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { OtpModule } from './providers/otp/otp.module';
+import { OpenaiModule } from './providers/openai/openai.module';
 @Module({
   imports: [
     ThrottlerModule.forRoot([
@@ -35,6 +36,7 @@ import { OtpModule } from './providers/otp/otp.module';
     MailModule,
     MagiclinkModule,
     OtpModule,
+    OpenaiModule,
   ],
   controllers: [],
   providers: [

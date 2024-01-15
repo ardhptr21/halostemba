@@ -1,6 +1,6 @@
 import { Prisma, Vote } from '@halostemba/db';
 import { UserEntity } from '@halostemba/entities';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { endOfWeek, startOfWeek } from 'date-fns';
 import { HashtagRepository } from '../hashtag/hashtag.repository';
 import { HashtagService } from '../hashtag/hashtag.service';
@@ -11,6 +11,7 @@ import {
   MenfessNotFoundException,
   MenfessServerError,
 } from './menfess.exception';
+import { OpenaiService } from '~/providers/openai/openai.service';
 
 @Injectable()
 export class MenfessService {
@@ -18,12 +19,30 @@ export class MenfessService {
     private readonly menfessRepository: MenfessRepository,
     private readonly hashtagService: HashtagService,
     private readonly hashtagRepository: HashtagRepository,
+    private readonly openaiService: OpenaiService,
   ) {}
 
   async createMenfess(createMenfessDto: CreateMenfessDto, userId: string) {
+    let score = 0;
+
+    try {
+      score = (
+        await this.openaiService.validateMenfess(createMenfessDto.content)
+      ).score;
+    } catch (error) {
+      score = 0;
+    }
+
+    if (score > 80)
+      throw new BadRequestException({
+        error: 'Menfess terdeteksi mengandung hal negatif.',
+        statusCode: 400,
+      });
+
     const hashtags = this.hashtagService.parseHashtags(
       createMenfessDto.content,
     );
+
     const menfess = await this.menfessRepository.createMenfess({
       ...createMenfessDto,
       userId,
