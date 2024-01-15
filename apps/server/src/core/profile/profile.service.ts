@@ -1,20 +1,20 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ProfileRepository } from './profile.repository';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
-import { UserService } from '../user/user.service';
 import { compare, hash } from 'bcryptjs';
 import { MailService } from '~/mail/mail.service';
+import { UserRepository } from '../user/user.repository';
 
 @Injectable()
 export class ProfileService {
   constructor(
     private readonly profileRepository: ProfileRepository,
-    private readonly userService: UserService,
+    private readonly userRepository: UserRepository,
     private readonly mailService: MailService,
   ) {}
 
   async updateProfile(userId: string, updateProfileDto: UpdateProfileDto) {
-    const user = await this.userService.findUserById(userId);
+    const user = await this.userRepository.findUserById(userId);
 
     await this.profileRepository.updateProfile(userId, updateProfileDto);
 
@@ -28,7 +28,7 @@ export class ProfileService {
   }
 
   async changePassword(userId: string, password: string) {
-    const user = await this.userService.findUserById(userId);
+    const user = await this.userRepository.findUserById(userId);
 
     const hashPassword = await hash(password, 10);
 

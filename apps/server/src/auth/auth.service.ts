@@ -8,7 +8,6 @@ import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcryptjs';
 import { plainToClass } from 'class-transformer';
 import { UserEntity } from '~/commons/entities/user.entity';
-import { UserService } from '~/core/user/user.service';
 import { AuthRepository } from './auth.repository';
 import { LoginDto } from './dtos/login.dto';
 import { RegisterDto } from './dtos/register.dto';
@@ -16,20 +15,21 @@ import { MailService } from '~/mail/mail.service';
 import { UserEntity as UserEntityLib } from '@halostemba/entities';
 import { MagicLinkRepository } from '~/providers/magiclink/magiclink.repository';
 import { OtpRepository } from '~/providers/otp/otp.repository';
+import { UserRepository } from '~/core/user/user.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly authRepository: AuthRepository,
     private readonly jwtService: JwtService,
-    private readonly userService: UserService,
+    private readonly userRepository: UserRepository,
     private readonly mailService: MailService,
     private readonly magicLinkRepository: MagicLinkRepository,
     private readonly otpRepository: OtpRepository,
   ) {}
 
   async login(loginDto: LoginDto) {
-    const user = await this.userService.findUser(loginDto.username);
+    const user = await this.userRepository.findUser(loginDto.username);
     if (!user) throw new UnauthorizedException('Invalid credentials.');
 
     const passwordMatch = await compare(loginDto.password, user.password);
@@ -91,7 +91,7 @@ export class AuthService {
   }
 
   async forgotPasswordOtp(email: string) {
-    const user = await this.userService.findUser(email);
+    const user = await this.userRepository.findUser(email);
 
     await this.mailService.sendForgotPasswordOtp(user);
 
@@ -101,7 +101,7 @@ export class AuthService {
   }
 
   async verifyForgotPasswordOtp(token: string, email: string) {
-    const user = await this.userService.findUser(email);
+    const user = await this.userRepository.findUser(email);
 
     const otp = await this.otpRepository.getOtp(token, user.id);
 
