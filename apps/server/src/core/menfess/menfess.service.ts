@@ -1,16 +1,16 @@
 import { Prisma, Vote } from '@halostemba/db';
 import { UserEntity } from '@halostemba/entities';
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { endOfWeek, startOfWeek } from 'date-fns';
 import { HashtagRepository } from '../hashtag/hashtag.repository';
 import { HashtagService } from '../hashtag/hashtag.service';
 import { CreateMenfessDto } from './dtos/create-menfess.dto';
 import { ListMenfessParamsDto } from './dtos/list-menfess-params.dto';
 import { MenfessRepository } from './menfess.repository';
+import {
+  MenfessNotFoundException,
+  MenfessServerError,
+} from './menfess.exception';
 
 @Injectable()
 export class MenfessService {
@@ -32,16 +32,15 @@ export class MenfessService {
 
     await this.hashtagRepository.modifyHashtagsScore(hashtags, 'increment');
 
-    if (!menfess)
-      throw new InternalServerErrorException('Failed to create menfess.');
+    if (!menfess) throw new MenfessServerError('Gagal membuat menfess.');
 
-    return { message: 'Menfess created.', data: menfess };
+    return { message: 'Menfess telah dibuat.', data: menfess };
   }
 
   async getMenfess(menfessId: string, user: UserEntity) {
     const menfess = await this.menfessRepository.getMenfess(menfessId, !!user);
 
-    if (!menfess) throw new NotFoundException('Menfess not found.');
+    if (!menfess) throw new MenfessNotFoundException();
     if (menfess.anonymous) menfess.author = null;
 
     return { data: this.serializeMenfess(menfess, user) };
@@ -57,14 +56,13 @@ export class MenfessService {
       const hashtags = this.hashtagService.parseHashtags(deleted.content);
       await this.hashtagRepository.modifyHashtagsScore(hashtags, 'decrement');
 
-      return { message: 'Menfess removed.' };
+      return { message: 'Menfess telah dihapus.' };
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025')
-          throw new NotFoundException('Menfess not found.');
+        if (error.code === 'P2025') throw new MenfessNotFoundException();
       }
 
-      throw new InternalServerErrorException('Failed to remove menfess.');
+      throw new MenfessServerError('Gagal menghapus menfess.');
     }
   }
 

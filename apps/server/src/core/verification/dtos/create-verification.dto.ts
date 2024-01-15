@@ -1,18 +1,40 @@
 import { IsNotEmpty, IsString, IsUUID, IsUrl, Length } from 'class-validator';
+import { validatorMapper } from '~/commons/lang/id/validator';
 
 export class CreateVerificationDto {
-  @IsUUID()
-  @IsNotEmpty()
-  @IsString()
+  @IsUUID('all', {
+    message: validatorMapper('isUUID'),
+  })
+  @IsNotEmpty({
+    message: validatorMapper('isNotEmpty'),
+  })
+  @IsString({
+    message: validatorMapper('isString'),
+  })
   readonly majorId: string;
 
-  @IsUrl()
-  @IsNotEmpty()
-  @IsString()
+  @IsUrl(
+    {},
+    {
+      message: validatorMapper('isUrl'),
+    },
+  )
+  @IsNotEmpty({
+    message: validatorMapper('isNotEmpty'),
+  })
+  @IsString({
+    message: validatorMapper('isString'),
+  })
   readonly idCard: string;
 
-  @Length(10)
-  @IsNotEmpty()
-  @IsString()
+  @Length(10, 10, {
+    message: validatorMapper('length'),
+  })
+  @IsNotEmpty({
+    message: validatorMapper('isNotEmpty'),
+  })
+  @IsString({
+    message: validatorMapper('isString'),
+  })
   readonly nis: string;
 }

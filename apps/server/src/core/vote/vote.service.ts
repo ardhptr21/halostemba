@@ -26,25 +26,29 @@ export class VoteService {
       0,
     );
 
-    if (!menfess) throw new NotFoundException('Menfess not found.');
+    if (!menfess)
+      throw new NotFoundException({
+        message: 'Menfess tidak ditemukan.',
+        statusCode: 404,
+      });
 
     let message = '';
 
     if (!existingVote) {
       await this.voteRepository.createVote({ ...voteDto, userId });
       score = voteDto.type === VoteType.UP ? score + 1 : score - 1;
-      message = 'Vote successful.';
+      message = 'Berhasil vote.';
     } else if (existingVote.type === voteDto.type) {
       await this.voteRepository.deleteVote(existingVote.id);
       score = voteDto.type === VoteType.UP ? score - 1 : score + 1;
-      message = 'Unvote successful.';
+      message = 'Berhasil unvote.';
     } else {
       await this.voteRepository.updateVote({
         voteId: existingVote.id,
         type: voteDto.type,
       });
       score = voteDto.type === VoteType.UP ? score + 2 : score - 2;
-      message = 'Vote updated.';
+      message = 'Vote telah diubah.';
     }
 
     await this.menfessRepository.updateMenfessScore(menfess.id, score);

@@ -1,5 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
+import { validatorMapper } from '~/commons/lang/id/validator';
 
 enum SortBy {
   name = 'name',
@@ -12,26 +13,40 @@ enum Order {
 }
 export class GetUserParamsDto {
   @IsOptional()
-  @IsInt()
+  @IsInt({
+    message: validatorMapper('isInt'),
+  })
   @Transform(({ value }) => Number(value))
   readonly page?: number;
 
   @IsOptional()
-  @IsInt()
+  @IsInt({
+    message: validatorMapper('isInt'),
+  })
   @Transform(({ value }) => Number(value))
   readonly perPage?: number;
 
   @IsOptional()
-  @IsString()
+  @IsString({
+    message: validatorMapper('isString'),
+  })
   readonly search?: string;
 
   @IsOptional()
-  @IsString()
-  @IsEnum(SortBy)
+  @IsString({
+    message: validatorMapper('isString'),
+  })
+  @IsEnum(SortBy, {
+    message: validatorMapper('isEnum'),
+  })
   readonly sortBy?: 'name' | 'createdAt';
 
   @IsOptional()
-  @IsString()
-  @IsEnum(Order)
+  @IsString({
+    message: validatorMapper('isString'),
+  })
+  @IsEnum(Order, {
+    message: validatorMapper('isEnum'),
+  })
   readonly order?: 'asc' | 'desc';
 }

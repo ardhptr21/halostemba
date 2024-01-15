@@ -1,13 +1,14 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
 import { TicketRepository } from './ticket.repository';
 import { Prisma, TicketStatus } from '@halostemba/db';
+import { TicketNotFoundException, TicketServerError } from './ticket.exception';
 
 @Injectable()
 export class TicketService {
@@ -26,7 +27,7 @@ export class TicketService {
       reporterId: userId,
     });
 
-    if (!ticket) throw new InternalServerErrorException('Create ticket failed');
+    if (!ticket) throw new TicketServerError('Gagal membuat laporan.');
 
     return { data: ticket };
   }
@@ -42,48 +43,53 @@ export class TicketService {
       ticketId,
     });
 
-    if (!updated) throw new InternalServerErrorException('Updat ticket failed');
+    if (!updated) throw new TicketServerError('Gagal memperbarui laporan.');
 
-    return { message: 'Update ticket successfully' };
+    return { message: 'Berhasil memperbarui laporan.' };
   }
 
   async deleteTicket(ticketId: string, userId: string) {
     const ticket = await this.ticketRepository.deleteTicket(ticketId, userId);
 
-    if (!ticket) throw new InternalServerErrorException('Delete ticket failed');
+    if (!ticket) throw new TicketServerError('Gagal menghapus laporan.');
 
-    return { message: 'Delete ticket successfully' };
+    return { message: 'Berhasil menghapus laporan.' };
   }
 
   async responseTicket(ticketId: string, userId: string) {
     const ticket = await this.ticketRepository.getTicketById(ticketId);
 
-    if (!ticket) throw new InternalServerErrorException('Ticket not found');
+    if (!ticket) throw new TicketNotFoundException();
 
     if (ticket.responderId)
-      throw new InternalServerErrorException('Ticket already responded');
+      throw new ForbiddenException({
+        error: 'Laporan sudah ditanggapi.',
+        statusCode: 403,
+      });
 
     const updated = await this.ticketRepository.updateTicketResponder(
       userId,
       ticketId,
     );
 
-    if (!updated)
-      throw new InternalServerErrorException('Response ticket failed');
+    if (!updated) throw new TicketServerError('Gagal menanggapi laporan.');
 
-    return { message: 'Response ticket successfully' };
+    return { message: 'Berhasil menanggapi laporan.' };
   }
 
   async createTicketReply(ticketId: string, userId: string, message: string) {
     const checkTicket = await this.ticketRepository.getTicketById(ticketId);
 
-    if (!checkTicket) throw new NotFoundException('Ticket not found');
+    if (!checkTicket) throw new TicketNotFoundException();
 
     if (checkTicket.reporterId !== userId && checkTicket.responderId !== userId)
-      throw new NotFoundException('Ticket not found');
+      throw new TicketNotFoundException();
 
     if (checkTicket.status !== TicketStatus.OPEN)
-      throw new BadRequestException('Ticket already closed or still pending');
+      throw new BadRequestException({
+        error: 'Laporan sudah ditutup atau belum ditanggapi.',
+        statusCode: 400,
+      });
 
     const ticket = await this.ticketRepository.createTicketReply(
       ticketId,
@@ -91,8 +97,7 @@ export class TicketService {
       message,
     );
 
-    if (!ticket)
-      throw new InternalServerErrorException('Create ticket reply failed');
+    if (!ticket) throw new TicketServerError('Gagal membuat balasan laporan.');
 
     return { data: ticket };
   }
@@ -101,7 +106,7 @@ export class TicketService {
     const ticket = await this.ticketRepository.getTicketById(ticketId);
 
     if (ticket.reporterId !== userId && ticket.responderId !== userId)
-      throw new NotFoundException('Ticket not found');
+      throw new TicketNotFoundException();
 
     const replies = await this.ticketRepository.getTicketReplies(ticketId);
 
@@ -112,16 +117,19 @@ export class TicketService {
     try {
       await this.ticketRepository.deleteTicketReply(replyId, userId);
 
-      return { message: 'Delete ticket reply successfully' };
+      return { message: 'Berhasil menghapus balasan laporan.' };
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2025'
       ) {
-        throw new NotFoundException('Ticket reply not found');
+        throw new NotFoundException({
+          error: 'Balasan laporan tidak ditemukan.',
+          statusCode: 404,
+        });
       }
 
-      throw new InternalServerErrorException('Delete ticket reply failed');
+      throw new TicketServerError('Gagal menghapus balasan laporan.');
     }
   }
 }

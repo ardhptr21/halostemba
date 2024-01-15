@@ -1,10 +1,17 @@
 import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { validatorMapper } from '~/commons/lang/id/validator';
 
 export class CreateMenfessDto {
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({
+    message: validatorMapper('isNotEmpty'),
+  })
+  @IsString({
+    message: validatorMapper('isString'),
+  })
   readonly content: string;
 
-  @IsBoolean()
+  @IsBoolean({
+    message: validatorMapper('isBoolean'),
+  })
   readonly anonymous: boolean;
 }
