@@ -1,4 +1,5 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import http from "~/lib/axios";
 import ErrorResponseType from "~/types/error-response-type";
 import { ForgotPasswordValidatorType } from "~/validators/auth/forgot-password-validator";
@@ -17,7 +18,7 @@ export const forgotPasswordApiHandler = async (
 export const useForgotPassword = (
   options?: UseMutationOptions<
     ForgotPasswordApiHandlerResponse,
-    ErrorResponseType,
+    AxiosError<ErrorResponseType>,
     ForgotPasswordValidatorType
   >,
 ) => {

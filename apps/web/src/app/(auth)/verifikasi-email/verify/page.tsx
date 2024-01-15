@@ -16,23 +16,30 @@ interface Props {
 
 const handleVerify = async (
   token: string,
-  authtoken: string,
-): Promise<{ success: boolean }> => {
+): Promise<{ success: boolean; error: string | null }> => {
   if (!token) throw notFound();
 
   try {
-    await verifyEmailApiHandler({ token, authtoken });
-    return { success: true };
+    await verifyEmailApiHandler({ token });
+    return { success: true, error: null };
   } catch (error) {
+    let message = "";
     if (error instanceof AxiosError) {
+      console.log(error.response);
       if (error.status === 404) throw notFound();
+      message = error.response?.data.error;
     }
-    return { success: false };
+    return {
+      success: false,
+      error:
+        message ||
+        "Sepertinya ada sesuatu yang salah, Periksa kembali datamu atau kirim ulang email.",
+    };
   }
 };
 
-async function VerifyEmail({ session, searchParams: { token } }: Props) {
-  const { success } = await handleVerify(token, session.token);
+async function VerifyEmail({ searchParams: { token } }: Props) {
+  const { success, error } = await handleVerify(token);
 
   return (
     <Card className="w-full max-w-2xl">
@@ -65,7 +72,7 @@ async function VerifyEmail({ session, searchParams: { token } }: Props) {
         <Text as="p" size="4" className="max-w-md">
           {success
             ? "Semuanya berjalan dengan baik, Selamat akunmu sudah terverifikasi!"
-            : "Sepertinya ada sesuatu yang salah, Periksa kembali datamu atau kirim ulang email."}
+            : error}
         </Text>
         {success ? (
           <div className="text-center w-full">
@@ -75,10 +82,14 @@ async function VerifyEmail({ session, searchParams: { token } }: Props) {
               size="4"
               style={{ cursor: "pointer" }}
             >
-              <Link href="/masuk">Masuk</Link>
+              <Link href="/">Kembali</Link>
             </Button>
           </div>
-        ) : null}
+        ) : (
+          <Button asChild size="3">
+            <Link href="/verifikasi-email">Kirim Ulang</Link>
+          </Button>
+        )}
       </Flex>
     </Card>
   );

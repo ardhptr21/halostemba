@@ -1,4 +1,5 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import http from "~/lib/axios";
 import ErrorResponseType from "~/types/error-response-type";
 
@@ -21,7 +22,7 @@ export const resetPasswordApiHandler = async (
 export const useResetPassword = (
   options?: UseMutationOptions<
     ResetPasswordApiHandlerResponse,
-    ErrorResponseType,
+    AxiosError<ErrorResponseType>,
     ResetPasswordApiHandlerBody
   >,
 ) => {

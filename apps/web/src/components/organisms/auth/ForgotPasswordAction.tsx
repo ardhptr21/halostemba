@@ -3,7 +3,7 @@
 import { useForgotPasswordStore } from "~/store/auth/forgot-password-store";
 import ForgotPasswordForm from "./ForgotPasswordForm";
 import ResetPasswordForm from "./ResetPasswordForm";
-import VerifyOTP from "./VerifyForgotPasswordOTP";
+import VerifyForgotPasswordOTP from "./VerifyForgotPasswordOTP";
 
 export default function ForgotPasswordAction() {
   const store = useForgotPasswordStore();
@@ -11,7 +11,7 @@ export default function ForgotPasswordAction() {
   return (
     <>
       {!store.email ? <ForgotPasswordForm /> : null}
-      {store.email && !store.token ? <VerifyOTP /> : null}
+      {store.email && !store.token ? <VerifyForgotPasswordOTP /> : null}
       {store.email && store.token ? <ResetPasswordForm /> : null}
     </>
   );

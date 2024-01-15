@@ -29,20 +29,17 @@ export default function ForgotPasswordForm() {
   });
 
   const { mutate: forgotPasswordHandler, isPending } = useForgotPassword({
-    onError: () => {
+    onError: (error) => {
       reset({ email: "" });
-      toast("Gagal mengirim OTP, coba lagi.", {
-        variant: "error",
-        anchorOrigin: { horizontal: "center", vertical: "top" },
-      });
+      const message =
+        error.response?.data.error || "Gagal mengirim OTP, coba lagi.";
+      toast(message, { variant: "error" });
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       setEmail(getValues("email"));
       reset();
-      toast("Berhasil mengirim OTP, cek email kamu.", {
-        variant: "success",
-        anchorOrigin: { horizontal: "center", vertical: "top" },
-      });
+      const message = data.message || "Berhasil mengirim OTP, cek email kamu.";
+      toast(message, { variant: "success" });
     },
   });
 

@@ -5,8 +5,11 @@ export class ForgotPasswordDto {
   @IsNotEmpty({
     message: validatorMapper('isNotEmpty'),
   })
-  @IsEmail(null, {
-    message: validatorMapper('isEmail'),
-  })
+  @IsEmail(
+    {},
+    {
+      message: validatorMapper('isEmail'),
+    },
+  )
   email: string;
 }

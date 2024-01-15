@@ -1,32 +1,25 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import http from "~/lib/axios";
 import ErrorResponseType from "~/types/error-response-type";
 import { EmailVerificationValidatorType } from "~/validators/auth/email-verification-validator";
 
-interface EmailVerificationApiHandlerResponse {
+interface EmailVerificationApiResponse {
   message: string;
 }
 
-interface EmailVerificationApiHandlerBody
-  extends EmailVerificationValidatorType {
-  token: string;
-}
-
-export const emailVerificationApiHandler = async ({
-  token,
-  ...body
-}: EmailVerificationApiHandlerBody): Promise<EmailVerificationApiHandlerResponse> => {
-  const { data } = await http.post("/auth/request-verify-email", body, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const emailVerificationApiHandler = async (
+  body: EmailVerificationValidatorType,
+): Promise<EmailVerificationApiResponse> => {
+  const { data } = await http.post("/auth/request-verify-email", body);
   return data;
 };
 
 export const useEmailVerification = (
   options?: UseMutationOptions<
-    EmailVerificationApiHandlerResponse,
-    ErrorResponseType,
-    EmailVerificationApiHandlerBody
+    EmailVerificationApiResponse,
+    AxiosError<ErrorResponseType>,
+    EmailVerificationValidatorType
   >,
 ) => {
   return useMutation({

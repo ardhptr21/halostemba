@@ -7,15 +7,19 @@ import { useSnackbar } from "notistack";
 import { useForm } from "react-hook-form";
 import { useRegister } from "~/apis/auth/register-api";
 import Input from "~/components/atoms/form/Input";
+import { useVerificationEmailStore } from "~/store/auth/verification-email-store";
 import {
   RegisterValidator,
   RegisterValidatorType,
 } from "~/validators/auth/register-validator";
 
 export default function RegisterForm() {
+  const { setEmail } = useVerificationEmailStore();
+
   const {
     register,
     reset,
+    getValues,
     formState: { errors },
     handleSubmit,
   } = useForm<RegisterValidatorType>({
@@ -40,12 +44,13 @@ export default function RegisterForm() {
       });
     },
     onSuccess: () => {
+      setEmail(getValues("email"));
       reset();
-      toast("Berhasil membuat akun, silahkan login", {
+      toast("Berhasil membuat akun.", {
         variant: "success",
         anchorOrigin: { horizontal: "center", vertical: "top" },
       });
-      router.push("/masuk");
+      router.push("/verifikasi-email");
     },
   });
 

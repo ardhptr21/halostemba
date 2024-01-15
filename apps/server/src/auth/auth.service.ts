@@ -4,19 +4,19 @@ import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcryptjs';
 import { plainToClass } from 'class-transformer';
 import { UserEntity } from '~/commons/entities/user.entity';
-import { AuthRepository } from './auth.repository';
-import { LoginDto } from './dtos/login.dto';
-import { RegisterDto } from './dtos/register.dto';
+import { UserNotFoundException } from '~/core/user/user.exception';
+import { UserRepository } from '~/core/user/user.repository';
 import { MailService } from '~/mail/mail.service';
 import { MagicLinkRepository } from '~/providers/magiclink/magiclink.repository';
 import { OtpRepository } from '~/providers/otp/otp.repository';
-import { VerifyEmailDto } from './dtos/verify-email.dto';
-import { UserRepository } from '~/core/user/user.repository';
-import { UserNotFoundException } from '~/core/user/user.exception';
 import {
   InvalidTokenException,
   UserUnAuthorizedException,
 } from './auth.exception';
+import { AuthRepository } from './auth.repository';
+import { LoginDto } from './dtos/login.dto';
+import { RegisterDto } from './dtos/register.dto';
+import { VerifyEmailDto } from './dtos/verify-email.dto';
 
 @Injectable()
 export class AuthService {
@@ -100,10 +100,12 @@ export class AuthService {
   async forgotPasswordOtp(email: string) {
     const user = await this.userRepository.findUser(email);
 
+    if (!user) throw new UserNotFoundException();
+
     await this.mailService.sendForgotPasswordOtp(user);
 
     return {
-      message: 'OTP telah dikirim. Silahkan cek email anda.',
+      message: 'OTP telah dikirim. Silahkan cek email kamu.',
     };
   }
 
