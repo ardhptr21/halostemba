@@ -1,19 +1,15 @@
 import { Prisma } from '@halostemba/db';
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
-import { DatabaseService } from '~/providers/database/database.service';
+import { Injectable } from '@nestjs/common';
 import { CommentRepository } from './comment.repository';
 import { CreateCommentDto } from './dtos/create-comment.dto';
+import {
+  CommentNotFoundException,
+  CommentServerError,
+} from './comment.exception';
 
 @Injectable()
 export class CommentService {
-  constructor(
-    private readonly commentRepository: CommentRepository,
-    private readonly db: DatabaseService,
-  ) {}
+  constructor(private readonly commentRepository: CommentRepository) {}
 
   async createComment(
     createCommentDto: CreateCommentDto,
@@ -26,25 +22,24 @@ export class CommentService {
       authorId,
     });
 
-    if (!comment)
-      throw new InternalServerErrorException('Failed to create comment.');
+    if (!comment) throw new CommentServerError('Gagal membuat komentar.');
 
-    return { message: 'Comment created.', data: comment };
+    return { message: 'Komentar berhasil dibuat.', data: comment };
   }
 
   async removeComment(commentId: string, userId: string) {
     try {
       await this.commentRepository.removeComment(commentId, userId);
 
-      return { message: 'Comment removed.' };
+      return { message: 'Komentar telah dihapus.' };
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
-          throw new NotFoundException('Comment not found.');
+          throw new CommentNotFoundException();
         }
       }
 
-      throw new InternalServerErrorException('Failed to remove comment.');
+      throw new CommentServerError('Gagal menghapus komentar.');
     }
   }
 }

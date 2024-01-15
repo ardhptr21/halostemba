@@ -1,10 +1,7 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { GetUserParamsDto } from './dtos/get-user-params.dto';
 import { UserRepository } from './user.repository';
+import { UserNotFoundException } from './user.exception';
 
 @Injectable()
 export class UserService {
@@ -28,19 +25,22 @@ export class UserService {
     const user = await this.userRepository.findUserById(id);
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new UserNotFoundException();
     }
 
     if (user.id === userId) {
-      throw new ForbiddenException('You cannot ban yourself');
+      throw new ForbiddenException({
+        error: 'Tidak dapat memblokir akun sendiri.',
+        statusCode: 403,
+      });
     }
 
     if (user.banned) {
       await this.userRepository.unbanUser(id);
-      return { message: 'User has been unbanned' };
+      return { message: 'Blokir telah dicabut' };
     }
 
     await this.userRepository.banUser(id);
-    return { message: 'User has been banned' };
+    return { message: 'User telah diblokir' };
   }
 }

@@ -1,10 +1,5 @@
 import { JwtPayloadEntity } from '@halostemba/entities';
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcryptjs';
 import { plainToClass } from 'class-transformer';
@@ -17,6 +12,11 @@ import { MagicLinkRepository } from '~/providers/magiclink/magiclink.repository'
 import { OtpRepository } from '~/providers/otp/otp.repository';
 import { VerifyEmailDto } from './dtos/verify-email.dto';
 import { UserRepository } from '~/core/user/user.repository';
+import { UserNotFoundException } from '~/core/user/user.exception';
+import {
+  InvalidTokenException,
+  UserUnAuthorizedException,
+} from './auth.exception';
 
 @Injectable()
 export class AuthService {
@@ -31,11 +31,11 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const user = await this.userRepository.findUser(loginDto.username);
-    if (!user) throw new UnauthorizedException('Invalid credentials.');
+    if (!user) throw new UserUnAuthorizedException();
 
     const passwordMatch = await compare(loginDto.password, user.password);
 
-    if (!passwordMatch) throw new UnauthorizedException('Invalid credentials.');
+    if (!passwordMatch) throw new UserUnAuthorizedException();
 
     const payload: JwtPayloadEntity = {
       username: user.username,
@@ -66,38 +66,39 @@ export class AuthService {
   async requestVerifyEmail(email: string) {
     const user = await this.userRepository.findUser(email);
 
-    console.log(user);
-
-    if (!user) throw new NotFoundException('User not found.');
+    if (!user) throw new UserNotFoundException();
 
     if (user.emailVerifiedAt)
-      throw new BadRequestException('Email has already verified.');
+      throw new BadRequestException({
+        error: 'Email telah diverifikasi.',
+        statusCode: 400,
+      });
 
     await this.mailService.sendEmailVerification(user);
 
     return {
-      message: 'Email has already sent. Please check your email.',
+      message: 'Email telah dikirim. Silahkan cek email anda.',
     };
   }
 
   async verifyEmail(verifyEmailDto: VerifyEmailDto) {
     const user = await this.userRepository.findUser(verifyEmailDto.email);
 
-    if (!user) throw new NotFoundException('User not found.');
+    if (!user) throw new UserNotFoundException();
 
     const magicLink = await this.magicLinkRepository.getMagicLink(
       verifyEmailDto.token,
       user.id,
     );
 
-    if (!magicLink) throw new UnauthorizedException('Invalid token.');
+    if (!magicLink) throw new InvalidTokenException();
 
     await this.authRepository.verifyEmail(user.id);
 
     await this.magicLinkRepository.deleteMagicLinkByUserId(user.id);
 
     return {
-      message: 'Email has been verified.',
+      message: 'Email telah diverifikasi.',
     };
   }
 
@@ -107,7 +108,7 @@ export class AuthService {
     await this.mailService.sendForgotPasswordOtp(user);
 
     return {
-      message: 'Email has already sent. Please check your email.',
+      message: 'OTP telah dikirim. Silahkan cek email anda.',
     };
   }
 
@@ -116,7 +117,7 @@ export class AuthService {
 
     const otp = await this.otpRepository.getOtp(token, user.id);
 
-    if (!otp) throw new UnauthorizedException('Invalid token.');
+    if (!otp) throw new InvalidTokenException();
 
     const forgotPasswordToken = this.jwtService.sign(
       {
@@ -130,7 +131,7 @@ export class AuthService {
     );
 
     return {
-      message: 'OTP is valid.',
+      message: 'OTP telah diverifikasi.',
       token: forgotPasswordToken,
     };
   }
@@ -141,7 +142,7 @@ export class AuthService {
 
       const otp = await this.otpRepository.getOtpById(payload.otpId);
 
-      if (!otp) throw new UnauthorizedException('Invalid token.');
+      if (!otp) throw new InvalidTokenException();
 
       const hashPassword = await hash(password, 10);
       password = hashPassword;
@@ -151,10 +152,10 @@ export class AuthService {
       await this.otpRepository.deleteOtpByUserId(payload.sub);
 
       return {
-        message: 'Password has been reset.',
+        message: 'Password telah diubah.',
       };
     } catch (error) {
-      throw new UnauthorizedException('Invalid token.');
+      throw new InvalidTokenException();
     }
   }
 }

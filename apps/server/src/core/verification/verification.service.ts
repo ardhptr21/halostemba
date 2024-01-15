@@ -1,13 +1,13 @@
 import { Role, VerificationStatus } from '@halostemba/db';
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../user/user.repository';
 import { CreateVerificationDto } from './dtos/create-verification.dto';
 import { RejectVerificationDto } from './dtos/reject-verification.dto';
 import { VerificationRepository } from './verification.repository';
+import {
+  VerificationBadRequestException,
+  VerificationNotFoundException,
+} from './verification.exception';
 
 @Injectable()
 export class VerificationService {
@@ -27,7 +27,9 @@ export class VerificationService {
       lastVerification &&
       lastVerification?.status !== VerificationStatus.REJECTED
     )
-      throw new BadRequestException('Verification request is still pending');
+      throw new VerificationBadRequestException(
+        'Permintaan verifikasi sebelumnya masih dalam proses.',
+      );
 
     const verification = await this.verificationRepository.createVerification({
       ...createVerificationDto,
@@ -51,11 +53,13 @@ export class VerificationService {
       );
 
     if (!verification) {
-      throw new NotFoundException('Verification request not found');
+      throw new VerificationNotFoundException();
     }
 
     if (verification.status !== VerificationStatus.PENDING) {
-      throw new BadRequestException('Verification request is not pending');
+      throw new VerificationBadRequestException(
+        'Permintaan verifikasi tidak dalam status pending.',
+      );
     }
 
     await this.verificationRepository.updateStatusVerification(
@@ -66,7 +70,7 @@ export class VerificationService {
     await this.userRepository.updateUserGuestToStudent(userId, verification);
 
     return {
-      message: 'Verification request has been approved',
+      message: 'Permintaan verifikasi telah disetujui.',
     };
   }
 
@@ -80,11 +84,12 @@ export class VerificationService {
         Role.GUEST,
       );
 
-    if (!verification)
-      throw new NotFoundException('Verification request not found');
+    if (!verification) throw new VerificationNotFoundException();
 
     if (verification.status !== VerificationStatus.PENDING)
-      throw new BadRequestException('Verification request is not pending');
+      throw new VerificationBadRequestException(
+        'Permintaan verifikasi tidak dalam status pending.',
+      );
 
     await this.verificationRepository.updateStatusVerification(
       verification.id,
@@ -92,6 +97,6 @@ export class VerificationService {
       rejectVerificationDto.note,
     );
 
-    return { message: 'Verification request has been rejected' };
+    return { message: 'Permintaan verifikasi telah ditolak.' };
   }
 }

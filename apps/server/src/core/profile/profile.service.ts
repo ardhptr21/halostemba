@@ -23,7 +23,7 @@ export class ProfileService {
     }
 
     return {
-      message: 'Profile updated',
+      message: 'Profile telah diperbarui.',
     };
   }
 
@@ -35,16 +35,17 @@ export class ProfileService {
     const passwordMatch = await compare(password, user.password);
 
     if (passwordMatch)
-      throw new BadRequestException(
-        'Password cannot be the same as the old password',
-      );
+      throw new BadRequestException({
+        error: 'Password tidak boleh sama dengan password lama.',
+        statusCode: 400,
+      });
 
     await this.profileRepository.changePassword(user.id, hashPassword);
 
     await this.mailService.sendResetPasswordSuccess(user);
 
     return {
-      message: 'Password changed',
+      message: 'Password telah diubah.',
     };
   }
 
@@ -52,7 +53,7 @@ export class ProfileService {
     await this.profileRepository.changeProfilePicture(userId, avatar);
 
     return {
-      message: 'Profile picture changed',
+      message: 'Avatar telah diubah.',
     };
   }
 }
