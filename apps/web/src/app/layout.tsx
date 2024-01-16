@@ -1,5 +1,6 @@
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
+
 import { Theme } from "@radix-ui/themes";
 import NextTopLoader from "nextjs-toploader";
 import GlobalProvider from "~/components/organisms/GlobalProvider";

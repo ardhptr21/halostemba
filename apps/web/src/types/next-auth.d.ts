@@ -1,5 +1,5 @@
-import _NextAuth from "next-auth";
 import { UserEntity } from "@halostemba/entities";
+import "next-auth";
 
 declare module "next-auth" {
   interface User extends UserEntity {
