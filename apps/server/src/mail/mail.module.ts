@@ -11,26 +11,28 @@ import { OtpModule } from '~/providers/otp/otp.module';
   imports: [
     MagiclinkModule,
     OtpModule,
-    MailerModule.forRoot({
-      transport: {
-        host: process.env.MAIL_HOST,
-        secure: process.env.MAIL_SECURE === 'true',
-        port: Number(process.env.MAIL_PORT || 465),
-        auth: {
-          user: process.env.MAIL_USER,
-          pass: process.env.MAIL_PASS,
+    MailerModule.forRootAsync({
+      useFactory: () => ({
+        transport: {
+          host: process.env.MAIL_HOST,
+          secure: process.env.MAIL_SECURE === 'true',
+          port: Number(process.env.MAIL_PORT || 465),
+          auth: {
+            user: process.env.MAIL_USER,
+            pass: process.env.MAIL_PASS,
+          },
         },
-      },
-      defaults: {
-        from: `"noreply" <${process.env.MAIL_FROM}>`,
-      },
-      template: {
-        dir: join(__dirname, 'templates'),
-        adapter: new HandlebarsAdapter(),
-        options: {
-          strict: true,
+        defaults: {
+          from: `"noreply" <${process.env.MAIL_FROM}>`,
         },
-      },
+        template: {
+          dir: join(__dirname, 'templates'),
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
+        },
+      }),
     }),
   ],
   providers: [MailService],
