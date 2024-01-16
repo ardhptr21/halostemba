@@ -62,7 +62,7 @@ function MenfessCard(
                 <DotsHorizontalIcon />
               </Flex>
               <Flex direction="column" gap="4">
-                <Text size="2" color="gray">
+                <Text size="2" color="gray" className="whitespace-pre-line">
                   {menfess.content}
                 </Text>
 
