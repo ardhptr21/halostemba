@@ -1,5 +1,4 @@
 import {
-  BookmarkIcon,
   ChatBubbleIcon,
   DotsHorizontalIcon,
   TriangleDownIcon,
@@ -10,51 +9,52 @@ import Image from "next/image";
 
 export default function MenfessCard() {
   return (
-    <Card className="w-full">
-      <Flex direction="row" gap="2">
-        <Box>
-          <Image
-            src={"/assets/images/avatar.png"}
-            width={40}
-            height={40}
-            alt="avatar"
-            className="rounded-md"
-          />
-        </Box>
-        <Flex width="100%" direction="column">
-          <Flex width="100%" direction="row" justify="between" align="baseline">
-            <Flex direction="column" pb="4">
-              <Text size="2">John Doe</Text>
-              <Text size="2" color="gray">
-                2 menit yang lalu
-              </Text>
-            </Flex>
-            <DotsHorizontalIcon />
-          </Flex>
-          <Flex direction="column" gap="4">
-            <Text size="2" color="gray">
-              Warning Allert!! Tannssss gilakkk keren banget aksi dari anak
-              argapeta tadi waktu upacara. Mereka rapling dari tower yang tinggi
-              buangettt itu lohh 🤯🔥🔥
-            </Text>
-            <Flex align="center" justify="center">
+    <Box>
+      <Card asChild className="w-full">
+        <article>
+          <Flex direction="row" gap="2">
+            <Box>
               <Image
-                src={"/assets/images/menfess.png"}
-                width={700}
-                height={500}
+                src={"/assets/images/avatar.png"}
+                width={40}
+                height={40}
                 alt="avatar"
                 className="rounded-md"
               />
-            </Flex>
-            <Flex>
+            </Box>
+            <Flex width="100%" direction="column">
               <Flex
                 width="100%"
                 direction="row"
-                align="center"
                 justify="between"
+                align="baseline"
               >
-                <Flex align="center" gap="2">
-                  <Flex align="center" asChild gap="1">
+                <Flex direction="column" pb="4">
+                  <Text size="2">John Doe</Text>
+                  <Text size="2" color="gray">
+                    2 menit yang lalu
+                  </Text>
+                </Flex>
+                <DotsHorizontalIcon />
+              </Flex>
+              <Flex direction="column" gap="4">
+                <Text size="2" color="gray">
+                  Warning Allert!! Tannssss gilakkk keren banget aksi dari anak
+                  argapeta tadi waktu upacara. Mereka rapling dari tower yang
+                  tinggi buangettt itu lohh 🤯🔥🔥
+                </Text>
+                <Flex align="center" justify="center">
+                  <Image
+                    src={"/assets/images/menfess.png"}
+                    width={700}
+                    height={500}
+                    alt="avatar"
+                    className="rounded-md"
+                  />
+                </Flex>
+
+                <Flex align="center" gap="3">
+                  <Flex align="center" asChild gap="2">
                     <Text as="p" color="gray">
                       <ChatBubbleIcon cursor="pointer" />
                       <Text size="2">4 Replies</Text>
@@ -64,18 +64,15 @@ export default function MenfessCard() {
                     <Text as="p" color="gray">
                       <TriangleUpIcon className="text-slate-400" />
                       <Text size="2">1.5 K</Text>
+                      <TriangleDownIcon />
                     </Text>
-                  </Flex>
-                  <Flex align="center" gap="1">
-                    <TriangleDownIcon />
                   </Flex>
                 </Flex>
               </Flex>
-              <BookmarkIcon />
             </Flex>
           </Flex>
-        </Flex>
-      </Flex>
-    </Card>
+        </article>
+      </Card>
+    </Box>
   );
 }
