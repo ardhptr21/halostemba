@@ -1,45 +1,23 @@
-import {
-  Button,
-  CalloutRoot,
-  CalloutText,
-  Flex,
-  Heading,
-  Text,
-} from "@radix-ui/themes";
-import { Session } from "next-auth";
-import Link from "next/link";
-import withAuthRequired from "~/guards/auth/withAuthRequired";
+import { Flex } from "@radix-ui/themes";
+import MainLayout from "~/components/layouts/MainLayout";
+import CalloutAction from "~/components/molecules/common/CalloutAction";
+import MenfessCard from "~/components/molecules/menfess/MenfessCard";
+import MenfessCreate from "~/components/molecules/menfess/MenfessCreate";
 
-interface Props {
-  session: Session;
-}
-
-function Home({ session }: Props) {
+function Home() {
   return (
-    <main className="h-screen">
-      <Flex
-        height="100%"
-        align="center"
-        justify="center"
-        direction="column"
-        gap="5"
-      >
-        <Heading weight="regular">
-          Halo, <Text weight="bold">{session.user.name}</Text> 👋
-        </Heading>
-        {!!!session.user.emailVerifiedAt ? (
-          <Flex align="center" direction="column" gap="3">
-            <CalloutRoot color="red">
-              <CalloutText>Email belum terverifikasi.</CalloutText>
-            </CalloutRoot>
-            <Button asChild size="3" variant="ghost">
-              <Link href="/verifikasi-email">Verifikasi Sekarang</Link>
-            </Button>
-          </Flex>
-        ) : null}
+    <MainLayout>
+      <Flex direction="column" gap="4">
+        <CalloutAction />
+        <MenfessCreate />
+
+        <MenfessCard />
+        <MenfessCard />
+        <MenfessCard />
+        <MenfessCard />
       </Flex>
-    </main>
+    </MainLayout>
   );
 }
 
-export default withAuthRequired(Home);
+export default Home;
