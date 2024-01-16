@@ -13,7 +13,6 @@ export default function MenfessCreate() {
   const [showMustVerified, setShowMustVerified] = useState(false);
 
   const handleClick = () => {
-    console.log(session?.user);
     if (session?.user.role === "GUEST") {
       setShowMustVerified(true);
     }

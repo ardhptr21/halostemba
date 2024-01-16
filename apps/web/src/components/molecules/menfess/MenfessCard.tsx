@@ -1,4 +1,5 @@
 "use client";
+import { MenfessEntity } from "@halostemba/entities";
 import {
   ChatBubbleIcon,
   DotsHorizontalIcon,
@@ -8,22 +9,29 @@ import {
 import { Box, Card, Flex, Text } from "@radix-ui/themes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { ForwardedRef, forwardRef } from "react";
 
-interface Props {
-  pageDetail?: boolean;
+interface MenfessCardProps {
+  redirect?: boolean;
+  menfess: MenfessEntity;
 }
 
-export default function MenfessCard({ pageDetail }: Props) {
+function MenfessCard(
+  { redirect, menfess }: MenfessCardProps,
+  ref: ForwardedRef<HTMLDivElement>,
+) {
   const router = useRouter();
 
+  const handleRedirect = () => {
+    if (!redirect) return;
+
+    router.push(`/menfess/${menfess.id}`);
+  };
+
   return (
-    <Box>
-      <Card
-        asChild
-        className="w-full"
-        onClick={() => (!pageDetail ? router.push("/menfess/1") : null)}
-      >
-        <article className={!pageDetail ? "cursor-pointer" : ""}>
+    <Box ref={ref}>
+      <Card asChild className="w-full" onClick={handleRedirect}>
+        <article className={redirect ? "cursor-pointer" : ""}>
           <Flex direction="row" gap="2">
             <Box>
               <Image
@@ -42,7 +50,9 @@ export default function MenfessCard({ pageDetail }: Props) {
                 align="baseline"
               >
                 <Flex direction="column" pb="4">
-                  <Text size="2">John Doe</Text>
+                  <Text size="2">
+                    {menfess.anonymous ? "Anonymous" : menfess.author?.username}
+                  </Text>
                   <Text size="2" color="gray">
                     2 menit yang lalu
                   </Text>
@@ -51,19 +61,8 @@ export default function MenfessCard({ pageDetail }: Props) {
               </Flex>
               <Flex direction="column" gap="4">
                 <Text size="2" color="gray">
-                  Warning Allert!! Tannssss gilakkk keren banget aksi dari anak
-                  argapeta tadi waktu upacara. Mereka rapling dari tower yang
-                  tinggi buangettt itu lohh 🤯🔥🔥
+                  {menfess.content}
                 </Text>
-                <Flex align="center" justify="center">
-                  <Image
-                    src={"/assets/images/menfess.png"}
-                    width={700}
-                    height={500}
-                    alt="avatar"
-                    className="rounded-md"
-                  />
-                </Flex>
 
                 <Flex align="center" gap="3">
                   <Flex align="center" asChild gap="2">
@@ -75,7 +74,7 @@ export default function MenfessCard({ pageDetail }: Props) {
                   <Flex align="center" gap="1" asChild>
                     <Text as="p" color="gray">
                       <TriangleUpIcon className="text-slate-400" />
-                      <Text size="2">1.5 K</Text>
+                      <Text size="2">{menfess.score}</Text>
                       <TriangleDownIcon />
                     </Text>
                   </Flex>
@@ -88,3 +87,5 @@ export default function MenfessCard({ pageDetail }: Props) {
     </Box>
   );
 }
+
+export default forwardRef(MenfessCard);
