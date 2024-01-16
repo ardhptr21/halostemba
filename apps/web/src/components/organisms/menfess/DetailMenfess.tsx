@@ -21,7 +21,7 @@ export default function DetailMenfess({ id }: Props) {
       ) : (
         <MenfessCardSkeleton />
       )}
-      <CommentCreate />
+      <CommentCreate menfessId={id} />
       {isPending
         ? Array.from({ length: 3 }).map((_, i) => (
             <CommentCardSkeleton key={i} />
