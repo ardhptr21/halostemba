@@ -1,3 +1,4 @@
+"use client";
 import {
   ChatBubbleIcon,
   DotsHorizontalIcon,
@@ -6,12 +7,23 @@ import {
 } from "@radix-ui/react-icons";
 import { Box, Card, Flex, Text } from "@radix-ui/themes";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-export default function MenfessCard() {
+interface Props {
+  pageDetail?: boolean;
+}
+
+export default function MenfessCard({ pageDetail }: Props) {
+  const router = useRouter();
+
   return (
     <Box>
-      <Card asChild className="w-full">
-        <article>
+      <Card
+        asChild
+        className="w-full"
+        onClick={() => (!pageDetail ? router.push("/menfess/1") : null)}
+      >
+        <article className={!pageDetail ? "cursor-pointer" : ""}>
           <Flex direction="row" gap="2">
             <Box>
               <Image
