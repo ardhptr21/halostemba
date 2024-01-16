@@ -8,7 +8,10 @@ import MenfessCard from "~/components/molecules/menfess/MenfessCard";
 import MenfessCardSkeleton from "~/components/molecules/menfess/skeletons/MenfessCardSkeleton";
 
 export default function ListMenfess() {
-  const { ref, inView } = useInView({});
+  const { ref, inView } = useInView({
+    threshold: 0.5,
+    delay: 500,
+  });
 
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useGetListMenfessInfiniteApi();

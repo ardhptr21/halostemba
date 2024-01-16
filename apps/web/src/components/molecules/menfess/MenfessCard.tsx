@@ -29,7 +29,7 @@ function MenfessCard(
   };
 
   return (
-    <Box ref={ref}>
+    <Box ref={ref} width="100%">
       <Card asChild className="w-full" onClick={handleRedirect}>
         <article className={redirect ? "cursor-pointer" : ""}>
           <Flex direction="row" gap="2">
@@ -51,7 +51,9 @@ function MenfessCard(
               >
                 <Flex direction="column" pb="4">
                   <Text size="2">
-                    {menfess.anonymous ? "Anonymous" : menfess.author?.username}
+                    {menfess.anonymous
+                      ? "Anonymous"
+                      : "@" + menfess.author?.username}
                   </Text>
                   <Text size="2" color="gray">
                     2 menit yang lalu

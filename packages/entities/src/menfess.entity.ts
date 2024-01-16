@@ -1,3 +1,5 @@
+import { CommentEntity } from "comment.entity";
+
 export class MenfessEntity {
   id: string;
   content: string;
@@ -10,4 +12,8 @@ export class MenfessEntity {
     avatar: string;
   } | null;
   voted: boolean | null;
+}
+
+export class MenfessWithCommentEntity extends MenfessEntity {
+  comments: CommentEntity[];
 }

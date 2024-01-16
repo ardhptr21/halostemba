@@ -1,9 +1,13 @@
+import { CommentEntity } from "@halostemba/entities";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Box, Card, Flex, Text } from "@radix-ui/themes";
 import Image from "next/image";
 import React from "react";
 
-export default function CommentCard() {
+interface CommentCardProps {
+  comment: CommentEntity;
+}
+export default function CommentCard({ comment }: CommentCardProps) {
   return (
     <Box>
       <Card asChild className="w-full">
@@ -26,13 +30,13 @@ export default function CommentCard() {
                 align="baseline"
               >
                 <Flex direction="column" pb="4">
-                  <Text size="2">Alex Goodman</Text>
+                  <Text size="2">@{comment.author.username}</Text>
                   <Text size="2" color="gray">
                     2 menit yang lalu
                   </Text>
                   <Box pt="4">
                     <Text size="2" color="gray">
-                      Mantap!! keren banget emang mereka🔥
+                      {comment.content}
                     </Text>
                   </Box>
                 </Flex>
