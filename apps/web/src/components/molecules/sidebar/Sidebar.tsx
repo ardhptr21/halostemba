@@ -61,9 +61,9 @@ export default function Sidebar() {
           <Image
             src="/assets/images/logo.png"
             alt="Logo"
-            width={180}
-            height={180}
-            className="mb-12"
+            width={315}
+            height={63}
+            className="mb-12 w-48"
           />
           <Flex direction="column">
             <Flex direction="column" gap="7">
