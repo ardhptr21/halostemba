@@ -112,11 +112,15 @@ export class MenfessService {
 
   private serializeMenfess(data: any | any[], user: UserEntity) {
     const serializeAuthor = (menfess: any) =>
-      menfess.anonymous ? (menfess.author = null) : menfess;
+      menfess.anonymous ? { ...menfess, author: null } : menfess;
     const serializeVotes = (menfess: any) => {
       const vote = menfess.votes.find((vote: Vote) => vote.userId === user.id);
       delete menfess.votes;
-      return { ...menfess, voted: vote ? vote.type : null };
+      return {
+        ...menfess,
+        voted: vote ? vote.type : null,
+        author: menfess.anonymous ? null : menfess.author,
+      };
     };
 
     if (!Array.isArray(data)) {
