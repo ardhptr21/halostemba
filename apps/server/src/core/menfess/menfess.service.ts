@@ -116,11 +116,7 @@ export class MenfessService {
     const serializeVotes = (menfess: any) => {
       const vote = menfess.votes.find((vote: Vote) => vote.userId === user.id);
       delete menfess.votes;
-      return {
-        ...menfess,
-        voted: vote ? vote.type : null,
-        author: menfess.anonymous ? null : menfess.author,
-      };
+      return { ...menfess, voted: vote ? vote.type : null };
     };
 
     if (!Array.isArray(data)) {

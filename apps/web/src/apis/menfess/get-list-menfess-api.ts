@@ -21,13 +21,18 @@ interface GetListMenfessApiParams {
 }
 
 export const getListMenfessApiHandler = async (
+  token?: string | null,
   params?: GetListMenfessApiParams,
 ): Promise<GetListMenfessApiResponse> => {
-  const { data } = await http.get("/menfess", { params });
+  const { data } = await http.get("/menfess", {
+    params,
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
   return data;
 };
 
 export const useGetListMenfessApi = (
+  token?: string | null,
   params?: GetListMenfessApiParams,
   options?: UseQueryOptions<
     GetListMenfessApiResponse,
@@ -36,12 +41,13 @@ export const useGetListMenfessApi = (
 ) => {
   return useQuery({
     queryKey: ["list-menfess", params],
-    queryFn: () => getListMenfessApiHandler(params),
+    queryFn: () => getListMenfessApiHandler(token, params),
     ...options,
   });
 };
 
 export const useGetListMenfessInfiniteApi = (
+  token?: string | null,
   params?: GetListMenfessApiParams,
   options?: UseInfiniteQueryOptions<
     GetListMenfessApiResponse,
@@ -52,7 +58,7 @@ export const useGetListMenfessInfiniteApi = (
   return useInfiniteQuery({
     queryKey: ["list-menfess", params],
     queryFn: ({ pageParam }) =>
-      getListMenfessApiHandler({ ...params, page: pageParam as number }),
+      getListMenfessApiHandler(token, { ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (current) => {
       return current.meta.next;

@@ -7,7 +7,15 @@ import {
   TriangleDownIcon,
   TriangleUpIcon,
 } from "@radix-ui/react-icons";
-import { Box, Button, Card, Flex, Popover, Text } from "@radix-ui/themes";
+import {
+  Box,
+  Button,
+  Card,
+  Flex,
+  IconButton,
+  Popover,
+  Text,
+} from "@radix-ui/themes";
 import Image from "next/image";
 import Link from "next/link";
 import { ForwardedRef, forwardRef, useState } from "react";
@@ -85,9 +93,21 @@ function MenfessCard(
                     </Flex>
                     <Flex align="center" gap="1" asChild>
                       <Text as="p" color="gray">
-                        <TriangleUpIcon className="text-slate-400" />
-                        <Text size="2">{menfess.score}</Text>
-                        <TriangleDownIcon />
+                        <Button
+                          size={"1"}
+                          variant="soft"
+                          color={menfess.voted === "UP" ? "iris" : "gray"}
+                        >
+                          <TriangleUpIcon width={20} height={20} />
+                          <Text size="2">{menfess.score}</Text>
+                        </Button>
+                        <IconButton
+                          size={"1"}
+                          variant="soft"
+                          color={menfess.voted === "DOWN" ? "iris" : "gray"}
+                        >
+                          <TriangleDownIcon width={20} height={20} />
+                        </IconButton>
                       </Text>
                     </Flex>
                   </Flex>

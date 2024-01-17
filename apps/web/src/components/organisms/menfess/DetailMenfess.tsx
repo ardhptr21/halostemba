@@ -1,5 +1,6 @@
 "use client";
 import { Flex } from "@radix-ui/themes";
+import { Session } from "next-auth";
 import { useDetailMenfessApi } from "~/apis/menfess/get-detail-menfess-api";
 import MenfessCard from "~/components/molecules/menfess/MenfessCard";
 import CommentCard from "~/components/molecules/menfess/comment/CommentCard";
@@ -9,10 +10,11 @@ import MenfessCardSkeleton from "~/components/molecules/menfess/skeletons/Menfes
 
 interface Props {
   id: string;
+  session?: Session | null;
 }
 
-export default function DetailMenfess({ id }: Props) {
-  const { data, isPending } = useDetailMenfessApi(id);
+export default function DetailMenfess({ id, session }: Props) {
+  const { data, isPending } = useDetailMenfessApi(id, session?.token);
 
   return (
     <Flex width="100%" direction="column" gap="4">

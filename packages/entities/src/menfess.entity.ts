@@ -15,7 +15,7 @@ export class MenfessEntity {
   _count: {
     comments: number;
   };
-  voted: boolean | null;
+  voted: "UP" | "DOWN" | null;
 }
 
 export class MenfessWithCommentEntity extends MenfessEntity {

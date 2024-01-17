@@ -4,18 +4,21 @@ import MainLayout from "~/components/layouts/MainLayout";
 import CalloutAction from "~/components/molecules/common/CalloutAction";
 import MenfessCreate from "~/components/molecules/menfess/MenfessCreate";
 import ListMenfess from "~/components/organisms/menfess/ListMenfess";
+import { getAuthServer } from "~/lib/auth";
 
 export const metadata: Metadata = {
   title: "halostemba",
 };
 
-function Home() {
+async function Home() {
+  const session = await getAuthServer();
+
   return (
     <MainLayout>
       <Flex direction="column" gap="4">
         <CalloutAction />
         <MenfessCreate />
-        <ListMenfess />
+        <ListMenfess session={session} />
       </Flex>
     </MainLayout>
   );

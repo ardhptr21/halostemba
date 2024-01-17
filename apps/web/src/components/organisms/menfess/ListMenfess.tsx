@@ -1,20 +1,25 @@
 "use client";
 
 import { Flex } from "@radix-ui/themes";
+import { Session } from "next-auth";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useGetListMenfessInfiniteApi } from "~/apis/menfess/get-list-menfess-api";
 import MenfessCard from "~/components/molecules/menfess/MenfessCard";
 import MenfessCardSkeleton from "~/components/molecules/menfess/skeletons/MenfessCardSkeleton";
 
-export default function ListMenfess() {
+interface Props {
+  session?: Session | null;
+}
+
+export default function ListMenfess({ session }: Props) {
   const { ref, inView } = useInView({
     threshold: 0.5,
     delay: 500,
   });
 
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useGetListMenfessInfiniteApi();
+    useGetListMenfessInfiniteApi(session?.token as string);
 
   useEffect(() => {
     if (inView && hasNextPage) fetchNextPage();
