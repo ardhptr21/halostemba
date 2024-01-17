@@ -12,6 +12,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { ForwardedRef, forwardRef, useState } from "react";
 import DeleteMenfessModal from "~/components/atoms/modals/DeleteMenfessModal";
+import { formatDistanceToNowStrict } from "date-fns";
+import { id } from "date-fns/locale";
+import { useSession } from "next-auth/react";
 
 interface MenfessCardProps {
   redirect?: boolean;
@@ -22,6 +25,7 @@ function MenfessCard(
   { redirect, menfess }: MenfessCardProps,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
+  const { data: session } = useSession();
   const Wrapper = redirect ? Link : "div";
 
   return (
@@ -51,12 +55,17 @@ function MenfessCard(
                       ? "Anonymous"
                       : "@" + menfess.author?.username}
                   </Text>
-                  <Text size="2" color="gray">
-                    2 menit yang lalu
+                  <Text size="1" color="gray">
+                    {formatDistanceToNowStrict(new Date(menfess.createdAt), {
+                      locale: id,
+                      addSuffix: true,
+                    })}
                   </Text>
                 </Flex>
 
-                <MenfessCardPopOver menfessId={menfess.id} />
+                {session?.user.id === menfess.authorId && (
+                  <MenfessCardPopOver menfessId={menfess.id} />
+                )}
               </Flex>
               <Wrapper
                 href={`/menfess/${menfess.id}`}
@@ -71,7 +80,7 @@ function MenfessCard(
                     <Flex align="center" asChild gap="2">
                       <Text as="p" color="gray">
                         <ChatBubbleIcon cursor="pointer" />
-                        <Text size="2">4 Replies</Text>
+                        <Text size="2">{menfess._count.comments} Komentar</Text>
                       </Text>
                     </Flex>
                     <Flex align="center" gap="1" asChild>

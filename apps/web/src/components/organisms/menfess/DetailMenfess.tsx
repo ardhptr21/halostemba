@@ -27,7 +27,7 @@ export default function DetailMenfess({ id }: Props) {
             <CommentCardSkeleton key={i} />
           ))
         : data?.comments.map((comment) => (
-            <CommentCard key={comment.id} comment={comment} />
+            <CommentCard key={comment.id} comment={comment} menfessId={id} />
           ))}
     </Flex>
   );
