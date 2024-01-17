@@ -74,7 +74,7 @@ export class MenfessRepository {
         anonymous: true,
         createdAt: true,
         score: true,
-        author: { select: { name: true, username: true } },
+        author: { select: { name: true, username: true, avatar: true } },
         ...(hasUser && { votes: { select: { userId: true, type: true } } }),
         comments: {
           select: {

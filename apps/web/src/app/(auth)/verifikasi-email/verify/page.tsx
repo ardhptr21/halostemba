@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { verifyEmailApiHandler } from "~/apis/auth/verify-email-api";
-import withAuthRequired from "~/guards/auth/withAuthRequired";
 
 interface Props {
   session: Session;
@@ -95,4 +94,4 @@ async function VerifyEmail({ searchParams: { token } }: Props) {
   );
 }
 
-export default withAuthRequired(VerifyEmail, { emailVerified: false });
+export default VerifyEmail;
