@@ -1,10 +1,11 @@
-import { NestFactory, Reflector } from '@nestjs/core';
-import { AppModule } from './app.module';
 import {
   BadRequestException,
   ClassSerializerInterceptor,
   ValidationPipe,
 } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
+import { AppModule } from './app.module';
+import parseErrorUtil from './commons/utils/parseErrorUtil';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,15 +17,8 @@ async function bootstrap() {
       whitelist: true,
       stopAtFirstError: true,
       exceptionFactory: (errors) => {
-        const result = errors.reduce(
-          (acc, curr) => ({
-            ...acc,
-            [curr.property]: curr.constraints[Object.keys(curr.constraints)[0]],
-          }),
-          {},
-        );
         return new BadRequestException({
-          errors: result,
+          errors: parseErrorUtil(errors),
           statusCode: 400,
         });
       },

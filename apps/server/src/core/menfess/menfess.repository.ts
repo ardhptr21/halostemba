@@ -2,6 +2,7 @@ import { Prisma } from '@halostemba/db';
 import { Injectable } from '@nestjs/common';
 import { paginator } from '~/providers/database/database.paginator';
 import { DatabaseService } from '~/providers/database/database.service';
+import { MediaDto } from '../media/dtos/media.dto';
 import { CreateMenfessDto } from './dtos/create-menfess.dto';
 import { ListMenfessParamsDto } from './dtos/list-menfess-params.dto';
 
@@ -49,9 +50,10 @@ export class MenfessRepository {
     data: CreateMenfessDto & {
       userId: string;
       hashtags: string[];
+      media?: MediaDto[];
     },
   ) {
-    const { userId, hashtags, ...menfess } = data;
+    const { userId, hashtags, media, ...menfess } = data;
     return await this.db.menfess.create({
       data: {
         ...menfess,
@@ -62,6 +64,7 @@ export class MenfessRepository {
             create: { name: hashtag },
           })),
         },
+        medias: { create: media },
       },
       select: { id: true, content: true, anonymous: true },
     });
