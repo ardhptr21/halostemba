@@ -49,10 +49,12 @@ export const useGetListMenfessApi = (
 export const useGetListMenfessInfiniteApi = (
   token?: string | null,
   params?: GetListMenfessApiParams,
-  options?: UseInfiniteQueryOptions<
-    GetListMenfessApiResponse,
-    AxiosError<any>,
-    InfiniteData<WithMetaResponseType<MenfessEntity[]>>
+  options?: Partial<
+    UseInfiniteQueryOptions<
+      GetListMenfessApiResponse,
+      AxiosError<any>,
+      InfiniteData<WithMetaResponseType<MenfessEntity[]>>
+    >
   >,
 ) => {
   return useInfiniteQuery({
