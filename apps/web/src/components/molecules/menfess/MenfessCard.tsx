@@ -6,14 +6,14 @@ import {
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { Box, Button, Card, Flex, Popover, Text } from "@radix-ui/themes";
-import Image from "next/image";
-import Link from "next/link";
-import { ForwardedRef, forwardRef, useState } from "react";
-import DeleteMenfessModal from "~/components/atoms/modals/DeleteMenfessModal";
 import { formatDistanceToNowStrict } from "date-fns";
 import { id } from "date-fns/locale";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { ForwardedRef, forwardRef, useState } from "react";
 import VoteMenfessButton from "~/components/atoms/menfess/VoteMenfessButton";
+import DeleteMenfessModal from "~/components/atoms/modals/DeleteMenfessModal";
 
 interface MenfessCardProps {
   redirect?: boolean;

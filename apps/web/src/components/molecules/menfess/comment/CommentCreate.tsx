@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FaceIcon, ImageIcon } from "@radix-ui/react-icons";
 import { Box, Button, Card, Flex, Text } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -88,7 +87,7 @@ export default function CommentCreate({ menfessId }: { menfessId: string }) {
                   disabled={isPending}
                   maxRows={12}
                   className="rt-TextAreaInput"
-                  placeholder="Apa yang sedang terjadi !?"
+                  placeholder="Kirimkan komentarmu..."
                   style={{ width: "100%" }}
                   {...register("content")}
                 />
@@ -99,20 +98,13 @@ export default function CommentCreate({ menfessId }: { menfessId: string }) {
               </Text>
             </Flex>
           </Flex>
-          <Flex direction="row" pt="3" pl="8" justify="between">
-            <Flex direction="row" gap="2" className="mt-2">
-              <ImageIcon
-                width={15}
-                height={"100%"}
-                style={{ color: "#99A2FF" }}
-              />
-              <FaceIcon
-                width={15}
-                height={"100%"}
-                style={{ color: "#99A2FF" }}
-              />
-            </Flex>
-            <Button disabled={isPending} size="2" onClick={handleClick}>
+          <Flex direction="row" pt="3" pl="8" justify="end">
+            <Button
+              disabled={isPending}
+              size="2"
+              onClick={handleClick}
+              style={{ cursor: "pointer" }}
+            >
               Kirim
             </Button>
           </Flex>

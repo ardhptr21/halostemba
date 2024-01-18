@@ -138,7 +138,14 @@ export default function MenfessCreate() {
                 </Text>
               </Tooltip>
             </Flex>
-            <Button size="2" onClick={handleClick} disabled={isPending}>
+            <Button
+              size="2"
+              onClick={handleClick}
+              disabled={isPending}
+              style={{
+                cursor: "pointer",
+              }}
+            >
               Posting
             </Button>
           </Flex>

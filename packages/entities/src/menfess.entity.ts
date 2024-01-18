@@ -1,4 +1,4 @@
-import { CommentEntity } from "comment.entity";
+import { CommentEntity } from 'comment.entity';
 
 export class MenfessEntity {
   id: string;
@@ -15,7 +15,7 @@ export class MenfessEntity {
   _count: {
     comments: number;
   };
-  voted: "UP" | "DOWN" | null;
+  voted: 'UP' | 'DOWN' | null;
 }
 
 export class MenfessWithCommentEntity extends MenfessEntity {
