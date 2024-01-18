@@ -44,7 +44,7 @@ model Student {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  user  User  @relation(fields: [userId], references: [id])
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   major Major @relation(fields: [majorId], references: [id])
 
   @@map("students")
@@ -88,7 +88,7 @@ model Menfess {
   score     Int      @default(0)
   createdAt DateTime @default(now()) @map("created_at")
 
-  author   User      @relation(fields: [authorId], references: [id])
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   votes    Vote[]
   comments Comment[]
   hashtags Hashtag[]
@@ -103,8 +103,8 @@ model Comment {
   content   String   @db.Text()
   createdAt DateTime @default(now()) @map("created_at")
 
-  author  User    @relation(fields: [authorId], references: [id])
-  menfess Menfess @relation(fields: [menfessId], references: [id])
+  author  User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  menfess Menfess @relation(fields: [menfessId], references: [id], onDelete: Cascade)
 
   @@map("comments")
 }
@@ -143,8 +143,8 @@ model Ticket {
   closedAt    DateTime?
 
   ticketReplies TicketReply[]
-  reporter      User          @relation("reporter", fields: [reporterId], references: [id])
-  responder     User?         @relation("responder", fields: [responderId], references: [id])
+  reporter      User          @relation("reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  responder     User?         @relation("responder", fields: [responderId], references: [id], onDelete: Cascade)
 
   @@map("tickets")
 }
@@ -156,8 +156,8 @@ model TicketReply {
   message   String   @db.Text()
   createdAt DateTime @default(now()) @map("created_at")
 
-  ticket Ticket @relation(fields: [ticketId], references: [id])
-  author User   @relation(fields: [authorId], references: [id])
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   @@map("ticket_replies")
 }
