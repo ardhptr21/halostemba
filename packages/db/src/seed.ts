@@ -6,7 +6,7 @@ async function main() {
   const client = new PrismaClient();
 
   await UserSeeder(client);
-  await MenfessSeeder(client, 10);
+  await MenfessSeeder(client, 20);
 
   await client.$disconnect();
 }

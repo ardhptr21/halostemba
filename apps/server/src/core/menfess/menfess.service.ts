@@ -81,8 +81,6 @@ export class MenfessService {
         if (error.code === 'P2025') throw new MenfessNotFoundException();
       }
 
-      console.log(error);
-
       throw new MenfessServerError('Gagal menghapus menfess.');
     }
   }

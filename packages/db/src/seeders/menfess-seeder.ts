@@ -17,6 +17,9 @@ export async function MenfessSeeder(client: PrismaClient, count: number = 5) {
       }),
       anonymous: faker.datatype.boolean(),
       authorId: faker.helpers.arrayElement(users).id,
+      createdAt: faker.date.recent({
+        days: faker.number.int({ min: 1, max: 30 }),
+      }),
     });
   }
 

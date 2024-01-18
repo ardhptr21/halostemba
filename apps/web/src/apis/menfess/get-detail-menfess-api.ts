@@ -19,7 +19,7 @@ export const getDetailMenfessApiHandler = async (
 export const useDetailMenfessApi = (
   id: string,
   token?: string | null,
-  options?: UseQueryOptions<GetDetailMenfessApiResponse, AxiosError>,
+  options?: Partial<UseQueryOptions<GetDetailMenfessApiResponse, AxiosError>>,
 ) => {
   return useQuery({
     queryKey: ["detail-menfess", id],
