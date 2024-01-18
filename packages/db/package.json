@@ -10,9 +10,18 @@
     "db:migrate": "prisma migrate deploy",
     "db:generate": "prisma generate"
   },
+  "prisma": {
+    "seed": "ts-node src/seed.ts"
+  },
+  "compilerOptions": {
+    "module": "ESNext",
+    "esModuleInterop": true
+  },
   "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
     "prisma": "^5.7.1",
     "rimraf": "^5.0.5",
+    "ts-node": "^10.9.1",
     "typescript": "^5.3.3"
   },
   "dependencies": {

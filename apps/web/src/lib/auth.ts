@@ -58,6 +58,7 @@ export const authOptions: AuthOptions = {
   },
   pages: {
     signIn: "/masuk",
+    signOut: "/masuk",
   },
 };
 

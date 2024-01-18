@@ -1,20 +1,24 @@
 import { Flex } from "@radix-ui/themes";
+import { Metadata } from "next";
 import MainLayout from "~/components/layouts/MainLayout";
 import CalloutAction from "~/components/molecules/common/CalloutAction";
-import MenfessCard from "~/components/molecules/menfess/MenfessCard";
 import MenfessCreate from "~/components/molecules/menfess/MenfessCreate";
+import ListMenfess from "~/components/organisms/menfess/ListMenfess";
+import { getAuthServer } from "~/lib/auth";
 
-function Home() {
+export const metadata: Metadata = {
+  title: "halostemba",
+};
+
+async function Home() {
+  const session = await getAuthServer();
+
   return (
     <MainLayout>
       <Flex direction="column" gap="4">
         <CalloutAction />
         <MenfessCreate />
-
-        <MenfessCard />
-        <MenfessCard />
-        <MenfessCard />
-        <MenfessCard />
+        <ListMenfess session={session} />
       </Flex>
     </MainLayout>
   );

@@ -1,29 +1,36 @@
 "use client";
+import { MenfessEntity } from "@halostemba/entities";
 import {
   ChatBubbleIcon,
   DotsHorizontalIcon,
-  TriangleDownIcon,
-  TriangleUpIcon,
+  TrashIcon,
 } from "@radix-ui/react-icons";
-import { Box, Card, Flex, Text } from "@radix-ui/themes";
+import { Box, Button, Card, Flex, Popover, Text } from "@radix-ui/themes";
+import { formatDistanceToNowStrict } from "date-fns";
+import { id } from "date-fns/locale";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { ForwardedRef, forwardRef, useState } from "react";
+import VoteMenfessButton from "~/components/atoms/menfess/VoteMenfessButton";
+import DeleteMenfessModal from "~/components/atoms/modals/DeleteMenfessModal";
 
-interface Props {
-  pageDetail?: boolean;
+interface MenfessCardProps {
+  redirect?: boolean;
+  menfess: MenfessEntity;
 }
 
-export default function MenfessCard({ pageDetail }: Props) {
-  const router = useRouter();
+function MenfessCard(
+  { redirect, menfess }: MenfessCardProps,
+  ref: ForwardedRef<HTMLDivElement>,
+) {
+  const { data: session } = useSession();
+  const Wrapper = redirect ? Link : "div";
 
   return (
-    <Box>
-      <Card
-        asChild
-        className="w-full"
-        onClick={() => (!pageDetail ? router.push("/menfess/1") : null)}
-      >
-        <article className={!pageDetail ? "cursor-pointer" : ""}>
+    <Box ref={ref} width="100%">
+      <Card asChild className="w-full">
+        <article>
           <Flex direction="row" gap="2">
             <Box>
               <Image
@@ -42,43 +49,40 @@ export default function MenfessCard({ pageDetail }: Props) {
                 align="baseline"
               >
                 <Flex direction="column" pb="4">
-                  <Text size="2">John Doe</Text>
-                  <Text size="2" color="gray">
-                    2 menit yang lalu
+                  <Text size="2">
+                    {menfess.anonymous
+                      ? "Anonymous"
+                      : "@" + menfess.author?.username}
+                  </Text>
+                  <Text size="1" color="gray">
+                    {formatDistanceToNowStrict(new Date(menfess.createdAt), {
+                      locale: id,
+                      addSuffix: true,
+                    })}
                   </Text>
                 </Flex>
-                <DotsHorizontalIcon />
+
+                {session?.user.id === menfess.authorId && (
+                  <MenfessCardPopOver menfessId={menfess.id} />
+                )}
               </Flex>
               <Flex direction="column" gap="4">
-                <Text size="2" color="gray">
-                  Warning Allert!! Tannssss gilakkk keren banget aksi dari anak
-                  argapeta tadi waktu upacara. Mereka rapling dari tower yang
-                  tinggi buangettt itu lohh 🤯🔥🔥
-                </Text>
-                <Flex align="center" justify="center">
-                  <Image
-                    src={"/assets/images/menfess.png"}
-                    width={700}
-                    height={500}
-                    alt="avatar"
-                    className="rounded-md"
-                  />
-                </Flex>
-
+                <Wrapper
+                  href={`/menfess/${menfess.id}`}
+                  className={redirect ? "cursor-pointer" : ""}
+                >
+                  <Text size="2" color="gray" className="whitespace-pre-line">
+                    {menfess.content}
+                  </Text>
+                </Wrapper>
                 <Flex align="center" gap="3">
                   <Flex align="center" asChild gap="2">
                     <Text as="p" color="gray">
                       <ChatBubbleIcon cursor="pointer" />
-                      <Text size="2">4 Replies</Text>
+                      <Text size="2">{menfess._count.comments} Komentar</Text>
                     </Text>
                   </Flex>
-                  <Flex align="center" gap="1" asChild>
-                    <Text as="p" color="gray">
-                      <TriangleUpIcon className="text-slate-400" />
-                      <Text size="2">1.5 K</Text>
-                      <TriangleDownIcon />
-                    </Text>
-                  </Flex>
+                  <VoteMenfessButton menfess={menfess} />
                 </Flex>
               </Flex>
             </Flex>
@@ -88,3 +92,43 @@ export default function MenfessCard({ pageDetail }: Props) {
     </Box>
   );
 }
+
+interface MenfessCardPopOverProps {
+  menfessId: string;
+}
+
+const MenfessCardPopOver = ({ menfessId }: MenfessCardPopOverProps) => {
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  return (
+    <>
+      <DeleteMenfessModal
+        menfessId={menfessId}
+        open={openDeleteModal}
+        onOpenChange={setOpenDeleteModal}
+      />
+      <Popover.Root>
+        <Popover.Trigger>
+          <Button variant="ghost" style={{ cursor: "pointer" }}>
+            <DotsHorizontalIcon />
+          </Button>
+        </Popover.Trigger>
+        <Popover.Content align="end" size={"1"} style={{ width: 105 }}>
+          <Flex
+            align={"center"}
+            asChild
+            style={{ cursor: "pointer" }}
+            onClick={() => setOpenDeleteModal(true)}
+          >
+            <Text as="p" color="red">
+              <TrashIcon width={20} height={20} />
+              <Text>Delete</Text>
+            </Text>
+          </Flex>
+        </Popover.Content>
+      </Popover.Root>
+    </>
+  );
+};
+
+export default forwardRef(MenfessCard);

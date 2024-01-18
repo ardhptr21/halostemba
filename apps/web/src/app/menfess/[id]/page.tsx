@@ -1,19 +1,19 @@
-import { Flex } from "@radix-ui/themes";
 import MainLayout from "~/components/layouts/MainLayout";
-import MenfessCard from "~/components/molecules/menfess/MenfessCard";
-import CommentCard from "~/components/molecules/menfess/comment/CommentCard";
-import CommentCreate from "~/components/molecules/menfess/comment/CommentCreate";
+import DetailMenfess from "~/components/organisms/menfess/DetailMenfess";
+import { getAuthServer } from "~/lib/auth";
 
-export default function page() {
+interface Props {
+  params: {
+    id: string;
+  };
+}
+
+export default async function page({ params }: Props) {
+  const session = await getAuthServer();
+
   return (
     <MainLayout>
-      <Flex direction="column" gap="4">
-        <MenfessCard pageDetail />
-        <CommentCreate />
-        <CommentCard />
-        <CommentCard />
-        <CommentCard />
-      </Flex>
+      <DetailMenfess id={params.id} session={session} />
     </MainLayout>
   );
 }
