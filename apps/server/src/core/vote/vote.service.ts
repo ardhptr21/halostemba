@@ -37,7 +37,7 @@ export class VoteService {
     if (!existingVote) {
       await this.voteRepository.createVote({ ...voteDto, userId });
       score = voteDto.type === VoteType.UP ? score + 1 : score - 1;
-      message = 'Berhasil vote.';
+      message = 'Berhasil vote ' + voteDto.type.toLowerCase();
     } else if (existingVote.type === voteDto.type) {
       await this.voteRepository.deleteVote(existingVote.id);
       score = voteDto.type === VoteType.UP ? score - 1 : score + 1;
@@ -48,7 +48,7 @@ export class VoteService {
         type: voteDto.type,
       });
       score = voteDto.type === VoteType.UP ? score + 2 : score - 2;
-      message = 'Vote telah diubah.';
+      message = 'Berhasil vote ' + voteDto.type.toLowerCase();
     }
 
     await this.menfessRepository.updateMenfessScore(menfess.id, score);

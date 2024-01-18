@@ -4,18 +4,8 @@ import {
   ChatBubbleIcon,
   DotsHorizontalIcon,
   TrashIcon,
-  TriangleDownIcon,
-  TriangleUpIcon,
 } from "@radix-ui/react-icons";
-import {
-  Box,
-  Button,
-  Card,
-  Flex,
-  IconButton,
-  Popover,
-  Text,
-} from "@radix-ui/themes";
+import { Box, Button, Card, Flex, Popover, Text } from "@radix-ui/themes";
 import Image from "next/image";
 import Link from "next/link";
 import { ForwardedRef, forwardRef, useState } from "react";
@@ -23,6 +13,7 @@ import DeleteMenfessModal from "~/components/atoms/modals/DeleteMenfessModal";
 import { formatDistanceToNowStrict } from "date-fns";
 import { id } from "date-fns/locale";
 import { useSession } from "next-auth/react";
+import VoteMenfessButton from "~/components/atoms/menfess/VoteMenfessButton";
 
 interface MenfessCardProps {
   redirect?: boolean;
@@ -75,44 +66,25 @@ function MenfessCard(
                   <MenfessCardPopOver menfessId={menfess.id} />
                 )}
               </Flex>
-              <Wrapper
-                href={`/menfess/${menfess.id}`}
-                className={redirect ? "cursor-pointer" : ""}
-              >
-                <Flex direction="column" gap="4">
+              <Flex direction="column" gap="4">
+                <Wrapper
+                  href={`/menfess/${menfess.id}`}
+                  className={redirect ? "cursor-pointer" : ""}
+                >
                   <Text size="2" color="gray" className="whitespace-pre-line">
                     {menfess.content}
                   </Text>
-
-                  <Flex align="center" gap="3">
-                    <Flex align="center" asChild gap="2">
-                      <Text as="p" color="gray">
-                        <ChatBubbleIcon cursor="pointer" />
-                        <Text size="2">{menfess._count.comments} Komentar</Text>
-                      </Text>
-                    </Flex>
-                    <Flex align="center" gap="1" asChild>
-                      <Text as="p" color="gray">
-                        <Button
-                          size={"1"}
-                          variant="soft"
-                          color={menfess.voted === "UP" ? "iris" : "gray"}
-                        >
-                          <TriangleUpIcon width={20} height={20} />
-                          <Text size="2">{menfess.score}</Text>
-                        </Button>
-                        <IconButton
-                          size={"1"}
-                          variant="soft"
-                          color={menfess.voted === "DOWN" ? "iris" : "gray"}
-                        >
-                          <TriangleDownIcon width={20} height={20} />
-                        </IconButton>
-                      </Text>
-                    </Flex>
+                </Wrapper>
+                <Flex align="center" gap="3">
+                  <Flex align="center" asChild gap="2">
+                    <Text as="p" color="gray">
+                      <ChatBubbleIcon cursor="pointer" />
+                      <Text size="2">{menfess._count.comments} Komentar</Text>
+                    </Text>
                   </Flex>
+                  <VoteMenfessButton menfess={menfess} />
                 </Flex>
-              </Wrapper>
+              </Flex>
             </Flex>
           </Flex>
         </article>
