@@ -4,13 +4,16 @@ import { Button, Flex, IconButton, Text } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useSnackbar } from "notistack";
+import { useState } from "react";
 import { useVoteMenfess } from "~/apis/menfess/vote-menfess-api";
+import MustBeLoginModal from "../modals/auth/MustBeLoginmodal";
 
 interface VoteMenfessButtonProps {
   menfess: Pick<MenfessEntity, "voted" | "score" | "id">;
 }
 
 export default function VoteMenfessButton({ menfess }: VoteMenfessButtonProps) {
+  const [showMustLogin, setShowMustLogin] = useState(false);
   const { enqueueSnackbar: toast } = useSnackbar();
   const queryClient = useQueryClient();
   const { data: session } = useSession();
@@ -34,6 +37,8 @@ export default function VoteMenfessButton({ menfess }: VoteMenfessButtonProps) {
   });
 
   const handleClick = (type: "UP" | "DOWN") => () => {
+    if (!session) return setShowMustLogin(true);
+
     handleVoteMenfess({
       menfessId: menfess.id,
       type,
@@ -42,30 +47,33 @@ export default function VoteMenfessButton({ menfess }: VoteMenfessButtonProps) {
   };
 
   return (
-    <Flex align="center" gap="1">
-      <Button
-        size={"1"}
-        variant="soft"
-        color={menfess.voted === "UP" ? "iris" : "gray"}
-        style={{
-          cursor: "pointer",
-        }}
-        onClick={handleClick("UP")}
-      >
-        <TriangleUpIcon width={20} height={20} />
-        <Text size="2">{menfess.score}</Text>
-      </Button>
-      <IconButton
-        onClick={handleClick("DOWN")}
-        size={"1"}
-        variant="soft"
-        color={menfess.voted === "DOWN" ? "iris" : "gray"}
-        style={{
-          cursor: "pointer",
-        }}
-      >
-        <TriangleDownIcon width={20} height={20} />
-      </IconButton>
-    </Flex>
+    <>
+      <MustBeLoginModal open={showMustLogin} onOpenChange={setShowMustLogin} />
+      <Flex align="center" gap="1">
+        <Button
+          size={"1"}
+          variant="soft"
+          color={menfess.voted === "UP" ? "iris" : "gray"}
+          style={{
+            cursor: "pointer",
+          }}
+          onClick={handleClick("UP")}
+        >
+          <TriangleUpIcon width={20} height={20} />
+          <Text size="2">{menfess.score}</Text>
+        </Button>
+        <IconButton
+          onClick={handleClick("DOWN")}
+          size={"1"}
+          variant="soft"
+          color={menfess.voted === "DOWN" ? "iris" : "gray"}
+          style={{
+            cursor: "pointer",
+          }}
+        >
+          <TriangleDownIcon width={20} height={20} />
+        </IconButton>
+      </Flex>
+    </>
   );
 }

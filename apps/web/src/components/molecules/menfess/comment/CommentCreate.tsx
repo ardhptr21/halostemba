@@ -8,7 +8,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactTextareaAutosize from "react-textarea-autosize";
 import { useCreateComment } from "~/apis/menfess/create-comment-api";
-import MustBeVerifiedModal from "~/components/atoms/modals/MustBeVerifiedModal";
+import MustBeLoginModal from "~/components/atoms/modals/auth/MustBeLoginmodal";
+import MustBeVerifiedModal from "~/components/atoms/modals/auth/MustBeVerifiedModal";
 import {
   CreateCommentValidator,
   CreateCommentValidatorType,
@@ -17,6 +18,7 @@ import {
 export default function CommentCreate({ menfessId }: { menfessId: string }) {
   const { data: session } = useSession();
   const [showMustVerified, setShowMustVerified] = useState(false);
+  const [showMustLogin, setShowMustLogin] = useState(false);
   const { enqueueSnackbar: toast } = useSnackbar();
   const queryClient = useQueryClient();
 
@@ -50,10 +52,11 @@ export default function CommentCreate({ menfessId }: { menfessId: string }) {
   });
 
   const handleClick = () => {
-    if (session?.user.role === "GUEST") {
-      setShowMustVerified(true);
-      return;
-    }
+    if (!session) return setShowMustLogin(true);
+    if (session?.user.role === "GUEST") return setShowMustVerified(true);
+  };
+
+  const handleCreate = () => {
     handleSubmit((data) => {
       createMenfessHandler({
         ...data,
@@ -68,8 +71,14 @@ export default function CommentCreate({ menfessId }: { menfessId: string }) {
         open={showMustVerified}
         onOpenChange={setShowMustVerified}
       />
-      <Card className="w-full">
-        <Flex direction="column">
+      <MustBeLoginModal open={showMustLogin} onOpenChange={setShowMustLogin} />
+      <Card className="w-full" onClick={handleClick}>
+        <Flex
+          direction="column"
+          style={{
+            pointerEvents: !session ? "none" : "initial",
+          }}
+        >
           <Flex direction="row" gap="2">
             <Box>
               <Image
@@ -102,7 +111,7 @@ export default function CommentCreate({ menfessId }: { menfessId: string }) {
             <Button
               disabled={isPending}
               size="2"
-              onClick={handleClick}
+              onClick={handleCreate}
               style={{ cursor: "pointer" }}
             >
               Kirim

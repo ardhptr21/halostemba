@@ -15,7 +15,7 @@ import { useSession } from "next-auth/react";
 
 import Image from "next/image";
 import { useState } from "react";
-import MustBeVerifiedModal from "~/components/atoms/modals/MustBeVerifiedModal";
+import MustBeVerifiedModal from "~/components/atoms/modals/auth/MustBeVerifiedModal";
 import { useForm } from "react-hook-form";
 import {
   CreateMenfessValidator,
@@ -25,10 +25,12 @@ import { useCreateMenfess } from "~/apis/menfess/create-menfess-api";
 import { useSnackbar } from "notistack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
+import MustBeLoginModal from "~/components/atoms/modals/auth/MustBeLoginmodal";
 
 export default function MenfessCreate() {
   const { data: session } = useSession();
   const [showMustVerified, setShowMustVerified] = useState(false);
+  const [showMustLogin, setShowMustLogin] = useState(false);
   const { enqueueSnackbar: toast } = useSnackbar();
   const queryClient = useQueryClient();
 
@@ -64,10 +66,11 @@ export default function MenfessCreate() {
   });
 
   const handleClick = () => {
-    if (session?.user.role === "GUEST") {
-      setShowMustVerified(true);
-      return;
-    }
+    if (!session) return setShowMustLogin(true);
+    if (session?.user.role === "GUEST") return setShowMustVerified(true);
+  };
+
+  const handleCreate = () => {
     handleSubmit((data) => {
       createMenfessHandler({ ...data, token: session?.token as string });
     })();
@@ -79,8 +82,14 @@ export default function MenfessCreate() {
         open={showMustVerified}
         onOpenChange={setShowMustVerified}
       />
-      <Card className="w-full">
-        <Flex direction="column">
+      <MustBeLoginModal open={showMustLogin} onOpenChange={setShowMustLogin} />
+      <Card className="w-full" onClick={handleClick}>
+        <Flex
+          direction="column"
+          style={{
+            pointerEvents: !session ? "none" : "initial",
+          }}
+        >
           <Flex direction="row" gap="2">
             <Box>
               <Image
@@ -140,7 +149,7 @@ export default function MenfessCreate() {
             </Flex>
             <Button
               size="2"
-              onClick={handleClick}
+              onClick={handleCreate}
               disabled={isPending}
               style={{
                 cursor: "pointer",

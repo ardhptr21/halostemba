@@ -1,3 +1,5 @@
+"use client";
+
 import {
   BellIcon,
   ExitIcon,
@@ -8,10 +10,17 @@ import {
   PersonIcon,
 } from "@radix-ui/react-icons";
 import { IconProps } from "@radix-ui/react-icons/dist/types";
-import { Flex, IconButton, Link as RLink, Text } from "@radix-ui/themes";
+import {
+  Button,
+  Flex,
+  IconButton,
+  Link as RLink,
+  Text,
+} from "@radix-ui/themes";
 import Image from "next/image";
 import Link from "next/link";
 import SidebarContainer from "./SidebarContainer";
+import { signOut, useSession } from "next-auth/react";
 
 export type NavLink = {
   href: string;
@@ -50,6 +59,8 @@ const navLinks: ReadonlyArray<NavLink> = [
 ];
 
 export default function Sidebar() {
+  const session = useSession();
+
   return (
     <SidebarContainer>
       <Flex
@@ -87,19 +98,29 @@ export default function Sidebar() {
           </Flex>
         </Flex>
         <Flex direction="row" gap="3" align="center" justify="between">
-          <Flex direction="row" gap="3" asChild align="center">
-            <RLink color="gray">
-              <ExitIcon width={20} height={"100%"} />
-              <Text size="4">Logout</Text>
-            </RLink>
-          </Flex>
-          <IconButton
-            variant="soft"
-            style={{ cursor: "pointer" }}
-            radius="full"
-          >
-            <MoonIcon width={20} height={"100%"} />
-          </IconButton>
+          {session.status === "authenticated" ? (
+            <>
+              <Flex direction="row" gap="3" asChild align="center">
+                <Text asChild color="gray">
+                  <button onClick={() => signOut()}>
+                    <ExitIcon width={20} height={"100%"} />
+                    <Text size="4">Logout</Text>
+                  </button>
+                </Text>
+              </Flex>
+              <IconButton
+                variant="soft"
+                style={{ cursor: "pointer" }}
+                radius="full"
+              >
+                <MoonIcon width={20} height={"100%"} />
+              </IconButton>
+            </>
+          ) : (
+            <Button asChild className="w-full" size="4">
+              <Link href="/masuk">Masuk</Link>
+            </Button>
+          )}
         </Flex>
       </Flex>
     </SidebarContainer>
