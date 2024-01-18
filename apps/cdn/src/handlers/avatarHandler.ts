@@ -37,7 +37,7 @@ export const uploadAvatarHandler: RequestHandler = async (req, res) => {
 
     const filename = `${nanoid(32)}.webp`;
     const path = `/avatar/${filename}`;
-    await storage.write(`/avatar/${filename}`, imageBuffer.data);
+    await storage.write(path, imageBuffer.data);
 
     return res.json({
       status: 201,
@@ -45,7 +45,6 @@ export const uploadAvatarHandler: RequestHandler = async (req, res) => {
       url: new URL(path, process.env.APP_URL).toString(),
     });
   } catch (error) {
-    console.error(error);
     if (error instanceof UnableToWriteFile) {
       return res.status(500).json({
         status: 500,
