@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactTextareaAutosize from "react-textarea-autosize";
 import { useCreateComment } from "~/apis/menfess/create-comment-api";
-import MustBeLoginModal from "~/components/atoms/modals/auth/MustBeLoginmodal";
+import MustBeLoginModal from "~/components/atoms/modals/auth/MustBeLoginModal";
 import MustBeVerifiedModal from "~/components/atoms/modals/auth/MustBeVerifiedModal";
 import {
   CreateCommentValidator,

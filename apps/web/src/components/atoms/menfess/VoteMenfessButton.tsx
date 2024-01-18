@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useVoteMenfess } from "~/apis/menfess/vote-menfess-api";
-import MustBeLoginModal from "../modals/auth/MustBeLoginmodal";
+import MustBeLoginModal from "../modals/auth/MustBeLoginModal";
 
 interface VoteMenfessButtonProps {
   menfess: Pick<MenfessEntity, "voted" | "score" | "id">;

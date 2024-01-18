@@ -1,6 +1,7 @@
 "use client";
 
-import { FaceIcon, ImageIcon } from "@radix-ui/react-icons";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FaceIcon } from "@radix-ui/react-icons";
 import {
   Box,
   Button,
@@ -10,23 +11,22 @@ import {
   Text,
   Tooltip,
 } from "@radix-ui/themes";
-import TextareaAutosize from "react-textarea-autosize";
+import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-
 import Image from "next/image";
+import { useSnackbar } from "notistack";
 import { useState } from "react";
-import MustBeVerifiedModal from "~/components/atoms/modals/auth/MustBeVerifiedModal";
 import { useForm } from "react-hook-form";
+import TextareaAutosize from "react-textarea-autosize";
+import { useCreateMenfess } from "~/apis/menfess/create-menfess-api";
+import MustBeLoginModal from "~/components/atoms/modals/auth/MustBeLoginModal";
+import MustBeVerifiedModal from "~/components/atoms/modals/auth/MustBeVerifiedModal";
 import {
   CreateMenfessValidator,
   CreateMenfessValidatorType,
 } from "~/validators/menfess/create-menfess-validator";
-import { useCreateMenfess } from "~/apis/menfess/create-menfess-api";
-import { useSnackbar } from "notistack";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
-import MustBeLoginModal from "~/components/atoms/modals/auth/MustBeLoginmodal";
-
+import PreviewMediaMenfess from "./PreviewMediaMenfess";
+import UploadMediaMenfess from "./UploadMediaMenfess";
 export default function MenfessCreate() {
   const { data: session } = useSession();
   const [showMustVerified, setShowMustVerified] = useState(false);
@@ -116,15 +116,12 @@ export default function MenfessCreate() {
               <Text as="p" size="1" color="red">
                 {errors.content?.message}
               </Text>
+              <PreviewMediaMenfess />
             </Flex>
           </Flex>
           <Flex direction="row" pt="3" pl="8" justify="between">
             <Flex direction="row" gap="2" className="mt-2" align={"center"}>
-              <ImageIcon
-                width={15}
-                height={"100%"}
-                style={{ color: "#99A2FF" }}
-              />
+              <UploadMediaMenfess />
               <FaceIcon
                 width={15}
                 height={"100%"}
