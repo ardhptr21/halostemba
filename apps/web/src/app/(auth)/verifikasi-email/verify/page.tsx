@@ -24,7 +24,6 @@ const handleVerify = async (
   } catch (error) {
     let message = "";
     if (error instanceof AxiosError) {
-      console.log(error.response);
       if (error.status === 404) throw notFound();
       message = error.response?.data.error;
     }

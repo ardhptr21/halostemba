@@ -31,8 +31,10 @@ export class MenfessRepository {
           score: true,
           anonymous: true,
           createdAt: true,
+          authorId: true,
           author: { select: { name: true, username: true, avatar: true } },
           ...(hasUser && { votes: { select: { userId: true, type: true } } }),
+          _count: { select: { comments: true } },
         },
         orderBy: { createdAt: 'desc' },
       },
@@ -74,8 +76,10 @@ export class MenfessRepository {
         anonymous: true,
         createdAt: true,
         score: true,
+        authorId: true,
         author: { select: { name: true, username: true, avatar: true } },
         ...(hasUser && { votes: { select: { userId: true, type: true } } }),
+        _count: { select: { comments: true } },
         comments: {
           select: {
             id: true,

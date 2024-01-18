@@ -19,7 +19,7 @@ export const validatorMapper =
   ({ property, constraints }: ValidationArguments): string => {
     let message = validator[type].replace('$property', property);
 
-    constraints.forEach((constraint, index) => {
+    constraints?.forEach((constraint, index) => {
       message = message.replace(`$${index + 1}`, constraint);
     });
 
