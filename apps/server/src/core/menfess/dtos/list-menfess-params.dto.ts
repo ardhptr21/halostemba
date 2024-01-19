@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
 import { validatorMapper } from '~/commons/lang/id/validator';
 
 export class ListMenfessParamsDto {
@@ -22,4 +22,10 @@ export class ListMenfessParamsDto {
     message: validatorMapper('isString'),
   })
   readonly search?: string;
+
+  @IsOptional()
+  @IsEnum(['TOP', 'LATEST'], {
+    message: validatorMapper('isEnum'),
+  })
+  readonly order?: 'TOP' | 'LATEST';
 }

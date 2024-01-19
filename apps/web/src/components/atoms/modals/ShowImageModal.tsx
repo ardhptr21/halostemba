@@ -9,7 +9,6 @@ interface Props extends DialogRootProps {
 }
 
 export default function ShowImageModal({ src, ...props }: Props) {
-  console.log(src);
   return (
     <Dialog.Root {...props}>
       <Dialog.Content

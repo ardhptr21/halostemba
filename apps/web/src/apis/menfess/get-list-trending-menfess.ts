@@ -11,57 +11,59 @@ import http from "~/lib/axios";
 import ErrorResponseType from "~/types/error-response-type";
 import WithMetaResponseType from "~/types/with-meta-response-type";
 
-interface GetListMenfessApiResponse
+interface GetListMenfessTrendingApiResponse
   extends WithMetaResponseType<MenfessEntity[]> {}
 
-interface GetListMenfessApiParams {
+interface GetListTrendingMenfessApiParams {
   page?: number;
   perPage?: number;
   search?: string;
-  order?: "TOP" | "LATEST";
 }
 
-export const getListMenfessApiHandler = async (
+export const getListTrendingMenfessApiHandler = async (
   token?: string | null,
-  params?: GetListMenfessApiParams,
-): Promise<GetListMenfessApiResponse> => {
-  const { data } = await http.get("/menfess", {
+  params?: GetListTrendingMenfessApiParams,
+): Promise<GetListMenfessTrendingApiResponse> => {
+  const { data } = await http.get("/menfess/popular", {
     params,
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
   });
   return data;
 };
 
-export const useGetListMenfessApi = (
+export const useGetListTrendingMenfessApi = (
   token?: string | null,
-  params?: GetListMenfessApiParams,
+  params?: GetListTrendingMenfessApiParams,
   options?: UseQueryOptions<
-    GetListMenfessApiResponse,
+    GetListMenfessTrendingApiResponse,
     AxiosError<ErrorResponseType>
   >,
 ) => {
   return useQuery({
-    queryKey: ["list-menfess", params],
-    queryFn: () => getListMenfessApiHandler(token, params),
+    queryKey: ["trending-menfess", params],
+    queryFn: () => getListTrendingMenfessApiHandler(token, params),
     ...options,
   });
 };
 
-export const useGetListMenfessInfiniteApi = (
+export const useGetListTrendingMenfessInfiniteApi = (
   token?: string | null,
-  params?: GetListMenfessApiParams,
+  params?: GetListTrendingMenfessApiParams,
   options?: Partial<
     UseInfiniteQueryOptions<
-      GetListMenfessApiResponse,
+      GetListMenfessTrendingApiResponse,
       AxiosError<any>,
       InfiniteData<WithMetaResponseType<MenfessEntity[]>>
     >
   >,
 ) => {
   return useInfiniteQuery({
-    queryKey: ["list-menfess", params],
+    queryKey: ["trending-menfess", params],
     queryFn: ({ pageParam }) =>
-      getListMenfessApiHandler(token, { ...params, page: pageParam as number }),
+      getListTrendingMenfessApiHandler(token, {
+        ...params,
+        page: pageParam as number,
+      }),
     initialPageParam: 1,
     getNextPageParam: (current) => {
       return current.meta.next;
