@@ -1,13 +1,11 @@
 import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { AxiosError } from "axios";
-import { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { verifyEmailApiHandler } from "~/apis/auth/verify-email-api";
 
 interface Props {
-  session: Session;
   searchParams: {
     token: string;
   };
