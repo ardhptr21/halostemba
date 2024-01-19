@@ -1,31 +1,18 @@
-"use client";
-
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  TabsList,
-  TabsRoot,
-  TabsTrigger,
-  Text,
-} from "@radix-ui/themes";
+import { Box, Flex, Heading, Text } from "@radix-ui/themes";
 import { Session } from "next-auth";
-import { useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
-import { useGetListMenfessInfiniteApi } from "~/apis/menfess/get-list-menfess-api";
-import MenfessCard from "~/components/molecules/menfess/MenfessCard";
-import MenfessSearch from "~/components/molecules/menfess/MenfessSearch";
-import MenfessCardSkeleton from "~/components/molecules/menfess/skeletons/MenfessCardSkeleton";
-import MenfessTrending from "./MenfessTrending";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+import { useGetListTrendingMenfessInfiniteApi } from "~/apis/menfess/get-list-trending-menfess";
+import MenfessCard from "~/components/molecules/menfess/MenfessCard";
+import MenfessCardSkeleton from "~/components/molecules/menfess/skeletons/MenfessCardSkeleton";
 
 interface Props {
   session?: Session | null;
 }
 
-export default function MenfessExplorer({ session }: Props) {
+export default function MenfessTrending({ session }: Props) {
   const { ref, inView } = useInView({
     threshold: 0.5,
     delay: 500,
@@ -33,13 +20,13 @@ export default function MenfessExplorer({ session }: Props) {
   const params = useSearchParams();
 
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useGetListMenfessInfiniteApi(
+    useGetListTrendingMenfessInfiniteApi(
       session?.token as string,
       {
         search: params.get("q") || "",
       },
       {
-        enabled: !!params.get("q"),
+        enabled: !params.get("q"),
       },
     );
 
@@ -49,17 +36,12 @@ export default function MenfessExplorer({ session }: Props) {
 
   return (
     <>
-      <MenfessSearch />
-      {!params.get("q") ? (
-        <MenfessTrending />
-      ) : !!data?.pages.length && !!data.pages[0].data.length ? (
-        <TabsRoot>
-          <TabsList size="2" className="justify-center">
-            <TabsTrigger value="top">Top</TabsTrigger>
-            <TabsTrigger value="latest">Latest</TabsTrigger>
-          </TabsList>
-
-          <Box py="5">
+      {!!data?.pages.length && !!data.pages[0].data.length ? (
+        <>
+          <Heading as="h2" className="py-4">
+            Trending Menfess 🔥
+          </Heading>
+          <Box>
             <Flex direction="column" gap="4">
               {data?.pages.map((page) =>
                 page.data.map((m) => (
@@ -76,19 +58,19 @@ export default function MenfessExplorer({ session }: Props) {
               <div ref={ref} />
             </Flex>
           </Box>
-        </TabsRoot>
+        </>
       ) : (
-        <Flex direction={"column"} align={"center"} gap={"2"}>
+        <Flex direction={"column"} align={"center"}>
           <Flex justify="center">
             <Image
-              src="/assets/images/action/not-verified.png"
+              src="/assets/images/menfess/no-trending.png"
               alt="account not verified"
               className="w-60"
-              width={400}
-              height={400}
+              width={200}
+              height={200}
             />
           </Flex>
-          <Heading as="h3">Menfess tidak ditemukan</Heading>
+          <Heading as="h3">Tidak ada trending</Heading>
           <Text
             as="p"
             color="gray"
@@ -96,9 +78,8 @@ export default function MenfessExplorer({ session }: Props) {
             className="max-w-sm mx-auto"
             size={"2"}
           >
-            Jadilah yang pertama yang membuat!
+            Kembali beberapa saat lagi untuk melihat ada sesuatu yang baru
           </Text>
-          <Button>Buat Menfess</Button>
         </Flex>
       )}
     </>
