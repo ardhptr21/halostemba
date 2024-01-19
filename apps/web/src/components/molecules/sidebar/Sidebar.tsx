@@ -17,10 +17,10 @@ import {
   Link as RLink,
   Text,
 } from "@radix-ui/themes";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import SidebarContainer from "./SidebarContainer";
-import { signOut, useSession } from "next-auth/react";
 
 export type NavLink = {
   href: string;

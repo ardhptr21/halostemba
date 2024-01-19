@@ -11,15 +11,16 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { Session } from "next-auth";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useGetListMenfessInfiniteApi } from "~/apis/menfess/get-list-menfess-api";
 import MenfessCard from "~/components/molecules/menfess/MenfessCard";
 import MenfessSearch from "~/components/molecules/menfess/MenfessSearch";
 import MenfessCardSkeleton from "~/components/molecules/menfess/skeletons/MenfessCardSkeleton";
 import MenfessTrending from "./MenfessTrending";
-import Image from "next/image";
+import Link from "next/link";
 
 interface Props {
   session?: Session | null;
@@ -60,59 +61,71 @@ export default function MenfessExplorer({ session }: Props) {
   return (
     <>
       <MenfessSearch />
+
       {!params.get("q") ? (
         <MenfessTrending session={session} />
-      ) : !!data?.pages.length && !!data.pages[0].data.length ? (
-        <TabsRoot
-          value={params.get("order") || "TOP"}
-          onValueChange={handleOrderChange}
-        >
-          <TabsList size="2" className="justify-center">
-            <TabsTrigger value="TOP">Top</TabsTrigger>
-            <TabsTrigger value="LATEST">Latest</TabsTrigger>
-          </TabsList>
-
-          <Box py="5">
-            <Flex direction="column" gap="4">
-              {data?.pages.map((page) =>
-                page.data.map((m) => (
-                  <MenfessCard key={m.id} redirect={true} menfess={m} />
-                )),
-              )}
-
-              {isFetching || isFetchingNextPage
-                ? Array.from({ length: 4 }).map((_, i) => (
-                    <MenfessCardSkeleton key={i} />
-                  ))
-                : null}
-
-              <div ref={ref} />
-            </Flex>
-          </Box>
-        </TabsRoot>
       ) : (
-        <Flex direction={"column"} align={"center"} gap={"2"}>
-          <Flex justify="center">
-            <Image
-              src="/assets/images/action/not-verified.png"
-              alt="account not verified"
-              className="w-60"
-              width={400}
-              height={400}
-            />
-          </Flex>
-          <Heading as="h3">Menfess tidak ditemukan</Heading>
-          <Text
-            as="p"
-            color="gray"
-            align={"center"}
-            className="max-w-sm mx-auto"
-            size={"2"}
-          >
-            Jadilah yang pertama yang membuat!
-          </Text>
-          <Button>Buat Menfess</Button>
-        </Flex>
+        <>
+          {!!data?.pages.length && !!data.pages[0].data.length ? (
+            <TabsRoot
+              value={params.get("order") || "TOP"}
+              onValueChange={handleOrderChange}
+            >
+              <TabsList size="2" className="justify-center">
+                <TabsTrigger value="TOP">Top</TabsTrigger>
+                <TabsTrigger value="LATEST">Latest</TabsTrigger>
+              </TabsList>
+
+              <Box py="5">
+                <Flex direction="column" gap="4">
+                  {data?.pages.map((page) =>
+                    page.data.map((m) => (
+                      <MenfessCard key={m.id} redirect={true} menfess={m} />
+                    )),
+                  )}
+                </Flex>
+              </Box>
+            </TabsRoot>
+          ) : (
+            !isFetching &&
+            !isFetchingNextPage && (
+              <Flex direction={"column"} align={"center"} gap={"2"}>
+                <Flex justify="center">
+                  <Image
+                    src="/assets/images/action/not-verified.png"
+                    alt="account not verified"
+                    className="w-60"
+                    width={400}
+                    height={400}
+                  />
+                </Flex>
+                <Heading as="h3">Menfess tidak ditemukan</Heading>
+                <Text
+                  as="p"
+                  color="gray"
+                  align={"center"}
+                  className="max-w-sm mx-auto"
+                  size={"2"}
+                >
+                  Jadilah yang pertama yang membuat!
+                </Text>
+
+                <Button asChild>
+                  <Link href="/">Buat Menfess</Link>
+                </Button>
+              </Flex>
+            )
+          )}
+
+          {(isFetching || isFetchingNextPage) && (
+            <>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <MenfessCardSkeleton key={i} />
+              ))}
+              <div ref={ref} />
+            </>
+          )}
+        </>
       )}
     </>
   );
