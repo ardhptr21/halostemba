@@ -7,6 +7,7 @@ import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useVoteMenfess } from "~/apis/menfess/vote-menfess-api";
 import MustBeLoginModal from "../modals/auth/MustBeLoginModal";
+import { preventBubbling } from "~/lib/utils";
 
 interface VoteMenfessButtonProps {
   menfess: Pick<MenfessEntity, "voted" | "score" | "id">;
@@ -57,13 +58,13 @@ export default function VoteMenfessButton({ menfess }: VoteMenfessButtonProps) {
           style={{
             cursor: "pointer",
           }}
-          onClick={handleClick("UP")}
+          onClick={preventBubbling(handleClick("UP"))}
         >
           <TriangleUpIcon width={20} height={20} />
           <Text size="2">{menfess.score}</Text>
         </Button>
         <IconButton
-          onClick={handleClick("DOWN")}
+          onClick={preventBubbling(handleClick("DOWN"))}
           size={"1"}
           variant="soft"
           color={menfess.voted === "DOWN" ? "iris" : "gray"}

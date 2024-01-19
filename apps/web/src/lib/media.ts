@@ -3,6 +3,8 @@ export const allowedMime = {
   videos: ["video/mp4", "video/quicktime", "video/x-matroska"],
 };
 
+const maxSize = 100 * 1024 * 1024;
+
 export interface PreviewMedia {
   file: File;
   type: "IMAGE" | "VIDEO";
@@ -22,6 +24,13 @@ export const mediaValidator = (
       media: null,
     };
   for (const file of files) {
+    if (file.size > maxSize)
+      return {
+        valid: false,
+        error: `Ukuran file "${file.name} terlalu besar", maksimal 100mb.`,
+        media: null,
+      };
+
     if (allowedMime.videos.includes(file.type)) {
       if (files.length + initCount > 1)
         return {

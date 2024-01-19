@@ -111,6 +111,16 @@ const PreviewMedia = ({
         </Box>
       ) : null}
       <video src={preview} controls></video>
+      <IconButton
+        onClick={onRemove}
+        color="gray"
+        style={{ cursor: "pointer" }}
+        variant="surface"
+        radius="full"
+        className="absolute right-2 top-2"
+      >
+        <Cross1Icon />
+      </IconButton>
     </Box>
   );
 };
