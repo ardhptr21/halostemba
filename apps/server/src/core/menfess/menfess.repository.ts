@@ -2,6 +2,7 @@ import { Prisma } from '@halostemba/db';
 import { Injectable } from '@nestjs/common';
 import { paginator } from '~/providers/database/database.paginator';
 import { DatabaseService } from '~/providers/database/database.service';
+import { MediaDto } from '../media/dtos/media.dto';
 import { CreateMenfessDto } from './dtos/create-menfess.dto';
 import { ListMenfessParamsDto } from './dtos/list-menfess-params.dto';
 
@@ -32,6 +33,7 @@ export class MenfessRepository {
           anonymous: true,
           createdAt: true,
           authorId: true,
+          medias: { select: { type: true, source: true } },
           author: { select: { name: true, username: true, avatar: true } },
           ...(hasUser && { votes: { select: { userId: true, type: true } } }),
           _count: { select: { comments: true } },
@@ -49,9 +51,10 @@ export class MenfessRepository {
     data: CreateMenfessDto & {
       userId: string;
       hashtags: string[];
+      media?: MediaDto[];
     },
   ) {
-    const { userId, hashtags, ...menfess } = data;
+    const { userId, hashtags, media, ...menfess } = data;
     return await this.db.menfess.create({
       data: {
         ...menfess,
@@ -62,6 +65,7 @@ export class MenfessRepository {
             create: { name: hashtag },
           })),
         },
+        medias: { create: media },
       },
       select: { id: true, content: true, anonymous: true },
     });
@@ -77,6 +81,7 @@ export class MenfessRepository {
         createdAt: true,
         score: true,
         authorId: true,
+        medias: { select: { type: true, source: true } },
         author: { select: { name: true, username: true, avatar: true } },
         ...(hasUser && { votes: { select: { userId: true, type: true } } }),
         _count: { select: { comments: true } },

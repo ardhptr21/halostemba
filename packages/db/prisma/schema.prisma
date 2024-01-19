@@ -92,6 +92,7 @@ model Menfess {
   votes    Vote[]
   comments Comment[]
   hashtags Hashtag[]
+  medias   Media[]
 
   @@map("menfesses")
 }
@@ -145,6 +146,7 @@ model Ticket {
   ticketReplies TicketReply[]
   reporter      User          @relation("reporter", fields: [reporterId], references: [id], onDelete: Cascade)
   responder     User?         @relation("responder", fields: [responderId], references: [id], onDelete: Cascade)
+  medias        Media[]
 
   @@map("tickets")
 }
@@ -188,6 +190,19 @@ model OTP {
   @@map("otps")
 }
 
+model Media {
+  id        String  @id @default(cuid())
+  menfessId String? @map("menfess_id")
+  ticketId  String? @map("ticket_id")
+
+  source    String    @db.Text()
+  type      MediaType
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  menfess Menfess? @relation(fields: [menfessId], references: [id], onDelete: SetNull)
+  ticket  Ticket?  @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+}
+
 enum Role {
   STUDENT @map("student")
   TEACHER @map("teacher")
@@ -210,4 +225,9 @@ enum TicketStatus {
 enum VoteType {
   UP   @map("up")
   DOWN @map("down")
+}
+
+enum MediaType {
+  IMAGE @map("image")
+  VIDEO @map("video")
 }

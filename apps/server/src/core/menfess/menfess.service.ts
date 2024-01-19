@@ -2,16 +2,16 @@ import { Prisma, Vote } from '@halostemba/db';
 import { UserEntity } from '@halostemba/entities';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { endOfWeek, startOfWeek } from 'date-fns';
+import { OpenaiService } from '~/providers/openai/openai.service';
 import { HashtagRepository } from '../hashtag/hashtag.repository';
 import { HashtagService } from '../hashtag/hashtag.service';
 import { CreateMenfessDto } from './dtos/create-menfess.dto';
 import { ListMenfessParamsDto } from './dtos/list-menfess-params.dto';
-import { MenfessRepository } from './menfess.repository';
 import {
   MenfessNotFoundException,
   MenfessServerError,
 } from './menfess.exception';
-import { OpenaiService } from '~/providers/openai/openai.service';
+import { MenfessRepository } from './menfess.repository';
 
 @Injectable()
 export class MenfessService {
@@ -112,7 +112,7 @@ export class MenfessService {
 
   private serializeMenfess(data: any | any[], user: UserEntity) {
     const serializeAuthor = (menfess: any) =>
-      menfess.anonymous ? (menfess.author = null) : menfess;
+      menfess.anonymous ? { ...menfess, author: null } : menfess;
     const serializeVotes = (menfess: any) => {
       const vote = menfess.votes.find((vote: Vote) => vote.userId === user.id);
       delete menfess.votes;

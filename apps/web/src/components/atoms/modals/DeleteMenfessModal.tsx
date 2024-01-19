@@ -40,7 +40,11 @@ export default function DeleteMenfessModal({ menfessId, ...props }: Props) {
 
   return (
     <AlertDialog.Root {...props}>
-      <AlertDialog.Content>
+      <AlertDialog.Content
+        style={{
+          pointerEvents: "fill",
+        }}
+      >
         <Flex justify="center"></Flex>
         <AlertDialog.Title>Hapus menfess!</AlertDialog.Title>
         <AlertDialog.Description color="gray">

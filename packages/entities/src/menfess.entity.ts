@@ -1,4 +1,5 @@
 import { CommentEntity } from 'comment.entity';
+import { MediaEntity } from 'media.entity';
 
 export class MenfessEntity {
   id: string;
@@ -7,6 +8,7 @@ export class MenfessEntity {
   anonymous: boolean;
   createdAt: string;
   authorId: string;
+  medias: MediaEntity[];
   author?: {
     name: string;
     username: string;

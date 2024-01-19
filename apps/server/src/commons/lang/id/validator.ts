@@ -12,6 +12,8 @@ export const validator = {
   isUrl: '$property harus berupa url',
   maxLength: '$property maksimal $1 karakter',
   isUUID: '$property harus berupa UUID',
+  isArray: '$property harus berupa array',
+  arrayMaxSize: 'data pada $property tidak lebih dari $1 data',
 };
 
 export const validatorMapper =
