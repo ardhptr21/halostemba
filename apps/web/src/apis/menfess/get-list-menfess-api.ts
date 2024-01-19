@@ -18,6 +18,7 @@ interface GetListMenfessApiParams {
   page?: number;
   perPage?: number;
   search?: string;
+  order?: "TOP" | "LATEST";
 }
 
 export const getListMenfessApiHandler = async (

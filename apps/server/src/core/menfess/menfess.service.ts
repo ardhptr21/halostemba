@@ -86,7 +86,12 @@ export class MenfessService {
   }
 
   async getListMenfess(user: UserEntity, params: ListMenfessParamsDto) {
-    const menfesses = await this.menfessRepository.listMenfess(params, !!user);
+    const menfesses = await this.menfessRepository.listMenfess(
+      params,
+      !!user,
+      null,
+      params.order,
+    );
     menfesses.data = this.serializeMenfess(menfesses.data, user);
     return menfesses;
   }

@@ -16,7 +16,15 @@ export class MenfessRepository {
     params: ListMenfessParamsDto,
     hasUser: boolean,
     where?: Prisma.MenfessWhereInput,
+    order?: 'TOP' | 'LATEST',
   ) {
+    const orderBy: {
+      [key in 'TOP' | 'LATEST']: Prisma.MenfessOrderByWithRelationInput;
+    } = {
+      TOP: { score: 'desc' },
+      LATEST: { createdAt: 'desc' },
+    };
+
     return await paginate<any, Prisma.MenfessFindManyArgs>(
       this.db.menfess,
       {
@@ -38,7 +46,7 @@ export class MenfessRepository {
           ...(hasUser && { votes: { select: { userId: true, type: true } } }),
           _count: { select: { comments: true } },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: orderBy[order || 'LATEST'],
       },
       {
         page: params.page,

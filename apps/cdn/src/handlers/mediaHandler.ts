@@ -72,7 +72,6 @@ export const uploadMediaHandler: RequestHandler = async (req, res) => {
       url: new URL(path, process.env.APP_URL).toString(),
     });
   } catch (error) {
-    console.log(error);
     if (error instanceof UnableToWriteFile) {
       return res.status(500).json({
         status: 500,

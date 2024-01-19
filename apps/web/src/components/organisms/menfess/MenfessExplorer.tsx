@@ -11,7 +11,7 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { Session } from "next-auth";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useGetListMenfessInfiniteApi } from "~/apis/menfess/get-list-menfess-api";
@@ -31,12 +31,14 @@ export default function MenfessExplorer({ session }: Props) {
     delay: 500,
   });
   const params = useSearchParams();
+  const router = useRouter();
 
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useGetListMenfessInfiniteApi(
       session?.token as string,
       {
         search: params.get("q") || "",
+        order: (params.get("order") as "TOP" | "LATEST") || "TOP",
       },
       {
         enabled: !!params.get("q"),
@@ -47,16 +49,27 @@ export default function MenfessExplorer({ session }: Props) {
     if (inView && hasNextPage) fetchNextPage();
   }, [inView, hasNextPage, fetchNextPage]);
 
+  const handleOrderChange = (value: any) => {
+    const searchParams = new URLSearchParams(params);
+
+    searchParams.set("order", value);
+
+    router.push("?" + searchParams.toString());
+  };
+
   return (
     <>
       <MenfessSearch />
       {!params.get("q") ? (
-        <MenfessTrending />
+        <MenfessTrending session={session} />
       ) : !!data?.pages.length && !!data.pages[0].data.length ? (
-        <TabsRoot>
+        <TabsRoot
+          value={params.get("order") || "TOP"}
+          onValueChange={handleOrderChange}
+        >
           <TabsList size="2" className="justify-center">
-            <TabsTrigger value="top">Top</TabsTrigger>
-            <TabsTrigger value="latest">Latest</TabsTrigger>
+            <TabsTrigger value="TOP">Top</TabsTrigger>
+            <TabsTrigger value="LATEST">Latest</TabsTrigger>
           </TabsList>
 
           <Box py="5">
