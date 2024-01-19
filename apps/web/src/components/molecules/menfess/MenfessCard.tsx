@@ -39,11 +39,13 @@ function MenfessCard(
   const Wrapper = redirect ? Link : "div";
   return (
     <>
-      <ShowImageModal
-        src={src}
-        open={openImageModal}
-        onOpenChange={setOpenImageModal}
-      />
+      {menfess.medias.length > 0 ? (
+        <ShowImageModal
+          src={src}
+          open={openImageModal}
+          onOpenChange={setOpenImageModal}
+        />
+      ) : null}
       <Box ref={ref} width="100%">
         <Card asChild className="w-full">
           <article>
