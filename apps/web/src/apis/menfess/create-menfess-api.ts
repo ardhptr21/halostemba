@@ -10,6 +10,7 @@ interface CreateMenfessApiResponse {
 
 interface CreateMenfessApiBody extends CreateMenfessValidatorType {
   token: string;
+  media?: { source: string; type: "IMAGE" | "VIDEO" }[];
 }
 
 export const createMenfessApiHandler = async (
@@ -17,7 +18,7 @@ export const createMenfessApiHandler = async (
 ): Promise<CreateMenfessApiResponse> => {
   const { data } = await http.post(
     "/menfess",
-    { content: body.content, anonymous: body.anonymous },
+    { content: body.content, anonymous: body.anonymous, media: body.media },
     { headers: { Authorization: `Bearer ${body.token}` } },
   );
 

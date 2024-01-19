@@ -21,6 +21,8 @@ import TextareaAutosize from "react-textarea-autosize";
 import { useCreateMenfess } from "~/apis/menfess/create-menfess-api";
 import MustBeLoginModal from "~/components/atoms/modals/auth/MustBeLoginModal";
 import MustBeVerifiedModal from "~/components/atoms/modals/auth/MustBeVerifiedModal";
+import { useMediaStore } from "~/store/media/media-store";
+import { usePreviewMediaStore } from "~/store/media/prepare-media-store";
 import {
   CreateMenfessValidator,
   CreateMenfessValidatorType,
@@ -33,6 +35,13 @@ export default function MenfessCreate() {
   const [showMustLogin, setShowMustLogin] = useState(false);
   const { enqueueSnackbar: toast } = useSnackbar();
   const queryClient = useQueryClient();
+  const [media, cleanMedia] = useMediaStore((state) => [
+    state.media,
+    state.cleanMedia,
+  ]);
+  const setPreviewMedia = usePreviewMediaStore(
+    (state) => state.setPreviewMedia,
+  );
 
   const {
     register,
@@ -57,6 +66,8 @@ export default function MenfessCreate() {
     },
     onSuccess: (data) => {
       reset();
+      cleanMedia();
+      setPreviewMedia(null);
       queryClient.invalidateQueries({
         queryKey: ["list-menfess"],
       });
@@ -72,7 +83,14 @@ export default function MenfessCreate() {
 
   const handleCreate = () => {
     handleSubmit((data) => {
-      createMenfessHandler({ ...data, token: session?.token as string });
+      createMenfessHandler({
+        ...data,
+        media: Object.values(media).map((m) => ({
+          source: m.url!,
+          type: m.type,
+        })),
+        token: session?.token as string,
+      });
     })();
   };
 

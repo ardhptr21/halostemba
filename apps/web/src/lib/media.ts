@@ -3,18 +3,19 @@ export const allowedMime = {
   videos: ["video/mp4", "video/quicktime", "video/x-matroska"],
 };
 
-export interface Media {
+export interface PreviewMedia {
   file: File;
   type: "IMAGE" | "VIDEO";
   preview: string;
 }
 
 export const mediaValidator = (
+  initCount: number,
   files: FileList | File[],
-): { valid: boolean; error: string | null; media: Media[] | null } => {
-  const media: Media[] = [];
+): { valid: boolean; error: string | null; media: PreviewMedia[] | null } => {
+  const media: PreviewMedia[] = [];
 
-  if (files.length > 4)
+  if (files.length + initCount > 4)
     return {
       valid: false,
       error: "Hanya dapat memilih 4 gambar.",
@@ -22,7 +23,7 @@ export const mediaValidator = (
     };
   for (const file of files) {
     if (allowedMime.videos.includes(file.type)) {
-      if (files.length > 1)
+      if (files.length + initCount > 1)
         return {
           valid: false,
           error: "Hanya dapat memilih 1 video dan tanpa gambar.",
