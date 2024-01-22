@@ -1,0 +1,13 @@
+{
+  "name": "@halostemba/transactional",
+  "private": true,
+  "scripts": {
+    "dev": "email dev --port 8080",
+    "build": "email build",
+    "export": "email export"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.14",
+    "react-email": "1.10.1"
+  }
+}
