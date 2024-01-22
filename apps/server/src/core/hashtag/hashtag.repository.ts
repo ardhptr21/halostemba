@@ -22,11 +22,11 @@ export class HashtagRepository {
     });
   }
 
-  async listPopularHashtags() {
+  async listPopularHashtags(treshold: number = 20) {
     return await this.db.hashtag.findMany({
       where: {
         score: {
-          gte: 20,
+          gte: treshold,
         },
       },
       orderBy: {
@@ -35,6 +35,7 @@ export class HashtagRepository {
       take: 5,
       select: {
         name: true,
+        score: true,
       },
     });
   }

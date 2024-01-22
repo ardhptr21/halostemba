@@ -12,7 +12,7 @@ export class HashtagService {
   }
 
   async getListPopularHashtags() {
-    const hashtags = await this.hashtagRepository.listPopularHashtags();
+    const hashtags = await this.hashtagRepository.listPopularHashtags(20);
     return { data: hashtags };
   }
 
