@@ -2,25 +2,20 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FaceIcon } from "@radix-ui/react-icons";
-import {
-  Box,
-  Button,
-  Card,
-  Flex,
-  Switch,
-  Text,
-  Tooltip,
-} from "@radix-ui/themes";
+import { Box, Button, Flex, Switch, Text, Tooltip } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
+import { KeyboardEvent, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
+import { useDebouncedCallback } from "use-debounce";
 import { useCreateMenfess } from "~/apis/menfess/create-menfess-api";
+import HashtagsAutoComplete from "~/components/atoms/menfess/HashtagsAutoComplete";
 import MustBeLoginModal from "~/components/atoms/modals/auth/MustBeLoginModal";
 import MustBeVerifiedModal from "~/components/atoms/modals/auth/MustBeVerifiedModal";
+import { getWordByPosition } from "~/lib/utils";
 import { useMediaStore } from "~/store/media/media-store";
 import { usePreviewMediaStore } from "~/store/media/prepare-media-store";
 import {
@@ -29,10 +24,15 @@ import {
 } from "~/validators/menfess/create-menfess-validator";
 import PreviewMediaMenfess from "./PreviewMediaMenfess";
 import UploadMediaMenfess from "./UploadMediaMenfess";
+
 export default function MenfessCreate() {
   const { data: session } = useSession();
   const [showMustVerified, setShowMustVerified] = useState(false);
   const [showMustLogin, setShowMustLogin] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const [showAutoComplete, setShowAutoComplete] = useState(false);
+  const [hashtagTyping, setHashtagTyping] = useState<string>("");
+
   const { enqueueSnackbar: toast } = useSnackbar();
   const queryClient = useQueryClient();
   const [media, cleanMedia] = useMediaStore((state) => [
@@ -94,14 +94,60 @@ export default function MenfessCreate() {
     })();
   };
 
+  const handleKeyUp = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    const rule = /(?:^|(?<=\s))([#＃][^\s#]+)(?=\s|$)/g;
+    const currentValue = e.currentTarget.value;
+    const currentPosition = e.currentTarget.selectionStart;
+    const word = getWordByPosition(currentValue, currentPosition);
+
+    if (rule.test(word)) {
+      changeHashtag(word, true);
+    } else {
+      changeHashtag("", false);
+    }
+  };
+
+  const changeHashtag = useDebouncedCallback(
+    (hashtag: string, show: boolean) => {
+      setHashtagTyping(hashtag);
+      setShowAutoComplete(show);
+    },
+    500,
+  );
+
+  const handleCompleteHashtag = (hashtag: string) => {
+    const value = textareaRef.current?.value || "";
+    const pos = textareaRef.current?.selectionStart || 0;
+    const word = getWordByPosition(value!, pos!);
+
+    const char = word.indexOf(value.charAt(pos - 1));
+    const start = pos - char - 1;
+    const end = start + word.length;
+
+    const final =
+      value.substring(0, start) + `#${hashtag}` + value.substring(end) + " ";
+    const carretPos = end + (hashtag.length - word.length) + 2;
+
+    setValue("content", final);
+    setShowAutoComplete(false);
+    textareaRef.current?.focus();
+
+    textareaRef.current?.setSelectionRange(carretPos, carretPos);
+  };
+
   return (
-    <>
+    <div className="relative">
       <MustBeVerifiedModal
         open={showMustVerified}
         onOpenChange={setShowMustVerified}
       />
+
       <MustBeLoginModal open={showMustLogin} onOpenChange={setShowMustLogin} />
-      <Card className="w-full" onClick={handleClick}>
+      <Box
+        p={"3"}
+        className="rt-reset rt-Card w-full rt-r-size-1 rt-variant-surface"
+        onClick={handleClick}
+      >
         <Flex
           direction="column"
           style={{
@@ -119,7 +165,7 @@ export default function MenfessCreate() {
               />
             </Box>
 
-            <Flex direction="column" gap="1" width="100%">
+            <Flex direction="column" gap="1" width="100%" className="relative">
               <div className="rt-TextAreaRoot rt-r-size-2 rt-variant-surface w-full ">
                 <TextareaAutosize
                   disabled={isPending}
@@ -127,10 +173,20 @@ export default function MenfessCreate() {
                   className="rt-TextAreaInput"
                   placeholder="Apa yang sedang terjadi !?"
                   style={{ width: "100%" }}
+                  onKeyUp={handleKeyUp}
                   {...register("content")}
+                  ref={(el) => {
+                    textareaRef.current = el;
+                    register("content").ref(el);
+                  }}
                 />
                 <div className="rt-TextAreaChrome"></div>
               </div>
+              <HashtagsAutoComplete
+                onSelect={handleCompleteHashtag}
+                hashtag={hashtagTyping}
+                open={showAutoComplete}
+              />
               <Text as="p" size="1" color="red">
                 {errors.content?.message}
               </Text>
@@ -174,7 +230,7 @@ export default function MenfessCreate() {
             </Button>
           </Flex>
         </Flex>
-      </Card>
-    </>
+      </Box>
+    </div>
   );
 }

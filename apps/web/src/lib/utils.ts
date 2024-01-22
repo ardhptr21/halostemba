@@ -11,3 +11,11 @@ export function preventBubbling(
     if (callback) callback();
   };
 }
+
+export function getWordByPosition(text: string, pos: number) {
+  const n = text.substring(pos).match(/^\S+/);
+  const p = text.substring(0, pos).match(/\S+$/);
+  const word = (p?.at(0) || "") + (n?.at(0) || "");
+
+  return word;
+}
