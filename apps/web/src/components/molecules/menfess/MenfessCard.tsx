@@ -17,6 +17,7 @@ import DeleteMenfessModal from "~/components/atoms/modals/DeleteMenfessModal";
 import { preventBubbling } from "~/lib/utils";
 import RenderMenfessMedia from "./RenderMenfessMedia";
 import ShowImageModal from "~/components/atoms/modals/ShowImageModal";
+import useParseHashtag from "~/hooks/useParseHashtag";
 
 interface MenfessCardProps {
   redirect?: boolean;
@@ -30,6 +31,7 @@ function MenfessCard(
   const { data: session } = useSession();
   const [src, setSrc] = useState("");
   const [openImageModal, setOpenImageModal] = useState(false);
+  const { parser } = useParseHashtag();
 
   const handlePreview = (src: string) => {
     setSrc(src);
@@ -91,7 +93,7 @@ function MenfessCard(
                     className={redirect ? "cursor-pointer" : ""}
                   >
                     <Text size="2" color="gray" className="whitespace-pre-line">
-                      {menfess.content}
+                      {parser(menfess.content)}
                     </Text>
                     {menfess.medias.length > 0 ? (
                       <RenderMenfessMedia
