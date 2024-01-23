@@ -1,9 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ProfileRepository } from './profile.repository';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { compare, hash } from 'bcryptjs';
 import { MailService } from '~/mail/mail.service';
 import { UserRepository } from '../user/user.repository';
+import { UserEntity } from '~/commons/entities/user.entity';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class ProfileService {
@@ -12,6 +18,21 @@ export class ProfileService {
     private readonly userRepository: UserRepository,
     private readonly mailService: MailService,
   ) {}
+
+  async getProfile(username: string) {
+    const profile = await this.userRepository.findUser(username);
+
+    if (!profile)
+      throw new NotFoundException({
+        error: 'Profile tidak ditemukan.',
+        statusCode: 404,
+      });
+
+    return {
+      message: 'Profile berhasil didapatkan.',
+      data: plainToClass(UserEntity, profile),
+    };
+  }
 
   async updateProfile(userId: string, updateProfileDto: UpdateProfileDto) {
     const user = await this.userRepository.findUserById(userId);
