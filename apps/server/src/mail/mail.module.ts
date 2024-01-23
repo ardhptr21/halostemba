@@ -1,10 +1,8 @@
-import { Global, Module } from '@nestjs/common';
-import { MailService } from './mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { join } from 'path';
+import { Global, Module } from '@nestjs/common';
 import { MagiclinkModule } from '~/providers/magiclink/magiclink.module';
 import { OtpModule } from '~/providers/otp/otp.module';
+import { MailService } from './mail.service';
 
 @Global()
 @Module({
@@ -24,13 +22,6 @@ import { OtpModule } from '~/providers/otp/otp.module';
         },
         defaults: {
           from: `"noreply" <${process.env.MAIL_FROM}>`,
-        },
-        template: {
-          dir: join(__dirname, 'templates'),
-          adapter: new HandlebarsAdapter(),
-          options: {
-            strict: true,
-          },
         },
       }),
     }),

@@ -16,6 +16,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@halostemba/db": "workspace:*",
+    "@halostemba/entities": "workspace:*",
+    "@halostemba/transactional": "workspace:*",
     "@nestjs-modules/mailer": "^1.10.3",
     "@nestjs/common": "^10.3.0",
     "@nestjs/config": "^3.1.1",
@@ -25,6 +28,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.3.0",
     "@nestjs/throttler": "^5.1.1",
+    "@react-email/render": "0.0.10",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -39,8 +43,6 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@halostemba/db": "workspace:*",
-    "@halostemba/entities": "workspace:*",
     "@halostemba/eslint-config": "workspace:*",
     "@halostemba/ts-config": "workspace:*",
     "@nestjs/cli": "^10.3.0",
