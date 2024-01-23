@@ -23,7 +23,9 @@ export default function TicketForm() {
           <Text weight={"bold"}>1</Text>
         </IconButton>
         <Flex direction={"column"} width={"100%"} gap={"5"}>
-          <Heading as="h2">Judul Permasalahan</Heading>
+          <Heading as="h2" size="4">
+            Judul Permasalahan
+          </Heading>
           <TextArea
             className="w-full"
             placeholder="Tuliskan judul permasalahan yang sedang kamu alami..."
@@ -36,7 +38,9 @@ export default function TicketForm() {
           <Text weight={"bold"}>2</Text>
         </IconButton>
         <Flex direction={"column"} width={"100%"} gap={"5"}>
-          <Heading as="h2">Detail Permasalahan</Heading>
+          <Heading as="h2" size="4">
+            Detail Permasalahan
+          </Heading>
           <AspectRatio ratio={21 / 9} asChild>
             <Flex
               justify={"center"}

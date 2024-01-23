@@ -1,16 +1,16 @@
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { Flex } from "@radix-ui/themes";
 import React from "react";
-import MainLayout from "~/components/layouts/MainLayout";
+import TicketLayout from "~/components/layouts/TicketLayout";
 import TicketForm from "~/components/organisms/ticket/TicketForm";
 
 export default function page() {
   return (
-    <MainLayout>
-      <Flex gap={"5"} width={"100%"}>
+    <TicketLayout>
+      <Flex gap={"5"} width={"100%"} className="max-w-3xl">
         <ArrowLeftIcon width={30} height={30} />
         <TicketForm />
       </Flex>
-    </MainLayout>
+    </TicketLayout>
   );
 }
