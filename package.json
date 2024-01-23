@@ -4,7 +4,7 @@
   "scripts": {
     "start": "turbo start",
     "prepare": "husky install",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --filter=@halostemba/*",
     "build": "turbo run build",
     "test": "turbo run test",
     "lint": "turbo run lint",
