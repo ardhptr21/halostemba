@@ -27,7 +27,6 @@ export class ProfileController {
     return user;
   }
 
-  @Auth(false)
   @HttpCode(HttpStatus.OK)
   @Get('/:username')
   async getProfileByUsername(@Param('username') username: string) {
