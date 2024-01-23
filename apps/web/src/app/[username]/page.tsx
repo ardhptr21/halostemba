@@ -26,8 +26,6 @@ export default function ProfilePage({
 }: ProfilePageProps) {
   const { data } = useGetUserProfileApi(username);
 
-  console.log(data);
-
   return (
     <ProfileLayout>
       <Flex direction="column" gap="4" className="w-full">

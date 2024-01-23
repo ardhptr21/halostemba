@@ -1,12 +1,10 @@
-import { Cross1Icon, ImageIcon, Pencil2Icon } from "@radix-ui/react-icons";
+import { Pencil2Icon } from "@radix-ui/react-icons";
 import {
   Box,
   Button,
   Card,
-  DialogClose,
   DialogContent,
   DialogRoot,
-  DialogTitle,
   DialogTrigger,
   Flex,
   Heading,
@@ -15,12 +13,11 @@ import {
   TabsRoot,
   TabsTrigger,
   Text,
-  TextArea,
-  TextFieldInput,
 } from "@radix-ui/themes";
 import { Session } from "next-auth";
 import Image from "next/image";
 import ProfileLayout from "~/components/layouts/ProfileLayout";
+import EditProfileForm from "~/components/organisms/profile/EditProfileForm";
 import withAuthRequired from "~/guards/auth/withAuthRequired";
 
 interface ProfilePageProps {
@@ -61,70 +58,7 @@ function ProfilePage({ session }: ProfilePageProps) {
                     </DialogTrigger>
 
                     <DialogContent style={{ maxWidth: 700 }}>
-                      <Flex gap="4">
-                        <Flex direction="column">
-                          <DialogClose>
-                            <Cross1Icon className="cursor-pointer" />
-                          </DialogClose>
-                        </Flex>
-                        <Flex direction="column" className="w-full">
-                          <DialogTitle size="5">Ubah Profile</DialogTitle>
-
-                          <Flex direction="row" gap="4" py="4">
-                            <Flex align="center" direction="column" gap="4">
-                              <Image
-                                src="/assets/images/profile/avatar.png"
-                                width={160}
-                                height={160}
-                                alt="profile"
-                              />
-                              <Flex
-                                direction="row"
-                                gap="2"
-                                align="center"
-                                className="cursor-pointer"
-                              >
-                                <ImageIcon style={{ color: "#99A2FF" }} />
-                                <Text style={{ color: "#99A2FF" }} size="1">
-                                  Ubah Foto Profil
-                                </Text>
-                              </Flex>
-                            </Flex>
-                            <Flex direction="column" gap="4" className="w-full">
-                              <label>
-                                <Text as="div" size="2" mb="1" weight="medium">
-                                  Nama
-                                </Text>
-                                <TextFieldInput
-                                  defaultValue="Freja Johnsen"
-                                  placeholder="Enter your full name"
-                                />
-                              </label>
-                              <label>
-                                <Text as="div" size="2" mb="1" weight="medium">
-                                  Bio
-                                </Text>
-                                <TextArea defaultValue="‘Sempatkan pulang ke beranda, tuk mencatat hidup dan harganya’ - Hindia"></TextArea>
-                              </label>
-                            </Flex>
-                          </Flex>
-
-                          <Flex gap="3" mt="4" justify="end">
-                            <DialogClose>
-                              <Button
-                                className="cursor-pointer"
-                                variant="soft"
-                                color="gray"
-                              >
-                                Cancel
-                              </Button>
-                            </DialogClose>
-                            <DialogClose>
-                              <Button className="cursor-pointer">Save</Button>
-                            </DialogClose>
-                          </Flex>
-                        </Flex>
-                      </Flex>
+                      <EditProfileForm session={session} />
                     </DialogContent>
                   </DialogRoot>
                 </Flex>
