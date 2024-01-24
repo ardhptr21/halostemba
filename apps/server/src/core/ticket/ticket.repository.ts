@@ -57,6 +57,16 @@ export class TicketRepository {
     return await this.db.ticket.findFirst({ where: { id: ticketId } });
   }
 
+  async getTicketByIdComplete(ticketId: string) {
+    return await this.db.ticket.findFirst({
+      where: { id: ticketId },
+      include: {
+        medias: { select: { source: true, type: true } },
+        responder: { select: { name: true, avatar: true, username: true } },
+      },
+    });
+  }
+
   async updateTicketResponder(responderId: string, ticketId: string) {
     return await this.db.ticket.update({
       data: { responderId, status: TicketStatus.OPEN },

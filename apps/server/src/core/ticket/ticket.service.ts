@@ -1,4 +1,5 @@
 import { Prisma, TicketStatus } from '@halostemba/db';
+import { UserEntity } from '@halostemba/entities';
 import {
   BadRequestException,
   ForbiddenException,
@@ -6,10 +7,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
+import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
 import { TicketNotFoundException, TicketServerError } from './ticket.exception';
 import { TicketRepository } from './ticket.repository';
-import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 
 @Injectable()
 export class TicketService {
@@ -31,6 +32,21 @@ export class TicketService {
     });
 
     if (!ticket) throw new TicketServerError('Gagal membuat laporan.');
+
+    return { data: ticket };
+  }
+
+  async getTicket(user: UserEntity, ticketId: string) {
+    const ticket = await this.ticketRepository.getTicketByIdComplete(ticketId);
+
+    if (!ticket) throw new TicketNotFoundException();
+
+    if (
+      (user.role === 'STUDENT' && ticket.reporterId !== user.id) ||
+      (user.role === 'TEACHER' && ticket.responderId !== user.id)
+    ) {
+      throw new NotFoundException();
+    }
 
     return { data: ticket };
   }

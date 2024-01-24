@@ -42,6 +42,15 @@ export class TicketController {
     return this.ticketService.getCurrentUserTickets(user.id, params);
   }
 
+  @Auth(true, Role.TEACHER, Role.STUDENT)
+  @Get('/:ticketId')
+  async getTicket(
+    @Param('ticketId', ParseUUIDPipe) ticketId: string,
+    @User() user: UserEntity,
+  ) {
+    return this.ticketService.getTicket(user, ticketId);
+  }
+
   @Auth(true, Role.STUDENT)
   @Put('/:ticketId')
   async updateTicket(

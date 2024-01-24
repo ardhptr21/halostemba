@@ -9,6 +9,7 @@ import {
   TabsList,
   TabsRoot,
   TabsTrigger,
+  Text,
   TextFieldInput,
   TextFieldRoot,
   TextFieldSlot,
@@ -90,8 +91,9 @@ export default function TicketList({ session }: Props) {
 
         <Flex direction={"column"} asChild>
           <ScrollArea scrollbars="vertical" className="h-full">
-            {!isPending
-              ? orderChat(data)
+            {!isPending ? (
+              !!data?.length ? (
+                orderChat(data)
                   ?.filter((ticket) => ticket.title.includes(search))
                   ?.map((ticket) => (
                     <TicketChatPreview
@@ -100,9 +102,18 @@ export default function TicketList({ session }: Props) {
                       active={ticket.id === id}
                     />
                   ))
-              : Array.from({ length: 12 }).map((_, i) => (
-                  <TicketChatPreviewSkeleton key={i} />
-                ))}
+              ) : (
+                <Flex mt="9" direction="column" justify="center" align="center">
+                  <Text as="p" size="3" color="gray">
+                    Tidak ada ticket disini
+                  </Text>
+                </Flex>
+              )
+            ) : (
+              Array.from({ length: 12 }).map((_, i) => (
+                <TicketChatPreviewSkeleton key={i} />
+              ))
+            )}
           </ScrollArea>
         </Flex>
       </Flex>
