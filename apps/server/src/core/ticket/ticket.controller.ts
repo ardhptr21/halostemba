@@ -19,6 +19,7 @@ import { CreateTicketDto } from './dtos/create-ticket.dto';
 import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
 import { TicketService } from './ticket.service';
+import { GetTicketRepliesParamsDto } from './dtos/get-ticket-replies-params.dto';
 
 @Controller('tickets')
 export class TicketController {
@@ -40,6 +41,15 @@ export class TicketController {
     @Query() params: ListTicketParamsDto,
   ) {
     return this.ticketService.getCurrentUserTickets(user.id, params);
+  }
+
+  @Auth(true, Role.TEACHER, Role.STUDENT)
+  @Get('/:ticketId')
+  async getTicket(
+    @Param('ticketId', ParseUUIDPipe) ticketId: string,
+    @User() user: UserEntity,
+  ) {
+    return this.ticketService.getTicket(user, ticketId);
   }
 
   @Auth(true, Role.STUDENT)
@@ -89,8 +99,9 @@ export class TicketController {
   async getTicketReplies(
     @Param('ticketId', ParseUUIDPipe) ticketId: string,
     @User() user: UserEntity,
+    @Query() params: GetTicketRepliesParamsDto,
   ) {
-    return this.ticketService.getTicketReplies(ticketId, user.id);
+    return this.ticketService.getTicketReplies(ticketId, user.id, params);
   }
 
   @Auth(true, Role.TEACHER, Role.STUDENT)

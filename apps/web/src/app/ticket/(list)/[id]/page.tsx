@@ -1,37 +1,38 @@
-import { Flex, ScrollArea, Separator, Text } from "@radix-ui/themes";
-import React from "react";
-import ChatBubble from "~/components/atoms/ticket/ChatBubble";
+import { Flex } from "@radix-ui/themes";
+import { AxiosError } from "axios";
+import { notFound } from "next/navigation";
+import { getTicketApiHandler } from "~/apis/ticket/get-ticket-api";
 import ChatField from "~/components/atoms/ticket/ChatField";
 import HeadTicketChat from "~/components/atoms/ticket/HeadTicketChat";
-import PreviewTicketIssue from "~/components/atoms/ticket/PreviewTicketIssue";
+import TicketChatContent from "~/components/organisms/ticket/TicketChatContent";
+import { getAuthServer } from "~/lib/auth";
 
-export default function page() {
+interface Props {
+  params: { id: string };
+}
+
+const getTicket = async (token: string, id: string) => {
+  try {
+    const ticket = await getTicketApiHandler(token, id);
+    if (!ticket) throw notFound();
+    return ticket;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      if (error.response?.status === 404) throw notFound();
+    }
+    throw error;
+  }
+};
+
+export default async function TicketDetailPage({ params: { id } }: Props) {
+  const session = await getAuthServer();
+  const ticket = await getTicket(session!.token, id);
+
   return (
     <Flex direction={"column"} gap={"5"} height={"100%"} className="relative">
-      <HeadTicketChat />
-      <Flex asChild direction={"column"} className="h-[calc(100%-150px)]">
-        <ScrollArea scrollbars="vertical">
-          <PreviewTicketIssue />
-          <Flex
-            gap={"3"}
-            align={"center"}
-            justify={"center"}
-            width={"100%"}
-            my={"4"}
-          >
-            <Separator size={"3"} />
-            <Text weight={"medium"}>Hari ini</Text>
-            <Separator size={"3"} />
-          </Flex>
-          <Flex direction={"column"} gap={"3"}>
-            <ChatBubble img="/assets/images/ticket/chat-bubble.png" />
-            <ChatBubble />
-            <ChatBubble self />
-            <ChatBubble self />
-          </Flex>
-        </ScrollArea>
-      </Flex>
-      <ChatField />
+      <HeadTicketChat ticket={ticket} />
+      <TicketChatContent session={session!} ticket={ticket} />
+      {ticket.status === "OPEN" && <ChatField />}
     </Flex>
   );
 }

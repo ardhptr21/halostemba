@@ -1,4 +1,5 @@
 import { Prisma, TicketStatus } from '@halostemba/db';
+import { UserEntity } from '@halostemba/entities';
 import {
   BadRequestException,
   ForbiddenException,
@@ -6,10 +7,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
+import { GetTicketRepliesParamsDto } from './dtos/get-ticket-replies-params.dto';
+import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
 import { TicketNotFoundException, TicketServerError } from './ticket.exception';
 import { TicketRepository } from './ticket.repository';
-import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 
 @Injectable()
 export class TicketService {
@@ -31,6 +33,21 @@ export class TicketService {
     });
 
     if (!ticket) throw new TicketServerError('Gagal membuat laporan.');
+
+    return { data: ticket };
+  }
+
+  async getTicket(user: UserEntity, ticketId: string) {
+    const ticket = await this.ticketRepository.getTicketByIdComplete(ticketId);
+
+    if (!ticket) throw new TicketNotFoundException();
+
+    if (
+      (user.role === 'STUDENT' && ticket.reporterId !== user.id) ||
+      (user.role === 'TEACHER' && ticket.responderId !== user.id)
+    ) {
+      throw new NotFoundException();
+    }
 
     return { data: ticket };
   }
@@ -105,15 +122,24 @@ export class TicketService {
     return { data: ticket };
   }
 
-  async getTicketReplies(ticketId: string, userId: string) {
+  async getTicketReplies(
+    ticketId: string,
+    userId: string,
+    params: GetTicketRepliesParamsDto,
+  ) {
     const ticket = await this.ticketRepository.getTicketById(ticketId);
 
     if (ticket.reporterId !== userId && ticket.responderId !== userId)
       throw new TicketNotFoundException();
 
-    const replies = await this.ticketRepository.getTicketReplies(ticketId);
+    const replies = await this.ticketRepository.getTicketReplies(
+      ticketId,
+      params,
+    );
 
-    return { data: replies };
+    replies.data.reverse();
+
+    return replies;
   }
 
   async deleteTicketReply(userId: string, replyId: string) {

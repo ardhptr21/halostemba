@@ -1,9 +1,13 @@
-import { TicketStatus } from '@halostemba/db';
+import { Prisma, TicketStatus } from '@halostemba/db';
 import { Injectable } from '@nestjs/common';
+import { paginator } from '~/providers/database/database.paginator';
 import { DatabaseService } from '~/providers/database/database.service';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
+import { GetTicketRepliesParamsDto } from './dtos/get-ticket-replies-params.dto';
 import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
+
+const paginate = paginator({ perPage: 20 });
 
 @Injectable()
 export class TicketRepository {
@@ -57,6 +61,16 @@ export class TicketRepository {
     return await this.db.ticket.findFirst({ where: { id: ticketId } });
   }
 
+  async getTicketByIdComplete(ticketId: string) {
+    return await this.db.ticket.findFirst({
+      where: { id: ticketId },
+      include: {
+        medias: { select: { source: true, type: true } },
+        responder: { select: { name: true, avatar: true, username: true } },
+      },
+    });
+  }
+
   async updateTicketResponder(responderId: string, ticketId: string) {
     return await this.db.ticket.update({
       data: { responderId, status: TicketStatus.OPEN },
@@ -70,18 +84,22 @@ export class TicketRepository {
     });
   }
 
-  async getTicketReplies(ticketId: string) {
-    return await this.db.ticketReply.findMany({
-      where: { ticketId },
-      select: {
-        id: true,
-        authorId: true,
-        message: true,
-        createdAt: true,
-        author: { select: { name: true, avatar: true } },
+  async getTicketReplies(ticketId: string, params: GetTicketRepliesParamsDto) {
+    return await paginate<any, Prisma.TicketReplyFindManyArgs>(
+      this.db.ticketReply,
+      {
+        where: { ticketId },
+        select: {
+          id: true,
+          authorId: true,
+          message: true,
+          createdAt: true,
+          author: { select: { name: true, username: true, avatar: true } },
+        },
+        orderBy: { createdAt: 'desc' },
       },
-      orderBy: { createdAt: 'asc' },
-    });
+      params,
+    );
   }
 
   async deleteTicketReply(replyId: string, authorId: string) {

@@ -1,4 +1,5 @@
 import { MediaEntity } from 'media.entity';
+import { UserEntity } from 'user.entity';
 
 export class TicketReplyEntity {
   id: string;
@@ -6,6 +7,7 @@ export class TicketReplyEntity {
   ticketId: string;
   message: string;
   createdAt: string;
+  author: Pick<UserEntity, 'name' | 'username' | 'avatar'>;
 }
 
 export class TicketEntity {
@@ -18,6 +20,7 @@ export class TicketEntity {
   createdAt: string;
   updatedAt: string;
   closedAt: string | null;
+  responder?: Pick<UserEntity, 'name' | 'avatar' | 'username'>;
   medias?: MediaEntity[];
   ticketReplies?: TicketReplyEntity[];
 }
