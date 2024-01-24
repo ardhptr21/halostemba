@@ -1,31 +1,43 @@
+import { TicketEntity } from "@halostemba/entities";
 import { Box, Flex, Text } from "@radix-ui/themes";
+import clsx from "clsx";
 import Link from "next/link";
-import React from "react";
+import { formatDateChatDisplay } from "~/lib/utils";
 
-export default function TicketChatPreview() {
+interface Props {
+  ticket: TicketEntity;
+  active?: boolean;
+}
+
+export default function TicketChatPreview({ ticket, active }: Props) {
+  const latestReply = ticket.ticketReplies?.at(0);
+
   return (
     <Box
-      width={"100%"}
-      px={"3"}
-      pt={"2"}
+      width="100%"
+      py="2"
+      px="4"
       asChild
-      className="hover:bg-[#3E63DD]/25 group"
+      className={clsx("border-b border-white/10 first:border-t", {
+        "hover:bg-[#3E63DD]/25": !active,
+        "bg-[#3E63DD]/50": active,
+      })}
     >
-      <Link href={"/ticket/1"} className="inline-block">
-        <Box
-          className="border-b border-b-gray-500/70 group-hover:border-b-transparent"
-          pb={"3"}
-        >
-          <Flex justify={"between"} width={"100%"} gap={"3"}>
-            <Text size={"2"} weight={"medium"}>
-              Pendaftaran KIP-K
-            </Text>
-            <Text size={"1"}>18:10</Text>
-          </Flex>
-          <Text color="gray" size={"2"}>
-            Untuk informasi Selanju....
+      <Link
+        href={`/ticket/${ticket.id}?status=${ticket.status}`}
+        className="inline-block"
+      >
+        <Flex justify="between" width="100%" gap="3">
+          <Text as="p" size="3" weight="medium" className="max-w-xs truncate">
+            {ticket.title}
           </Text>
-        </Box>
+          <Text size={"1"}>
+            {formatDateChatDisplay(latestReply?.createdAt ?? ticket.createdAt)}
+          </Text>
+        </Flex>
+        <Text color="gray" size="2" as="p" className="max-w-xs truncate">
+          {latestReply?.message ?? ticket.detail}
+        </Text>
       </Link>
     </Box>
   );

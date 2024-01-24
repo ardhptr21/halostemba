@@ -2,16 +2,28 @@ import { TicketStatus } from '@halostemba/db';
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '~/providers/database/database.service';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
+import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
 
 @Injectable()
 export class TicketRepository {
   constructor(private readonly db: DatabaseService) {}
 
-  async getListTicketByReporterId(reporterId: string) {
+  async getListTicketByReporterId(
+    reporterId: string,
+    params: ListTicketParamsDto,
+  ) {
     return await this.db.ticket.findMany({
-      where: { reporterId },
-      include: { responder: { select: { name: true, avatar: true } } },
+      where: {
+        reporterId,
+        status: params.status,
+      },
+      include: {
+        responder: { select: { name: true, avatar: true } },
+        ticketReplies: { take: 1, orderBy: { createdAt: 'desc' } },
+        medias: { select: { source: true, type: true } },
+      },
+      orderBy: { createdAt: 'desc' },
     });
   }
 

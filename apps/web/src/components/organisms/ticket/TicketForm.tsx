@@ -63,7 +63,7 @@ export default function TicketForm({ session }: Props) {
       cleanMedia();
       setPreviewMedia([]);
       toast("Ticket berhasil dibuat.", { variant: "success" });
-      router.push(`/ticket/${data.id}`);
+      router.push(`/ticket/${data.id}?status=WAITING`);
     },
   });
 

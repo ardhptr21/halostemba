@@ -1,15 +1,23 @@
 import { Box } from "@radix-ui/themes";
-import React, { PropsWithChildren } from "react";
+import { Session } from "next-auth";
+import { PropsWithChildren } from "react";
 import TicketLayout from "~/components/layouts/TicketLayout";
 import TicketList from "~/components/molecules/ticket/TicketList";
+import withAuthRequired from "~/guards/auth/withAuthRequired";
 
-export default function layout({ children }: PropsWithChildren) {
+interface Props extends PropsWithChildren {
+  session: Session;
+}
+
+function layout({ children, session }: Props) {
   return (
     <TicketLayout>
-      <TicketList />
+      <TicketList session={session} />
       <Box px={"3"} width={"100%"}>
         {children}
       </Box>
     </TicketLayout>
   );
 }
+
+export default withAuthRequired(layout);

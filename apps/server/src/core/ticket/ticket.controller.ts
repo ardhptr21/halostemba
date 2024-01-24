@@ -10,13 +10,15 @@ import {
   Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { User } from '~/commons/decorators/requests/user.decorator';
 import { Auth } from '~/commons/decorators/validators/auth.decorator';
+import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
+import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
 import { TicketService } from './ticket.service';
-import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
 
 @Controller('tickets')
 export class TicketController {
@@ -33,8 +35,11 @@ export class TicketController {
 
   @Auth(true, Role.STUDENT)
   @Get('/me')
-  async getCurrentUserTickets(@User() user: UserEntity) {
-    return this.ticketService.getCurrentUserTickets(user.id);
+  async getCurrentUserTickets(
+    @User() user: UserEntity,
+    @Query() params: ListTicketParamsDto,
+  ) {
+    return this.ticketService.getCurrentUserTickets(user.id, params);
   }
 
   @Auth(true, Role.STUDENT)

@@ -1,8 +1,7 @@
 import { Button, Flex, Text } from "@radix-ui/themes";
 import Image from "next/image";
-import React from "react";
 
-export default function page() {
+export default function TicketPage() {
   return (
     <Flex
       direction={"column"}

@@ -1,3 +1,4 @@
+import { Prisma, TicketStatus } from '@halostemba/db';
 import {
   BadRequestException,
   ForbiddenException,
@@ -6,17 +7,19 @@ import {
 } from '@nestjs/common';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
-import { TicketRepository } from './ticket.repository';
-import { Prisma, TicketStatus } from '@halostemba/db';
 import { TicketNotFoundException, TicketServerError } from './ticket.exception';
+import { TicketRepository } from './ticket.repository';
+import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 
 @Injectable()
 export class TicketService {
   constructor(private readonly ticketRepository: TicketRepository) {}
 
-  async getCurrentUserTickets(userId: string) {
-    const tickets =
-      await this.ticketRepository.getListTicketByReporterId(userId);
+  async getCurrentUserTickets(userId: string, params: ListTicketParamsDto) {
+    const tickets = await this.ticketRepository.getListTicketByReporterId(
+      userId,
+      params,
+    );
 
     return { data: tickets };
   }
