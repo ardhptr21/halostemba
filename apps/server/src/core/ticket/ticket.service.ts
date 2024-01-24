@@ -7,11 +7,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
+import { GetTicketRepliesParamsDto } from './dtos/get-ticket-replies-params.dto';
 import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
 import { TicketNotFoundException, TicketServerError } from './ticket.exception';
 import { TicketRepository } from './ticket.repository';
-import { GetTicketRepliesParamsDto } from './dtos/get-ticket-replies-params.dto';
 
 @Injectable()
 export class TicketService {
@@ -137,7 +137,9 @@ export class TicketService {
       params,
     );
 
-    return { data: replies };
+    replies.data.reverse();
+
+    return replies;
   }
 
   async deleteTicketReply(userId: string, replyId: string) {

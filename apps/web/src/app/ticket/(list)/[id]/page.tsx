@@ -1,19 +1,10 @@
-import { InfoCircledIcon } from "@radix-ui/react-icons";
-import {
-  CalloutIcon,
-  CalloutRoot,
-  CalloutText,
-  Flex,
-  ScrollArea,
-  Text,
-} from "@radix-ui/themes";
+import { Flex } from "@radix-ui/themes";
 import { AxiosError } from "axios";
 import { notFound } from "next/navigation";
 import { getTicketApiHandler } from "~/apis/ticket/get-ticket-api";
 import ChatField from "~/components/atoms/ticket/ChatField";
 import HeadTicketChat from "~/components/atoms/ticket/HeadTicketChat";
-import PreviewTicketIssue from "~/components/atoms/ticket/PreviewTicketIssue";
-import TicketChatList from "~/components/molecules/ticket/TicketChatList";
+import TicketChatContent from "~/components/organisms/ticket/TicketChatContent";
 import { getAuthServer } from "~/lib/auth";
 
 interface Props {
@@ -40,28 +31,7 @@ export default async function TicketDetailPage({ params: { id } }: Props) {
   return (
     <Flex direction={"column"} gap={"5"} height={"100%"} className="relative">
       <HeadTicketChat ticket={ticket} />
-      <ScrollArea scrollbars="vertical" className="h-[calc(100%-150px)]">
-        <Flex direction="column" gap="4">
-          <PreviewTicketIssue
-            media={ticket.medias}
-            title={ticket.title}
-            detail={ticket.detail}
-          />
-          {ticket.status !== "WAITING" && <TicketChatList ticketId={id} />}
-          {ticket.status === "WAITING" && (
-            <CalloutRoot variant="soft" color="cyan">
-              <CalloutIcon>
-                <InfoCircledIcon />
-              </CalloutIcon>
-              <CalloutText>Ticket-mu sedang di proses</CalloutText>
-              <Text as="p" size="2" color="gray">
-                Ticket-mu saat ini sedang dalam antrian untuk ditinjau oleh
-                guru. Stay tuned, ya!
-              </Text>
-            </CalloutRoot>
-          )}
-        </Flex>
-      </ScrollArea>
+      <TicketChatContent session={session!} ticket={ticket} />
       {ticket.status === "OPEN" && <ChatField />}
     </Flex>
   );
