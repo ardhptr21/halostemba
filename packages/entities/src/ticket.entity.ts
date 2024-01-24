@@ -7,6 +7,7 @@ export class TicketReplyEntity {
   ticketId: string;
   message: string;
   createdAt: string;
+  author: Pick<UserEntity, 'name' | 'username' | 'avatar'>;
 }
 
 export class TicketEntity {

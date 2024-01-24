@@ -11,6 +11,7 @@ import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
 import { TicketNotFoundException, TicketServerError } from './ticket.exception';
 import { TicketRepository } from './ticket.repository';
+import { GetTicketRepliesParamsDto } from './dtos/get-ticket-replies-params.dto';
 
 @Injectable()
 export class TicketService {
@@ -121,13 +122,20 @@ export class TicketService {
     return { data: ticket };
   }
 
-  async getTicketReplies(ticketId: string, userId: string) {
+  async getTicketReplies(
+    ticketId: string,
+    userId: string,
+    params: GetTicketRepliesParamsDto,
+  ) {
     const ticket = await this.ticketRepository.getTicketById(ticketId);
 
     if (ticket.reporterId !== userId && ticket.responderId !== userId)
       throw new TicketNotFoundException();
 
-    const replies = await this.ticketRepository.getTicketReplies(ticketId);
+    const replies = await this.ticketRepository.getTicketReplies(
+      ticketId,
+      params,
+    );
 
     return { data: replies };
   }
