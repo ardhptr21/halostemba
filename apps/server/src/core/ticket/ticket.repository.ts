@@ -1,8 +1,8 @@
+import { TicketStatus } from '@halostemba/db';
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '~/providers/database/database.service';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
-import { TicketStatus } from '@halostemba/db';
 
 @Injectable()
 export class TicketRepository {
@@ -15,8 +15,16 @@ export class TicketRepository {
     });
   }
 
-  async createTicket(data: CreateTicketDto & { reporterId: string }) {
-    return await this.db.ticket.create({ data });
+  async createTicket({
+    media,
+    ...data
+  }: CreateTicketDto & { reporterId: string }) {
+    return await this.db.ticket.create({
+      data: {
+        ...data,
+        medias: { create: media },
+      },
+    });
   }
 
   async updateTicket({

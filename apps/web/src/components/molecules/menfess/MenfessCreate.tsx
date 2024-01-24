@@ -16,8 +16,10 @@ import HashtagsAutoComplete from "~/components/atoms/menfess/HashtagsAutoComplet
 import MustBeLoginModal from "~/components/atoms/modals/auth/MustBeLoginModal";
 import MustBeVerifiedModal from "~/components/atoms/modals/auth/MustBeVerifiedModal";
 import { getWordByPosition } from "~/lib/utils";
-import { useMediaStore } from "~/store/media/media-store";
-import { usePreviewMediaStore } from "~/store/media/prepare-media-store";
+import {
+  useMediaStoreMenfess,
+  usePreviewMediaStoreMenfess,
+} from "~/store/media/menfess-media-store";
 import {
   CreateMenfessValidator,
   CreateMenfessValidatorType,
@@ -35,11 +37,11 @@ export default function MenfessCreate() {
 
   const { enqueueSnackbar: toast } = useSnackbar();
   const queryClient = useQueryClient();
-  const [media, cleanMedia] = useMediaStore((state) => [
+  const [media, cleanMedia] = useMediaStoreMenfess((state) => [
     state.media,
     state.cleanMedia,
   ]);
-  const setPreviewMedia = usePreviewMediaStore(
+  const setPreviewMedia = usePreviewMediaStoreMenfess(
     (state) => state.setPreviewMedia,
   );
 

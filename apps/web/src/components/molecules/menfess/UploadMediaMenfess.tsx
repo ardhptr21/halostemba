@@ -4,14 +4,16 @@ import { useSnackbar } from "notistack";
 import { ChangeEvent, useRef } from "react";
 import { uploadMediaCdn } from "~/apis/cdn/upload-media-cdn";
 import { PreviewMedia, mediaValidator } from "~/lib/media";
-import { useMediaStore } from "~/store/media/media-store";
-import { usePreviewMediaStore } from "~/store/media/prepare-media-store";
+import {
+  useMediaStoreMenfess,
+  usePreviewMediaStoreMenfess,
+} from "~/store/media/menfess-media-store";
 
 export default function UploadMediaMenfess() {
   const { enqueueSnackbar: toast } = useSnackbar();
   const inputRef = useRef<HTMLInputElement>(null);
-  const { previewMedia, setPreviewMedia } = usePreviewMediaStore();
-  const { addOrUpdateMedia } = useMediaStore();
+  const { previewMedia, setPreviewMedia } = usePreviewMediaStoreMenfess();
+  const { addOrUpdateMedia } = useMediaStoreMenfess();
 
   const handleClick = () => {
     inputRef.current?.click();
