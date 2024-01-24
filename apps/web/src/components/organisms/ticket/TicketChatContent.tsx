@@ -25,6 +25,7 @@ interface Props {
 
 export default function TicketChatContent({ ticket, session }: Props) {
   const [firstTime, setFirstTime] = useState(true);
+  const [scrollBottom, setScrollBottom] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { ref, inView } = useInView({
     threshold: 0.5,
@@ -45,11 +46,22 @@ export default function TicketChatContent({ ticket, session }: Props) {
       if (firstTime && isFetched) {
         el.scrollTop = el.scrollHeight;
         setFirstTime(false);
-      } else if (el.scrollTop + el.clientHeight === el.scrollHeight) {
+      } else if (scrollBottom) {
         el.scrollTop = el.scrollHeight;
       }
     }
-  }, [data, scrollAreaRef, isFetched, firstTime]);
+  }, [data, scrollAreaRef, isFetched, firstTime, scrollBottom]);
+
+  useEffect(() => {
+    const el = scrollAreaRef.current;
+    if (el) {
+      el.addEventListener("scroll", () => {
+        setScrollBottom(
+          Math.floor(el.scrollTop + el.clientHeight) === el.scrollHeight,
+        );
+      });
+    }
+  }, [scrollAreaRef, setScrollBottom]);
 
   useEffect(() => {
     if (inView && hasNextPage) fetchNextPage();

@@ -13,8 +13,14 @@ export default function ChatBubble({ reply, self }: Props) {
       className={!self ? "bg-[#3E63DD]/55 max-w-xs" : "bg-[#3E63DD] max-w-xs "}
       ml={self ? "auto" : "0"}
     >
-      <Flex direction="column" justify="center" gap="1">
-        <Flex direction="row" justify="between" align="end" className="w-full">
+      <Flex direction="column" justify="center">
+        <Flex
+          direction="row"
+          justify="between"
+          align="end"
+          className="w-full"
+          gap="1"
+        >
           <Text size="2" className="max-w-xs">
             {reply.message}
           </Text>

@@ -32,7 +32,9 @@ export default async function TicketDetailPage({ params: { id } }: Props) {
     <Flex direction={"column"} gap={"5"} height={"100%"} className="relative">
       <HeadTicketChat ticket={ticket} />
       <TicketChatContent session={session!} ticket={ticket} />
-      {ticket.status === "OPEN" && <ChatField />}
+      {ticket.status === "OPEN" && (
+        <ChatField session={session!} ticketId={id} />
+      )}
     </Flex>
   );
 }
