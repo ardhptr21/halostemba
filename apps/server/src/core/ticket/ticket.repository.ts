@@ -2,6 +2,7 @@ import { Prisma, TicketStatus } from '@halostemba/db';
 import { Injectable } from '@nestjs/common';
 import { paginator } from '~/providers/database/database.paginator';
 import { DatabaseService } from '~/providers/database/database.service';
+import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
 import { GetTicketRepliesParamsDto } from './dtos/get-ticket-replies-params.dto';
 import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
@@ -78,9 +79,20 @@ export class TicketRepository {
     });
   }
 
-  async createTicketReply(ticketId: string, authorId: string, message: string) {
+  async createTicketReply(
+    ticketId: string,
+    authorId: string,
+    createTicketReplyDto: CreateTicketReplyDto,
+  ) {
     return await this.db.ticketReply.create({
-      data: { ticketId, authorId, message },
+      data: {
+        ticketId,
+        authorId,
+        message: createTicketReplyDto.message,
+        medias: {
+          create: createTicketReplyDto.media,
+        },
+      },
     });
   }
 
@@ -95,6 +107,7 @@ export class TicketRepository {
           message: true,
           createdAt: true,
           author: { select: { name: true, username: true, avatar: true } },
+          medias: { select: { source: true, type: true } },
         },
         orderBy: { createdAt: 'desc' },
       },

@@ -8,6 +8,7 @@ export class TicketReplyEntity {
   message: string;
   createdAt: string;
   author: Pick<UserEntity, 'name' | 'username' | 'avatar'>;
+  medias?: MediaEntity[];
 }
 
 export class TicketEntity {

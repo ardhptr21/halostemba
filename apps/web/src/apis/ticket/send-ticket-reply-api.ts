@@ -1,3 +1,4 @@
+import { MediaEntity } from "@halostemba/entities";
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import http from "~/lib/axios";
@@ -7,22 +8,17 @@ interface SendTicketReplyApiBody {
   ticketId: string;
   token: string;
   message: string;
+  media: MediaEntity[];
 }
 
 export const sendTicketReplyApiHandler = async ({
   ticketId,
   token,
-  message,
+  ...body
 }: SendTicketReplyApiBody): Promise<unknown> => {
-  const { data } = await http.post(
-    `/tickets/${ticketId}/replies`,
-    {
-      message,
-    },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  );
+  const { data } = await http.post(`/tickets/${ticketId}/replies`, body, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
   return data.data;
 };

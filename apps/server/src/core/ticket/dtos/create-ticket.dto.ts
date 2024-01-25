@@ -24,7 +24,7 @@ export class CreateTicketDto {
   @IsString({ message: validatorMapper('isString') })
   readonly detail: string;
 
-  @ArrayMaxSize(4, { message: validatorMapper('arrayMaxSize') })
+  @ArrayMaxSize(1, { message: validatorMapper('arrayMaxSize') })
   @ValidateNested({ each: true })
   @IsArray({ message: validatorMapper('isArray') })
   @Type(() => MediaDto)

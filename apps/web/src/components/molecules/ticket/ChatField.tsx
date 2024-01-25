@@ -35,8 +35,9 @@ export default function ChatField({
 }: ChatFieldProps) {
   const { enqueueSnackbar: toast } = useSnackbar();
   const queryClient = useQueryClient();
-  const { media } = useMediaStoreChat();
-  const { previewMedia, removePreviewMedia } = usePreviewMediaStoreChat();
+  const { media, cleanMedia, removeMedia } = useMediaStoreChat();
+  const { previewMedia, removePreviewMedia, setPreviewMedia } =
+    usePreviewMediaStoreChat();
 
   const { register, reset, handleSubmit } =
     useForm<SendTicketReplyValidatorType>({
@@ -54,9 +55,9 @@ export default function ChatField({
       toast(message, { variant: "error" });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["replies", ticketId],
-      });
+      queryClient.invalidateQueries({ queryKey: ["replies", ticketId] });
+      cleanMedia();
+      setPreviewMedia([]);
       reset();
     },
   });
@@ -67,6 +68,10 @@ export default function ChatField({
       ticketId: ticketId,
       token: session.token,
       message: data.message,
+      media: Object.values(media).map((m) => ({
+        source: m.url!,
+        type: m.type,
+      })),
     });
   });
 
@@ -77,6 +82,11 @@ export default function ChatField({
     }
   };
 
+  const handleRemove = (preview: string) => {
+    removeMedia(preview);
+    removePreviewMedia(preview);
+  };
+
   return (
     <div className="w-full absolute -bottom-5 p-2 bg-[#18191B] left-0 right-0 h-auto">
       {!!previewMedia?.length ? (
@@ -84,7 +94,7 @@ export default function ChatField({
           <Flex className="w-max h-14 mb-2" gap="2">
             {previewMedia.map((m) => (
               <PreviewMediaTick
-                onRemove={() => removePreviewMedia(m.preview)}
+                onRemove={() => handleRemove(m.preview)}
                 preview={m.preview}
                 type={m.type}
                 key={m.preview}

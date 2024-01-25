@@ -90,7 +90,7 @@ export class TicketController {
     return this.ticketService.createTicketReply(
       ticketId,
       user.id,
-      createTicketReplyDto.message,
+      createTicketReplyDto,
     );
   }
 
