@@ -17,6 +17,7 @@ interface MediaStore {
 interface PreviewMediaStore {
   previewMedia: PreviewMedia[] | null;
   setPreviewMedia: (files: PreviewMedia[] | null) => void;
+  removePreviewMedia: (key: string) => void;
 }
 
 export const createMediaStore = () =>
@@ -38,4 +39,10 @@ export const createPreviewMediaStore = () =>
     previewMedia: null,
     setPreviewMedia: (previewMedia: PreviewMedia[] | null) =>
       set({ previewMedia }),
+    removePreviewMedia: (key) =>
+      set((state) => {
+        const previewMedia =
+          state.previewMedia?.filter((media) => media.preview !== key) ?? null;
+        return { previewMedia };
+      }),
   }));

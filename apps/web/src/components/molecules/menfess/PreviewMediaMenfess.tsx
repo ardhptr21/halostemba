@@ -7,12 +7,11 @@ import {
 } from "~/store/media/menfess-media-store";
 
 export default function PreviewMediaMenfess() {
-  const { previewMedia, setPreviewMedia } = usePreviewMediaStoreMenfess();
+  const { previewMedia, removePreviewMedia } = usePreviewMediaStoreMenfess();
   const { media, removeMedia } = useMediaStoreMenfess();
 
   const handleRemovePreview = (blobStr: string) => () => {
-    const temp = previewMedia?.filter((m) => m.preview !== blobStr);
-    setPreviewMedia(temp!);
+    removePreviewMedia(blobStr);
     removeMedia(blobStr);
   };
 

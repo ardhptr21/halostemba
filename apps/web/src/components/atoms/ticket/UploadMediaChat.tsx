@@ -1,23 +1,18 @@
 import { ImageIcon } from "@radix-ui/react-icons";
-import { Flex, IconButton } from "@radix-ui/themes";
+import { IconButton } from "@radix-ui/themes";
 import { useSnackbar } from "notistack";
-import { ChangeEvent, useRef } from "react";
+import { ChangeEvent } from "react";
 import { uploadMediaCdn } from "~/apis/cdn/upload-media-cdn";
 import { PreviewMedia, mediaValidator } from "~/lib/media";
 import {
-  useMediaStoreMenfess,
-  usePreviewMediaStoreMenfess,
-} from "~/store/media/menfess-media-store";
+  useMediaStoreChat,
+  usePreviewMediaStoreChat,
+} from "~/store/media/chat-media-store";
 
-export default function UploadMediaMenfess() {
+export default function UploadMediaChat() {
   const { enqueueSnackbar: toast } = useSnackbar();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const { previewMedia, setPreviewMedia } = usePreviewMediaStoreMenfess();
-  const { addOrUpdateMedia } = useMediaStoreMenfess();
-
-  const handleClick = () => {
-    inputRef.current?.click();
-  };
+  const { previewMedia, setPreviewMedia } = usePreviewMediaStoreChat();
+  const { addOrUpdateMedia } = useMediaStoreChat();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -28,11 +23,11 @@ export default function UploadMediaMenfess() {
       error,
       media: mediaResult,
     } = mediaValidator(previewMedia?.length || 0, files, {
-      oneVideoWithoutImage: true,
+      maxFiles: Infinity,
+      oneVideoWithoutImage: false,
     });
 
     if (!valid) return toast(error, { variant: "error" });
-
     setPreviewMedia([...(previewMedia ?? []), ...(mediaResult || [])]);
     handleUpload(mediaResult!);
     e.target.value = "";
@@ -60,27 +55,24 @@ export default function UploadMediaMenfess() {
   };
 
   return (
-    <Flex asChild>
-      <label htmlFor="media">
+    <IconButton
+      className="cursor-pointer"
+      size="3"
+      variant="surface"
+      color="gray"
+      type="button"
+      asChild
+    >
+      <label htmlFor="chat-media">
+        <ImageIcon />
         <input
           type="file"
-          name="media"
-          id="media"
-          accept="image/jpg,image/jpeg,image/png,image/gif,image/webp,video/mp4,video/quicktime,video/x-matroska"
-          multiple
           hidden
+          id="chat-media"
+          multiple
           onChange={handleChange}
-          ref={inputRef}
         />
-        <IconButton
-          variant="ghost"
-          radius="full"
-          style={{ cursor: "pointer" }}
-          onClick={handleClick}
-        >
-          <ImageIcon width={15} height={"100%"} />
-        </IconButton>
       </label>
-    </Flex>
+    </IconButton>
   );
 }
