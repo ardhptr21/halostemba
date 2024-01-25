@@ -13,7 +13,7 @@ function layout({ children, session }: Props) {
   return (
     <TicketLayout>
       <TicketList session={session} />
-      <Box px={"3"} width={"100%"}>
+      <Box px="3" className="relative" width="100%">
         {children}
       </Box>
     </TicketLayout>

@@ -2,7 +2,6 @@ import { Flex } from "@radix-ui/themes";
 import { AxiosError } from "axios";
 import { notFound } from "next/navigation";
 import { getTicketApiHandler } from "~/apis/ticket/get-ticket-api";
-import ChatField from "~/components/atoms/ticket/ChatField";
 import HeadTicketChat from "~/components/atoms/ticket/HeadTicketChat";
 import TicketChatContent from "~/components/organisms/ticket/TicketChatContent";
 import { getAuthServer } from "~/lib/auth";
@@ -29,10 +28,9 @@ export default async function TicketDetailPage({ params: { id } }: Props) {
   const ticket = await getTicket(session!.token, id);
 
   return (
-    <Flex direction={"column"} gap={"5"} height={"100%"} className="relative">
+    <Flex direction="column" gap="5" height="100%" className="">
       <HeadTicketChat ticket={ticket} />
       <TicketChatContent session={session!} ticket={ticket} />
-      {ticket.status === "OPEN" && <ChatField />}
     </Flex>
   );
 }

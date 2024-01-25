@@ -14,6 +14,7 @@ interface Options {
   maxSize?: number;
   onlyImage?: boolean;
   onlyVideo?: boolean;
+  oneVideoWithoutImage?: boolean;
 }
 
 export const mediaValidator = (
@@ -62,7 +63,7 @@ export const mediaValidator = (
         };
       }
 
-      if (files.length + initCount > 1) {
+      if (files.length + initCount > 1 && options?.oneVideoWithoutImage) {
         return {
           valid: false,
           error: "Hanya dapat memilih 1 video dan tanpa gambar.",

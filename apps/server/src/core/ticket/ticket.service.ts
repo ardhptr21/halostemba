@@ -12,6 +12,7 @@ import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
 import { TicketNotFoundException, TicketServerError } from './ticket.exception';
 import { TicketRepository } from './ticket.repository';
+import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
 
 @Injectable()
 export class TicketService {
@@ -97,7 +98,11 @@ export class TicketService {
     return { message: 'Berhasil menanggapi laporan.' };
   }
 
-  async createTicketReply(ticketId: string, userId: string, message: string) {
+  async createTicketReply(
+    ticketId: string,
+    userId: string,
+    createTicketReplyDto: CreateTicketReplyDto,
+  ) {
     const checkTicket = await this.ticketRepository.getTicketById(ticketId);
 
     if (!checkTicket) throw new TicketNotFoundException();
@@ -114,7 +119,7 @@ export class TicketService {
     const ticket = await this.ticketRepository.createTicketReply(
       ticketId,
       userId,
-      message,
+      createTicketReplyDto,
     );
 
     if (!ticket) throw new TicketServerError('Gagal membuat balasan laporan.');
