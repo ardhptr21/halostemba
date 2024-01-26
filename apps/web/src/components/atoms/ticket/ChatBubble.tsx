@@ -1,9 +1,16 @@
+"use client";
+
 import { MediaEntity, TicketReplyEntity } from "@halostemba/entities";
-import { Card, Flex, Text } from "@radix-ui/themes";
+import { TrashIcon } from "@radix-ui/react-icons";
+import { Card, ContextMenu, Flex, Text } from "@radix-ui/themes";
+import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import { format } from "date-fns";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useSnackbar } from "notistack";
 import { PropsWithChildren } from "react";
+import { useDeleteTicketReply } from "~/apis/ticket/delete-ticket-reply-api";
 interface Props {
   reply: TicketReplyEntity;
   self?: boolean;
@@ -14,10 +21,10 @@ export default function ChatBubble({ reply, self }: Props) {
     reply.medias?.at(0),
     reply.medias?.slice(1),
   ];
-  console.log(reply.medias?.slice(1));
+
   return (
     <>
-      <Wrapper self={self}>
+      <Wrapper replyId={reply.id} ticketId={reply.ticketId} self={self}>
         <Flex direction="column" justify="center" gap="2">
           {media1 && (
             <div className="w-72 aspect-square overflow-hidden rounded-md relative">
@@ -58,7 +65,12 @@ export default function ChatBubble({ reply, self }: Props) {
       {!!media2?.length && (
         <Flex direction="column" gap="2">
           {media2.map((media) => (
-            <Wrapper self={self} key={media.source}>
+            <Wrapper
+              replyId={reply.id}
+              ticketId={reply.ticketId}
+              self={self}
+              key={media.source}
+            >
               <div className="w-72 aspect-square overflow-hidden rounded-md relative">
                 {media.type === "IMAGE" ? (
                   <Image
@@ -95,14 +107,50 @@ export default function ChatBubble({ reply, self }: Props) {
 const Wrapper = ({
   children,
   self,
-}: PropsWithChildren & { self?: boolean }) => (
-  <Card
-    className={clsx(["max-w-xs w-max"], {
-      "bg-[#3E63DD]/55": !self,
-      "bg-[#3E63DD] max-w-xs": self,
-    })}
-    ml={self ? "auto" : "0"}
-  >
-    {children}
-  </Card>
-);
+  replyId,
+  ticketId,
+}: PropsWithChildren & {
+  self?: boolean;
+  replyId: string;
+  ticketId: string;
+}) => {
+  const { data: session } = useSession();
+  const { enqueueSnackbar: toast } = useSnackbar();
+  const queryClient = useQueryClient();
+
+  const { mutate: deleteTicketReply } = useDeleteTicketReply({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["replies", ticketId] });
+      toast("Berhasil menghapus.", { variant: "success" });
+    },
+    onError: () => {
+      toast("Gagal menghapus.", { variant: "error" });
+    },
+  });
+
+  return (
+    <ContextMenu.Root>
+      <ContextMenu.Trigger>
+        <Card
+          className={clsx(["max-w-xs w-max"], {
+            "bg-[#3E63DD]/55": !self,
+            "bg-[#3E63DD] max-w-xs": self,
+          })}
+          ml={self ? "auto" : "0"}
+        >
+          {children}
+        </Card>
+      </ContextMenu.Trigger>
+      <ContextMenu.Content>
+        <ContextMenu.Item
+          color="red"
+          className="gap-3"
+          onSelect={() => deleteTicketReply({ replyId, token: session!.token })}
+        >
+          Hapus
+          <TrashIcon width={18} height={18} />
+        </ContextMenu.Item>
+      </ContextMenu.Content>
+    </ContextMenu.Root>
+  );
+};
