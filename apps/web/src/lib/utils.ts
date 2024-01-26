@@ -1,3 +1,4 @@
+import { format, isToday, isYesterday } from "date-fns";
 import { SyntheticEvent } from "react";
 
 export function preventBubbling(
@@ -18,4 +19,11 @@ export function getWordByPosition(text: string, pos: number) {
   const word = (p?.at(0) || "") + (n?.at(0) || "");
 
   return word;
+}
+
+export function formatDateChatDisplay(inputDate: string) {
+  const date = new Date(inputDate);
+  if (isToday(date)) return format(date, "HH:mm");
+  if (isYesterday(date)) return "kemarin";
+  return format(date, "yyyy/MM/dd");
 }

@@ -8,8 +8,6 @@ import { useGetTrendingHashtagApi } from "~/apis/menfess/get-trending-hashtag-ap
 export default function TrendingHashtagCard() {
   const { data } = useGetTrendingHashtagApi();
 
-  console.log(data);
-
   return (
     <Card className="p-4 w-full">
       <Flex direction="column" gap="4">

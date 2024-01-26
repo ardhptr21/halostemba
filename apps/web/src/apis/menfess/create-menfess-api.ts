@@ -2,6 +2,7 @@ import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import http from "~/lib/axios";
 import ErrorResponseType from "~/types/error-response-type";
+import MediaRequestType from "~/types/media-request-type";
 import { CreateMenfessValidatorType } from "~/validators/menfess/create-menfess-validator";
 
 interface CreateMenfessApiResponse {
@@ -10,17 +11,16 @@ interface CreateMenfessApiResponse {
 
 interface CreateMenfessApiBody extends CreateMenfessValidatorType {
   token: string;
-  media?: { source: string; type: "IMAGE" | "VIDEO" }[];
+  media?: MediaRequestType[];
 }
 
-export const createMenfessApiHandler = async (
-  body: CreateMenfessApiBody,
-): Promise<CreateMenfessApiResponse> => {
-  const { data } = await http.post(
-    "/menfess",
-    { content: body.content, anonymous: body.anonymous, media: body.media },
-    { headers: { Authorization: `Bearer ${body.token}` } },
-  );
+export const createMenfessApiHandler = async ({
+  token,
+  ...body
+}: CreateMenfessApiBody): Promise<CreateMenfessApiResponse> => {
+  const { data } = await http.post("/menfess", body, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
   return data;
 };

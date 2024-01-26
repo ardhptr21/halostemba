@@ -1,16 +1,17 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { AspectRatio, Box, Flex, IconButton, Text } from "@radix-ui/themes";
 import Image from "next/image";
-import { useMediaStore } from "~/store/media/media-store";
-import { usePreviewMediaStore } from "~/store/media/prepare-media-store";
+import {
+  useMediaStoreMenfess,
+  usePreviewMediaStoreMenfess,
+} from "~/store/media/menfess-media-store";
 
 export default function PreviewMediaMenfess() {
-  const { previewMedia, setPreviewMedia } = usePreviewMediaStore();
-  const { media, removeMedia } = useMediaStore();
+  const { previewMedia, removePreviewMedia } = usePreviewMediaStoreMenfess();
+  const { media, removeMedia } = useMediaStoreMenfess();
 
   const handleRemovePreview = (blobStr: string) => () => {
-    const temp = previewMedia?.filter((m) => m.preview !== blobStr);
-    setPreviewMedia(temp!);
+    removePreviewMedia(blobStr);
     removeMedia(blobStr);
   };
 
