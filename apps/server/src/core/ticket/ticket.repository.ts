@@ -103,6 +103,7 @@ export class TicketRepository {
         where: { ticketId },
         select: {
           id: true,
+          ticketId: true,
           authorId: true,
           message: true,
           createdAt: true,

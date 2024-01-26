@@ -17,11 +17,11 @@ interface GetListRepliesApiParams {
 }
 
 export const getListRepliesApiHandler = async (
-  id: string,
+  ticketId: string,
   token: string,
   params?: GetListRepliesApiParams,
 ): Promise<GetListRepliesApiResponse> => {
-  const { data } = await http.get(`/tickets/${id}/replies`, {
+  const { data } = await http.get(`/tickets/${ticketId}/replies`, {
     params,
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
   });
@@ -29,7 +29,7 @@ export const getListRepliesApiHandler = async (
 };
 
 export const useGetListRepliesInfiniteApi = (
-  id: string,
+  ticketId: string,
   token: string,
   params?: GetListRepliesApiParams,
   options?: Partial<
@@ -41,9 +41,9 @@ export const useGetListRepliesInfiniteApi = (
   >,
 ) => {
   return useInfiniteQuery({
-    queryKey: ["replies", id, params],
+    queryKey: ["replies", ticketId, params],
     queryFn: ({ pageParam }) =>
-      getListRepliesApiHandler(id, token, {
+      getListRepliesApiHandler(ticketId, token, {
         ...params,
         page: pageParam as number,
       }),
