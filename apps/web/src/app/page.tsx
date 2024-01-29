@@ -17,7 +17,7 @@ async function Home() {
     <MainLayout>
       <Flex direction="column" gap="4">
         <CalloutAction />
-        <MenfessCreate />
+        <MenfessCreate avatar={session?.user.avatar} />
         <ListMenfess session={session} />
       </Flex>
     </MainLayout>

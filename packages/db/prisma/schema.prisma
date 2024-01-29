@@ -16,6 +16,7 @@ model User {
   password        String
   banned          Boolean   @default(false)
   role            Role      @default(GUEST)
+  bio             String?   @db.Text()
   emailVerifiedAt DateTime? @map("email_verified_at")
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
@@ -158,8 +159,9 @@ model TicketReply {
   message   String   @db.Text()
   createdAt DateTime @default(now()) @map("created_at")
 
-  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  author User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  ticket Ticket  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  medias Media[]
 
   @@map("ticket_replies")
 }
@@ -191,16 +193,18 @@ model OTP {
 }
 
 model Media {
-  id        String  @id @default(cuid())
-  menfessId String? @map("menfess_id")
-  ticketId  String? @map("ticket_id")
+  id            String  @id @default(cuid())
+  menfessId     String? @map("menfess_id")
+  ticketId      String? @map("ticket_id")
+  ticketReplyId String? @map("ticket_reply_id")
 
   source    String    @db.Text()
   type      MediaType
   createdAt DateTime  @default(now()) @map("created_at")
 
-  menfess Menfess? @relation(fields: [menfessId], references: [id], onDelete: SetNull)
-  ticket  Ticket?  @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+  menfess     Menfess?     @relation(fields: [menfessId], references: [id], onDelete: SetNull)
+  ticket      Ticket?      @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+  ticketReply TicketReply? @relation(fields: [ticketReplyId], references: [id], onDelete: SetNull)
 }
 
 enum Role {

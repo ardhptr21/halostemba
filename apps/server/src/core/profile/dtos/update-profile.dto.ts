@@ -25,4 +25,16 @@ export class UpdateProfileDto {
     message: 'Username tidak boleh mengandung karakter spesial kecuali _ dan .',
   })
   readonly username?: string;
+
+  @IsOptional()
+  @IsString({
+    message: validatorMapper('isString'),
+  })
+  readonly bio?: string;
+
+  @IsOptional()
+  @IsString({
+    message: validatorMapper('isString'),
+  })
+  readonly avatar?: string;
 }

@@ -16,8 +16,10 @@ import HashtagsAutoComplete from "~/components/atoms/menfess/HashtagsAutoComplet
 import MustBeLoginModal from "~/components/atoms/modals/auth/MustBeLoginModal";
 import MustBeVerifiedModal from "~/components/atoms/modals/auth/MustBeVerifiedModal";
 import { getWordByPosition } from "~/lib/utils";
-import { useMediaStore } from "~/store/media/media-store";
-import { usePreviewMediaStore } from "~/store/media/prepare-media-store";
+import {
+  useMediaStoreMenfess,
+  usePreviewMediaStoreMenfess,
+} from "~/store/media/menfess-media-store";
 import {
   CreateMenfessValidator,
   CreateMenfessValidatorType,
@@ -25,7 +27,11 @@ import {
 import PreviewMediaMenfess from "./PreviewMediaMenfess";
 import UploadMediaMenfess from "./UploadMediaMenfess";
 
-export default function MenfessCreate() {
+interface Props {
+  avatar?: string | null;
+}
+
+export default function MenfessCreate({ avatar }: Props) {
   const { data: session } = useSession();
   const [showMustVerified, setShowMustVerified] = useState(false);
   const [showMustLogin, setShowMustLogin] = useState(false);
@@ -35,11 +41,11 @@ export default function MenfessCreate() {
 
   const { enqueueSnackbar: toast } = useSnackbar();
   const queryClient = useQueryClient();
-  const [media, cleanMedia] = useMediaStore((state) => [
+  const [media, cleanMedia] = useMediaStoreMenfess((state) => [
     state.media,
     state.cleanMedia,
   ]);
-  const setPreviewMedia = usePreviewMediaStore(
+  const setPreviewMedia = usePreviewMediaStoreMenfess(
     (state) => state.setPreviewMedia,
   );
 
@@ -157,7 +163,7 @@ export default function MenfessCreate() {
           <Flex direction="row" gap="2">
             <Box>
               <Image
-                src={"/assets/images/avatar.png"}
+                src={avatar || "/assets/images/avatar.png"}
                 width={45}
                 height={45}
                 alt="avatar"

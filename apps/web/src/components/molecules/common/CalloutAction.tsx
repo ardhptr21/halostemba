@@ -1,5 +1,6 @@
 import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function CalloutAction() {
   return (
@@ -20,8 +21,8 @@ export default function CalloutAction() {
             konsultasikan masalah Anda untuk langkah awal menuju solusi yang
             tepat.
           </Text>
-          <Button size="3" className="mt-5">
-            Konsul
+          <Button asChild size="3" className="mt-5">
+            <Link href="/ticket/formulir">Konsul</Link>
           </Button>
         </Flex>
       </Flex>

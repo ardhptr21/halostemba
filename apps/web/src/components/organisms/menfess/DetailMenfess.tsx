@@ -26,7 +26,7 @@ export default function DetailMenfess({ id, session }: Props) {
       {!isPending ? (
         <>
           <MenfessCard menfess={data!} redirect={false} />
-          <CommentCreate menfessId={id} />
+          <CommentCreate menfessId={id} avatar={session?.user.avatar} />
         </>
       ) : (
         <MenfessCardSkeleton />
@@ -36,7 +36,12 @@ export default function DetailMenfess({ id, session }: Props) {
             <CommentCardSkeleton key={i} />
           ))
         : data?.comments.map((comment) => (
-            <CommentCard key={comment.id} comment={comment} menfessId={id} />
+            <CommentCard
+              key={comment.id}
+              comment={comment}
+              menfessId={id}
+              avatar={comment.author.avatar}
+            />
           ))}
     </Flex>
   );
