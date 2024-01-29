@@ -2,19 +2,16 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Cross1Icon } from "@radix-ui/react-icons";
-import {
-  Button,
-  DialogClose,
-  DialogTitle,
-  Flex,
-  Text,
-  TextArea,
-} from "@radix-ui/themes";
+import { Button, Flex, Heading, Text, TextArea } from "@radix-ui/themes";
 import { Session } from "next-auth";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useForm } from "react-hook-form";
-import { useEditUserProfile } from "~/apis/profile/edit-user-profile";
+import {
+  useEditUserEmail,
+  useEditUserProfile,
+} from "~/apis/profile/edit-user-profile";
 import Input from "~/components/atoms/form/Input";
 import UploadMediaProfile from "~/components/molecules/profile/UploadMediaProfile";
 import {
@@ -22,6 +19,8 @@ import {
   usePreviewMediaStoreProfile,
 } from "~/store/media/profile-media-store";
 import {
+  EditEmailValidator,
+  EditEmailValidatorType,
   EditProfileValidator,
   EditProfileValidatorType,
 } from "~/validators/profile/edit-profile-validator";
@@ -43,7 +42,6 @@ export default function EditProfileForm({ session }: Props) {
   } = useForm<EditProfileValidatorType>({
     defaultValues: {
       name: session.user.name as string,
-      email: session.user.email as string,
       username: session.user.username as string,
       bio: session.user.bio as string,
       avatar: session.user.avatar as string,
@@ -71,66 +69,136 @@ export default function EditProfileForm({ session }: Props) {
       });
     })();
   };
+
+  const {
+    register: registerEmail,
+    formState: { errors: errorsEmail },
+    handleSubmit: handleSubmitEmail,
+  } = useForm<EditEmailValidatorType>({
+    defaultValues: {
+      email: session.user.email as string,
+    },
+    mode: "onChange",
+    resolver: zodResolver(EditEmailValidator),
+  });
+
+  const { mutate: editUserEmailHandler } = useEditUserEmail({
+    onSuccess: () => {
+      router.refresh();
+      toast("Berhasil edit email.", { variant: "success" });
+    },
+  });
+
+  const handleEditEmail = () => {
+    handleSubmitEmail((data) => {
+      editUserEmailHandler({
+        ...data,
+        token: session?.token as string,
+      });
+    })();
+  };
+
   return (
     <>
-      <Flex gap="4">
+      <Flex direction="column" className="w-full">
         <Flex direction="column">
-          <DialogClose>
-            <Cross1Icon className="cursor-pointer" />
-          </DialogClose>
-        </Flex>
-        <Flex direction="column" className="w-full">
-          <DialogTitle size="5">Ubah Profile</DialogTitle>
-
-          <Flex direction="row" gap="4" py="4">
-            <UploadMediaProfile avatar={session.user.avatar} />
-
-            <Flex direction="column" gap="4" className="w-full">
-              <Input
-                label="Nama"
-                id="name"
-                error={errors.name?.message}
-                {...register("name")}
-              />
-              <Input
-                label="Email"
-                id="email"
-                error={errors.email?.message}
-                {...register("email")}
-              />
-              <Input
-                label="Username"
-                id="username"
-                error={errors.email?.message}
-                {...register("username")}
-              />
-              <label>
-                <Text as="div" size="2" mb="1" weight="medium">
-                  Bio
-                </Text>
-                <TextArea
-                  {...register("bio")}
-                  placeholder="Tulis bio kamu disini"
-                  className="w-full"
-                ></TextArea>
-              </label>
-            </Flex>
+          <Flex direction="row" align="center" mb="2" gap="4">
+            <Link href="/profile">
+              <Cross1Icon className="cursor-pointer" />
+            </Link>
+            <Heading size="5">Ubah Profile</Heading>
           </Flex>
-          <Flex gap="3" mt="4" justify="end">
-            <DialogClose>
-              <Button className="cursor-pointer" variant="soft" color="gray">
-                Cancel
-              </Button>
-            </DialogClose>
-            <DialogClose>
-              <Button
-                className="cursor-pointer"
-                type="submit"
-                onClick={handleEditProfile}
-              >
-                Save
-              </Button>
-            </DialogClose>
+
+          <Flex direction="row" gap="8" py="4">
+            <UploadMediaProfile avatar={session.user.avatar} />
+            <Flex direction="column" className="w-full">
+              {/* Ubah Profil */}
+              <Flex direction="column" gap="4">
+                <Text size="3" weight="bold">
+                  Ubah Informasi Akun
+                </Text>
+
+                <Flex direction="column" gap="5">
+                  <Input
+                    label="Nama"
+                    id="name"
+                    error={errors.name?.message}
+                    {...register("name")}
+                  />
+
+                  <Input
+                    label="Username"
+                    id="username"
+                    error={errors.username?.message}
+                    {...register("username")}
+                  />
+                  <label>
+                    <Text as="div" size="3" mb="1">
+                      Bio
+                    </Text>
+                    <TextArea
+                      {...register("bio")}
+                      placeholder="Tulis bio kamu di sini"
+                      className="w-full"
+                    ></TextArea>
+                  </label>
+                </Flex>
+
+                <Flex gap="3" mt="4" justify="end">
+                  <Link href="/profile">
+                    <Button
+                      className="cursor-pointer"
+                      variant="soft"
+                      color="gray"
+                    >
+                      Batal
+                    </Button>
+                  </Link>
+                  <Button
+                    className="cursor-pointer"
+                    type="submit"
+                    onClick={handleEditProfile}
+                  >
+                    Simpan Perubahan
+                  </Button>
+                </Flex>
+              </Flex>
+
+              {/* Ubah Email */}
+              <Flex direction="column" gap="4" className="w-full">
+                <Text size="3" weight="bold">
+                  Ubah Email
+                </Text>
+
+                <Flex direction="column" gap="5">
+                  <Input
+                    label="Email"
+                    id="email"
+                    error={errorsEmail.email?.message}
+                    {...registerEmail("email")}
+                  />
+                </Flex>
+
+                <Flex gap="3" mt="4" justify="end">
+                  <Link href="/profile">
+                    <Button
+                      className="cursor-pointer"
+                      variant="soft"
+                      color="gray"
+                    >
+                      Batal
+                    </Button>
+                  </Link>
+                  <Button
+                    className="cursor-pointer"
+                    type="submit"
+                    onClick={handleEditEmail}
+                  >
+                    Simpan Perubahan
+                  </Button>
+                </Flex>
+              </Flex>
+            </Flex>
           </Flex>
         </Flex>
       </Flex>

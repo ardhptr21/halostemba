@@ -35,13 +35,6 @@ export class ProfileController {
 
   @Auth(false)
   @HttpCode(HttpStatus.OK)
-  @Get('/:username')
-  async getProfileByUsername(@Param('username') username: string) {
-    return this.profileService.getProfile(username);
-  }
-
-  @Auth(false)
-  @HttpCode(HttpStatus.OK)
   @Put('/me')
   async updateProfile(
     @Body() updateProfileDto: UpdateProfileDto,

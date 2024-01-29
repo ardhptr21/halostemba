@@ -69,8 +69,8 @@ export default function UploadMediaProfile({ avatar }: Props) {
       {!previewMedia?.length ? (
         <Image
           src={avatar || "/assets/images/profile/avatar.png"}
-          width={160}
-          height={160}
+          width={200}
+          height={200}
           alt="profile"
         />
       ) : (

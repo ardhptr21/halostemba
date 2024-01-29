@@ -1,20 +1,24 @@
-import { InfoCircledIcon, Pencil2Icon } from "@radix-ui/react-icons";
+import {
+  InfoCircledIcon,
+  LockClosedIcon,
+  MixerHorizontalIcon,
+  PersonIcon,
+} from "@radix-ui/react-icons";
 import {
   Badge,
   Button,
   Card,
-  DialogContent,
-  DialogRoot,
-  DialogTrigger,
   Flex,
   Heading,
+  PopoverContent,
+  PopoverRoot,
+  PopoverTrigger,
+  Separator,
   Text,
 } from "@radix-ui/themes";
 import { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import EditProfileForm from "~/components/organisms/profile/EditProfileForm";
 
 interface ProfileDataCardProps {
   name: string;
@@ -60,25 +64,51 @@ export default function ProfileDataCard({
                 )}
               </Flex>
               {self && (
-                <DialogRoot>
-                  <DialogTrigger>
+                <PopoverRoot>
+                  <PopoverTrigger>
                     <Flex
                       direction="row"
                       gap="2"
                       align="center"
                       className="cursor-pointer"
                     >
-                      <Pencil2Icon style={{ color: "#99A2FF" }} />
+                      <MixerHorizontalIcon style={{ color: "#99A2FF" }} />
                       <Text style={{ color: "#99A2FF" }} size="2">
-                        Ubah Profile
+                        Pengaturan
                       </Text>
                     </Flex>
-                  </DialogTrigger>
+                  </PopoverTrigger>
 
-                  <DialogContent style={{ maxWidth: 700 }}>
-                    <EditProfileForm session={session!} />
-                  </DialogContent>
-                </DialogRoot>
+                  <PopoverContent>
+                    <Flex direction="column" gap="2">
+                      <Link href="/profile/ubah-profil">
+                        <Flex
+                          direction="row"
+                          align="center"
+                          style={{ cursor: "pointer" }}
+                        >
+                          <PersonIcon />
+                          <Text size="2" className="ml-2">
+                            Ubah Profil
+                          </Text>
+                        </Flex>
+                      </Link>
+                      <Separator my="1" size="4" />
+                      <Link href="/profile/ubah-sandi">
+                        <Flex
+                          direction="row"
+                          align="center"
+                          style={{ cursor: "pointer" }}
+                        >
+                          <LockClosedIcon />
+                          <Text size="2" className="ml-2">
+                            Ubah Kata Sandi
+                          </Text>
+                        </Flex>
+                      </Link>
+                    </Flex>
+                  </PopoverContent>
+                </PopoverRoot>
               )}
             </Flex>
             <Flex direction="column">
