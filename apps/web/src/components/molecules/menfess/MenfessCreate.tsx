@@ -27,7 +27,11 @@ import {
 import PreviewMediaMenfess from "./PreviewMediaMenfess";
 import UploadMediaMenfess from "./UploadMediaMenfess";
 
-export default function MenfessCreate() {
+interface Props {
+  avatar?: string | null;
+}
+
+export default function MenfessCreate({ avatar }: Props) {
   const { data: session } = useSession();
   const [showMustVerified, setShowMustVerified] = useState(false);
   const [showMustLogin, setShowMustLogin] = useState(false);
@@ -159,7 +163,7 @@ export default function MenfessCreate() {
           <Flex direction="row" gap="2">
             <Box>
               <Image
-                src={"/assets/images/avatar.png"}
+                src={avatar || "/assets/images/avatar.png"}
                 width={45}
                 height={45}
                 alt="avatar"

@@ -6,10 +6,16 @@ import {
   CommentNotFoundException,
   CommentServerError,
 } from './comment.exception';
+import { UserRepository } from '../user/user.repository';
+import { UserEntity } from '@halostemba/entities';
+import serializeMenfessUtil from '~/commons/utils/serializeMenfessUtil';
 
 @Injectable()
 export class CommentService {
-  constructor(private readonly commentRepository: CommentRepository) {}
+  constructor(
+    private readonly commentRepository: CommentRepository,
+    private readonly userRepository: UserRepository,
+  ) {}
 
   async createComment(
     createCommentDto: CreateCommentDto,
@@ -25,6 +31,25 @@ export class CommentService {
     if (!comment) throw new CommentServerError('Gagal membuat komentar.');
 
     return { message: 'Komentar berhasil dibuat.', data: comment };
+  }
+
+  async getUserComments(username: string, logedUser?: UserEntity) {
+    const user = await this.userRepository.findUser(username);
+
+    const comments = await this.commentRepository.getUserComments(
+      user.id,
+      true,
+    );
+
+    comments.data = comments.data.map((comment: any) => ({
+      menfess: serializeMenfessUtil(comment.menfess, logedUser),
+      comment: {
+        ...comment,
+        menfess: undefined,
+      },
+    }));
+
+    return comments;
   }
 
   async removeComment(commentId: string, userId: string) {

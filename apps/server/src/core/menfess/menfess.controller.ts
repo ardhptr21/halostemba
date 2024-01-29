@@ -32,6 +32,15 @@ export class MenfessController {
   }
 
   @UseInterceptors(ParseUserInterceptor)
+  @Get('/users/:username')
+  getUserMenfess(
+    @Param('username') username: string,
+    @User() user?: UserEntity,
+  ) {
+    return this.menfessService.getUserMenfess(username, user);
+  }
+
+  @UseInterceptors(ParseUserInterceptor)
   @Get('/popular')
   getListPopularMenfess(
     @User() user: UserEntity,
