@@ -6,14 +6,15 @@ interface InputProps extends TextFieldInputProps {
   label: string;
   id: string;
   error?: string;
+  box?: string;
 }
 
 export default forwardRef(function Input(
-  { id, label, error, ...props }: InputProps,
+  { id, label, error, box, ...props }: InputProps,
   ref: ForwardedRef<HTMLInputElement>,
 ) {
   return (
-    <Box>
+    <Box className={box}>
       <Text as="label" htmlFor={id} mb="2" className="block">
         {label}
       </Text>

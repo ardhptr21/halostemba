@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import {
   useEditUserEmail,
   useEditUserProfile,
-} from "~/apis/profile/edit-user-profile";
+} from "~/apis/profile/edit-user-profile-api";
 import Input from "~/components/atoms/form/Input";
 import UploadMediaProfile from "~/components/molecules/profile/UploadMediaProfile";
 import {
@@ -84,8 +84,8 @@ export default function EditProfileForm({ session }: Props) {
 
   const { mutate: editUserEmailHandler } = useEditUserEmail({
     onSuccess: () => {
-      router.refresh();
       toast("Berhasil edit email.", { variant: "success" });
+      router.push("/verifikasi-email");
     },
   });
 
@@ -106,7 +106,7 @@ export default function EditProfileForm({ session }: Props) {
             <Link href="/profile">
               <Cross1Icon className="cursor-pointer" />
             </Link>
-            <Heading size="5">Ubah Profile</Heading>
+            <Heading size="4">Ubah Profile</Heading>
           </Flex>
 
           <Flex direction="row" gap="8" py="4">
