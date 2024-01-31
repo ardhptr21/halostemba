@@ -16,6 +16,7 @@ import { DatabaseModule } from './providers/database/database.module';
 import { MagiclinkModule } from './providers/magiclink/magiclink.module';
 import { OpenaiModule } from './providers/openai/openai.module';
 import { OtpModule } from './providers/otp/otp.module';
+import { MajorModule } from './core/major/major.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -39,6 +40,7 @@ import { OtpModule } from './providers/otp/otp.module';
     MagiclinkModule,
     OtpModule,
     OpenaiModule,
+    MajorModule,
   ],
   controllers: [],
   providers: [
