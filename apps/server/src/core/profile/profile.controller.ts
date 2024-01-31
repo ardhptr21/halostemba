@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Patch,
   Put,
 } from '@nestjs/common';
@@ -24,6 +25,12 @@ export class ProfileController {
   @Get('/me')
   async getProfile(@User() user: UserEntity) {
     return user;
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('/:username')
+  async getProfileByUsername(@Param('username') username: string) {
+    return this.profileService.getProfile(username);
   }
 
   @Auth(false)

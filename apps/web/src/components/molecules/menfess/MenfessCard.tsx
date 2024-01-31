@@ -54,11 +54,15 @@ function MenfessCard(
             <Flex direction="row" gap="2">
               <Box>
                 <Image
-                  src={"/assets/images/avatar.png"}
+                  src={
+                    menfess.author?.avatar && !menfess.anonymous
+                      ? menfess.author?.avatar
+                      : "/assets/images/profile/avatar.png"
+                  }
                   width={40}
                   height={40}
                   alt="avatar"
-                  className="rounded-md"
+                  className="rounded-md w-full h-full object-cover aspect-square max-w-[40px] max-h-[40px]"
                 />
               </Box>
 
@@ -70,11 +74,15 @@ function MenfessCard(
                   align="baseline"
                 >
                   <Flex direction="column" pb="4">
-                    <Text size="2">
-                      {menfess.anonymous
-                        ? "Anonymous"
-                        : "@" + menfess.author?.username}
-                    </Text>
+                    <>
+                      {menfess.anonymous ? (
+                        <Text size="2">Anonymous</Text>
+                      ) : (
+                        <Link href={`/${menfess.author?.username}`}>
+                          {"@" + menfess.author?.username}
+                        </Link>
+                      )}
+                    </>
                     <Text size="1" color="gray">
                       {formatDistanceToNowStrict(new Date(menfess.createdAt), {
                         locale: id,

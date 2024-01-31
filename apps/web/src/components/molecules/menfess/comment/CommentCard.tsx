@@ -11,9 +11,14 @@ import DeleteCommentModal from "~/components/atoms/modals/DeleteCommentModal";
 interface CommentCardProps {
   comment: CommentEntity;
   menfessId: string;
+  avatar?: string | null;
 }
 
-export default function CommentCard({ comment, menfessId }: CommentCardProps) {
+export default function CommentCard({
+  comment,
+  menfessId,
+  avatar,
+}: CommentCardProps) {
   const { data: session } = useSession();
   return (
     <Box>
@@ -22,7 +27,7 @@ export default function CommentCard({ comment, menfessId }: CommentCardProps) {
           <Flex direction="row" gap="2">
             <Box>
               <Image
-                src={"/assets/images/avatar.png"}
+                src={avatar || "/assets/images/avatar.png"}
                 width={40}
                 height={40}
                 alt="avatar"

@@ -1,4 +1,4 @@
-import { Prisma, Vote } from '@halostemba/db';
+import { Prisma } from '@halostemba/db';
 import { UserEntity } from '@halostemba/entities';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { endOfWeek, startOfWeek } from 'date-fns';
@@ -12,6 +12,8 @@ import {
   MenfessServerError,
 } from './menfess.exception';
 import { MenfessRepository } from './menfess.repository';
+import { UserRepository } from '../user/user.repository';
+import serializeMenfessUtil from '~/commons/utils/serializeMenfessUtil';
 
 @Injectable()
 export class MenfessService {
@@ -20,6 +22,7 @@ export class MenfessService {
     private readonly hashtagService: HashtagService,
     private readonly hashtagRepository: HashtagRepository,
     private readonly openaiService: OpenaiService,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async createMenfess(createMenfessDto: CreateMenfessDto, userId: string) {
@@ -62,7 +65,7 @@ export class MenfessService {
     if (!menfess) throw new MenfessNotFoundException();
     if (menfess.anonymous) menfess.author = null;
 
-    return { data: this.serializeMenfess(menfess, user) };
+    return { data: serializeMenfessUtil(menfess, user) };
   }
 
   async removeMenfess(menfessId: string, userId: string) {
@@ -92,7 +95,24 @@ export class MenfessService {
       null,
       params.order,
     );
-    menfesses.data = this.serializeMenfess(menfesses.data, user);
+    menfesses.data = serializeMenfessUtil(menfesses.data, user);
+    return menfesses;
+  }
+
+  async getUserMenfess(userName: string, logedUser?: UserEntity) {
+    const user = await this.userRepository.findUser(userName);
+
+    const menfesses = await this.menfessRepository.listMenfess(
+      {},
+      !!logedUser,
+      {
+        authorId: user.id,
+        anonymous: false,
+      },
+    );
+
+    menfesses.data = serializeMenfessUtil(menfesses.data, user);
+
     return menfesses;
   }
 
@@ -110,28 +130,8 @@ export class MenfessService {
       },
     );
 
-    popularMenfess.data = this.serializeMenfess(popularMenfess.data, user);
+    popularMenfess.data = serializeMenfessUtil(popularMenfess.data, user);
 
     return popularMenfess;
-  }
-
-  private serializeMenfess(data: any | any[], user: UserEntity) {
-    const serializeAuthor = (menfess: any) =>
-      menfess.anonymous ? { ...menfess, author: null } : menfess;
-    const serializeVotes = (menfess: any) => {
-      const vote = menfess.votes.find((vote: Vote) => vote.userId === user.id);
-      delete menfess.votes;
-      return { ...menfess, voted: vote ? vote.type : null };
-    };
-
-    if (!Array.isArray(data)) {
-      let processed = serializeAuthor(data);
-      if (user) processed = serializeVotes(data);
-      return processed;
-    }
-
-    let processed = data.map(serializeAuthor);
-    if (user) processed = data.map(serializeVotes);
-    return processed;
   }
 }
