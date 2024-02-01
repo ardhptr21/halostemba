@@ -35,7 +35,7 @@ export default function UploadMediaTicket() {
 
   const handleUpload = (media: PreviewMediaType[]) => {
     for (const m of media) {
-      uploadMediaCdn(m.file, {
+      uploadMediaCdn(m.file, "media", {
         onUploadProgress(progressEvent) {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total!,

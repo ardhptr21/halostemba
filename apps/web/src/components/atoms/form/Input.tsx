@@ -22,7 +22,7 @@ export default forwardRef(function Input(
         <TextFieldInput id={id} {...props} ref={ref} />
       </TextFieldRoot>
       {!!error && (
-        <Text as="p" size="1" mt="1" className="text-red-500">
+        <Text as="p" size="1" mt="1" color="red">
           {error}
         </Text>
       )}

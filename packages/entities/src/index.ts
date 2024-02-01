@@ -5,3 +5,5 @@ export * from "./comment.entity";
 export * from "./media.entity";
 export * from "./hashtag.entity";
 export * from "./ticket.entity";
+export * from "./major.entity";
+export * from "./verification.entity";

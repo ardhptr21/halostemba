@@ -40,7 +40,7 @@ export default function UploadMediaProfile({ avatar }: Props) {
 
   const handleUpload = (media: PreviewMediaType[]) => {
     for (const m of media) {
-      uploadMediaCdn(m.file, {
+      uploadMediaCdn(m.file, "avatar", {
         onUploadProgress(progressEvent) {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total!,

@@ -141,7 +141,11 @@ export default function ProfileDataCard({
               )}
             </Flex>
             {self && session!.user.role === "GUEST" && (
-              <Button className="cursor-pointer">UPGRADE KE STEMBA CLUB</Button>
+              <Link href={"/stembaclub"} className="w-full">
+                <Button className="cursor-pointer w-full">
+                  UPGRADE KE STEMBA CLUB
+                </Button>
+              </Link>
             )}
           </Flex>
         </Flex>
