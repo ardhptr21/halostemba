@@ -18,6 +18,7 @@ import { preventBubbling } from "~/lib/utils";
 import RenderMenfessMedia from "./RenderMenfessMedia";
 import ShowImageModal from "~/components/atoms/modals/ShowImageModal";
 import useParseHashtag from "~/hooks/useParseHashtag";
+import { useRouter } from "next/navigation";
 
 interface MenfessCardProps {
   redirect?: boolean;
@@ -32,6 +33,7 @@ function MenfessCard(
   const [src, setSrc] = useState("");
   const [openImageModal, setOpenImageModal] = useState(false);
   const { parser } = useParseHashtag();
+  const router = useRouter();
 
   const handlePreview = (src: string) => {
     setSrc(src);
@@ -54,11 +56,19 @@ function MenfessCard(
             <Flex direction="row" gap="2">
               <Box>
                 <Image
-                  src={"/assets/images/avatar.png"}
+                  src={
+                    menfess.author?.avatar && !menfess.anonymous
+                      ? menfess.author?.avatar
+                      : "/assets/images/profile/avatar.png"
+                  }
                   width={40}
                   height={40}
                   alt="avatar"
-                  className="rounded-md"
+                  onClick={() =>
+                    !menfess.anonymous &&
+                    router.push(`/${menfess.author?.username}`)
+                  }
+                  className="rounded-md w-full h-full object-cover aspect-square max-w-[40px] max-h-[40px] cursor-pointer"
                 />
               </Box>
 
@@ -70,11 +80,15 @@ function MenfessCard(
                   align="baseline"
                 >
                   <Flex direction="column" pb="4">
-                    <Text size="2">
-                      {menfess.anonymous
-                        ? "Anonymous"
-                        : "@" + menfess.author?.username}
-                    </Text>
+                    <>
+                      {menfess.anonymous ? (
+                        <Text size="2">Anonymous</Text>
+                      ) : (
+                        <Link href={`/${menfess.author?.username}`}>
+                          {"@" + menfess.author?.username}
+                        </Link>
+                      )}
+                    </>
                     <Text size="1" color="gray">
                       {formatDistanceToNowStrict(new Date(menfess.createdAt), {
                         locale: id,

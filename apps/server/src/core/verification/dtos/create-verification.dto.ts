@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsUUID, IsUrl, Length } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID, Length } from 'class-validator';
 import { validatorMapper } from '~/commons/lang/id/validator';
 
 export class CreateVerificationDto {
@@ -13,12 +13,6 @@ export class CreateVerificationDto {
   })
   readonly majorId: string;
 
-  @IsUrl(
-    {},
-    {
-      message: validatorMapper('isUrl'),
-    },
-  )
   @IsNotEmpty({
     message: validatorMapper('isNotEmpty'),
   })

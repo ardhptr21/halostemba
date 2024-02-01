@@ -15,7 +15,12 @@ import {
   CreateCommentValidatorType,
 } from "~/validators/menfess/create-comment-validator";
 
-export default function CommentCreate({ menfessId }: { menfessId: string }) {
+interface Props {
+  menfessId: string;
+  avatar?: string | null;
+}
+
+export default function CommentCreate({ menfessId, avatar }: Props) {
   const { data: session } = useSession();
   const [showMustVerified, setShowMustVerified] = useState(false);
   const [showMustLogin, setShowMustLogin] = useState(false);
@@ -82,7 +87,7 @@ export default function CommentCreate({ menfessId }: { menfessId: string }) {
           <Flex direction="row" gap="2">
             <Box>
               <Image
-                src={"/assets/images/avatar.png"}
+                src={avatar || "/assets/images/avatar.png"}
                 width={45}
                 height={45}
                 alt="avatar"

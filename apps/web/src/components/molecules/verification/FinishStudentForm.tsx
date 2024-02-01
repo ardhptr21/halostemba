@@ -1,19 +1,42 @@
 import { Box, Button, Flex, Heading, Text } from "@radix-ui/themes";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useSnackbar } from "notistack";
+import { useCreateVerification } from "~/apis/verification/create-verification-api";
 import { useVerificationStore } from "~/store/verification/verification-store";
 
 export default function FinishStudentForm() {
+  const { data: session } = useSession();
   const { decremenetStep, data } = useVerificationStore();
+  const { enqueueSnackbar: toast } = useSnackbar();
+  const router = useRouter();
+
+  const { mutate: handleCreateVerification } = useCreateVerification();
 
   const handleClick = () => {
-    alert("OKE");
-    console.log(data);
+    handleCreateVerification(
+      { ...data, token: session?.token as string },
+      {
+        onError: (error) => {
+          const message =
+            error.response?.data.error ||
+            "Gagal mengirimkan verifikasi, coba lagi.";
+          toast(message, { variant: "error" });
+        },
+        onSuccess: () => {
+          const message = "Berhasil mengirimkan verifikasi.";
+          toast(message, { variant: "success" });
+          router.replace("/stembaclub");
+        },
+      },
+    );
   };
 
   return (
     <Flex direction="column" align="center" gap="5">
       <Image
-        src="/assets/images/verification/wave.svg"
+        src="/assets/images/verification/wave.png"
         width={970}
         height={308}
         alt="Verifikasi"
@@ -21,7 +44,7 @@ export default function FinishStudentForm() {
       />
       <Box className="absolute top-48 -z-10">
         <Image
-          src="/assets/images/verification/rocket2.svg"
+          src="/assets/images/verification/rocket.png"
           width={291}
           height={298}
           alt="Rocket"
@@ -36,21 +59,21 @@ export default function FinishStudentForm() {
           gap="2"
         >
           <Heading as="h2" size="6">
-            Verifikasi dalam proses, nih
+            Yuk, Pastikan Semuanya Sudah Tepat!
           </Heading>
-          <Text size="3" className="max-w-sm text-center">
-            Sabar ya, tunggu verifikasi kamu berhasil buat nikmatin semua
-            layanan halostemba.
+          <Text size="3" className="max-w-md text-center">
+            Pastikan kalau semua datanya sudah diisi dengan benar. Kesalahan
+            kecil bisa bikin kamu mengulang lagi, lho.
           </Text>
         </Flex>
       </Flex>
       <Flex align="center" justify="center" gap="5">
         <Image
-          src="/assets/images/verification/education.svg"
-          width={101}
+          src="/assets/images/verification/comp.png"
+          width={100}
           height={100}
           alt="Education"
-          objectFit="cover"
+          className="bg-indigo-400 rounded-full"
         />
         <Flex direction="column" align="start">
           <Text weight="bold">Kemudahan menemukan solusi</Text>
@@ -59,27 +82,32 @@ export default function FinishStudentForm() {
       </Flex>
       <Flex align="center" justify="center" gap="5">
         <Image
-          src="/assets/images/verification/medsos.svg"
-          width={101}
+          src="/assets/images/verification/media.png"
+          width={100}
           height={100}
-          alt="Education"
+          alt="Media"
+          className="bg-indigo-400 rounded-full"
         />
         <Flex direction="column" align="start">
           <Text weight="bold">Akses fitur menfess</Text>
           <Text>Ekspresikan pikiran dan perasaanmu tanpa batasan</Text>
         </Flex>
       </Flex>
-      <Flex width="100%" gap="4" mt="2">
+      <Flex align="center" justify="center" gap="3" width="100%">
         <Button
-          size="3"
           variant="outline"
+          className="cursor-pointer flex-grow"
           onClick={decremenetStep}
-          className="w-1/2"
+          size="3"
         >
           Kembali
         </Button>
-        <Button size="3" className="w-1/2 cursor-pointer" onClick={handleClick}>
-          Simpan dan Lanjut
+        <Button
+          size="3"
+          className="cursor-pointer flex-grow"
+          onClick={handleClick}
+        >
+          Kirim
         </Button>
       </Flex>
     </Flex>

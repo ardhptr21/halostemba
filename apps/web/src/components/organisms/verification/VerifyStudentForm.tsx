@@ -3,7 +3,6 @@
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { Flex, Heading, IconButton, Text } from "@radix-ui/themes";
 import clsx from "clsx";
-import React from "react";
 import FinishStudentForm from "~/components/molecules/verification/FinishStudentForm";
 import IDCardStudentForm from "~/components/molecules/verification/IDCardStudentForm";
 import StudentDataForm from "~/components/molecules/verification/StudentDataForm";

@@ -39,7 +39,7 @@ export default function IDCardStudentForm() {
   const onNext = () => {
     if (!preview && data.idCard) return incrementStep();
     if (!preview) return;
-    mutate({ file: preview.file });
+    mutate({ file: preview.file, target: "card" });
   };
 
   return (
@@ -64,7 +64,7 @@ export default function IDCardStudentForm() {
               type="file"
               name="media"
               id="media"
-              accept="image/jpg,image/jpeg,image/png,image/gif,image/webp"
+              accept="image/jpg,image/jpeg,image/png,image/webp"
               hidden
               onChange={handleChange}
             />

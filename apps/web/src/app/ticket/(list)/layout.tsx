@@ -20,4 +20,6 @@ function layout({ children, session }: Props) {
   );
 }
 
-export default withAuthRequired(layout);
+export default withAuthRequired(layout, {
+  role: ["ADMIN", "STUDENT"],
+});

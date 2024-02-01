@@ -1,5 +1,6 @@
 import { Button, Flex, Text } from "@radix-ui/themes";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function TicketPage() {
   return (
@@ -22,7 +23,9 @@ export default function TicketPage() {
         Pilih ticket untuk memunculkan pesan. Belum punya ticket? Konsultasikan
         sekarang!
       </Text>
-      <Button size={"2"}>Formulir Konsultasi</Button>
+      <Link href={"/ticket/formulir"} passHref>
+        <Button size={"2"}>Formulir Konsultasi</Button>
+      </Link>
     </Flex>
   );
 }

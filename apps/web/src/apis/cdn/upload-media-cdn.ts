@@ -6,12 +6,13 @@ import ErrorResponseType from "~/types/error-response-type";
 
 export const uploadMediaCdn = async (
   file: File,
+  target: "avatar" | "card" | "media" = "media",
   config?: Partial<AxiosRequestConfig<FormData>>,
 ): Promise<CDNResponseUploaded> => {
   const formData = new FormData();
-  formData.append("media", file);
+  formData.append(target, file);
 
-  const { data } = await httpCdn.post("/upload/media", formData, {
+  const { data } = await httpCdn.post("/upload/" + target, formData, {
     headers: { "Content-Type": "multipart/form-data" },
     ...config,
   });
@@ -21,11 +22,12 @@ export const uploadMediaCdn = async (
 
 interface UploadMediaCdnBody {
   file: File;
+  target: "avatar" | "card" | "media";
   config?: Partial<AxiosRequestConfig<FormData>>;
 }
 
 const uploaderMutation = async (body: UploadMediaCdnBody) => {
-  return await uploadMediaCdn(body.file, body.config);
+  return await uploadMediaCdn(body.file, body.target, body.config);
 };
 
 export const useUploadMediaCdn = (

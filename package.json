@@ -2,13 +2,13 @@
   "name": "halostemba",
   "version": "0.0.1",
   "scripts": {
-    "start": "turbo start",
+    "start": "turbo start --filter=@halostemba/*",
     "prepare": "husky install",
     "dev": "turbo run dev --filter=@halostemba/*",
-    "build": "turbo run build",
-    "test": "turbo run test",
-    "lint": "turbo run lint",
-    "format": "turbo run format",
+    "build": "turbo run build --filter=@halostemba/*",
+    "test": "turbo run test --filter=@halostemba/*",
+    "lint": "turbo run lint --filter=@halostemba/*",
+    "format": "turbo run format --filter=@halostemba/*",
     "db:migrate": "turbo run db:migrate",
     "db:generate": "turbo run db:generate -- "
   },
