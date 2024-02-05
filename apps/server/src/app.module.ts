@@ -17,6 +17,7 @@ import { MagiclinkModule } from './providers/magiclink/magiclink.module';
 import { OpenaiModule } from './providers/openai/openai.module';
 import { OtpModule } from './providers/otp/otp.module';
 import { MajorModule } from './core/major/major.module';
+import { NotificationModule } from './core/notification/notification.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -41,6 +42,7 @@ import { MajorModule } from './core/major/major.module';
     OtpModule,
     OpenaiModule,
     MajorModule,
+    NotificationModule,
   ],
   controllers: [],
   providers: [
