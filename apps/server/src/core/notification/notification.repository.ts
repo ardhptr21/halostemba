@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '~/providers/database/database.service';
+import { NotificationEvent } from './events/notification.event';
 
 @Injectable()
 export class NotificationRepository {
@@ -30,6 +31,19 @@ export class NotificationRepository {
     return this.db.notification.updateMany({
       where: { userId },
       data: { read: true },
+    });
+  }
+
+  async createNotification(data: NotificationEvent) {
+    return this.db.notification.create({
+      data: {
+        userId: data.userId,
+        title: data.title,
+        message: data.message,
+        type: data.type,
+        url: data.url,
+        image: data.image,
+      },
     });
   }
 }

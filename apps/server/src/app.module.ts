@@ -18,6 +18,8 @@ import { OpenaiModule } from './providers/openai/openai.module';
 import { OtpModule } from './providers/otp/otp.module';
 import { MajorModule } from './core/major/major.module';
 import { NotificationModule } from './core/notification/notification.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -43,6 +45,7 @@ import { NotificationModule } from './core/notification/notification.module';
     OpenaiModule,
     MajorModule,
     NotificationModule,
+    EventEmitterModule.forRoot(),
   ],
   controllers: [],
   providers: [
