@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationRepository } from './notification.repository';
-import { ListNotificationParamsDto } from './dto/list-notification-params.dto';
 
 @Injectable()
 export class NotificationService {
@@ -8,7 +7,9 @@ export class NotificationService {
     private readonly notificationRepository: NotificationRepository,
   ) {}
 
-  async getNotifications(userId: string, params: ListNotificationParamsDto) {
-    return this.notificationRepository.getUserNotifications(userId, params);
+  async getNotifications(userId: string) {
+    this.notificationRepository.readAllNotifications(userId);
+
+    return this.notificationRepository.getUserNotifications(userId);
   }
 }
