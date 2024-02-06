@@ -20,6 +20,18 @@ export class CommentRepository {
         menfessId,
         ...comment,
       },
+      include: {
+        menfess: {
+          include: {
+            medias: {
+              select: { type: true, source: true },
+              where: { type: 'IMAGE' },
+              take: 1,
+            },
+          },
+        },
+        author: { select: { name: true, username: true } },
+      },
     });
   }
 

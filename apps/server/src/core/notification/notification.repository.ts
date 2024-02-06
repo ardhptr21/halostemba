@@ -21,6 +21,7 @@ export class NotificationRepository {
         read: true,
         type: true,
         url: true,
+        image: true,
         createdAt: true,
       },
       orderBy: [{ read: 'asc' }, { createdAt: 'desc' }],

@@ -9,26 +9,40 @@ import {
 import { UserRepository } from '../user/user.repository';
 import { UserEntity } from '@halostemba/entities';
 import serializeMenfessUtil from '~/commons/utils/serializeMenfessUtil';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { NotificationEvent } from '../notification/events/notification.event';
 
 @Injectable()
 export class CommentService {
   constructor(
     private readonly commentRepository: CommentRepository,
     private readonly userRepository: UserRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async createComment(
     createCommentDto: CreateCommentDto,
     menfessId: string,
-    authorId: string,
+    commentAuthorId: string,
   ) {
     const comment = await this.commentRepository.createComment({
       ...createCommentDto,
       menfessId,
-      authorId,
+      authorId: commentAuthorId,
     });
 
     if (!comment) throw new CommentServerError('Gagal membuat komentar.');
+
+    this.commentNotification(
+      menfessId,
+      comment.menfess.authorId,
+      commentAuthorId,
+      comment.author.name,
+      {
+        message: comment.content,
+        media: comment.menfess.medias[0]?.source,
+      },
+    );
 
     return { message: 'Komentar berhasil dibuat.', data: comment };
   }
@@ -66,5 +80,29 @@ export class CommentService {
 
       throw new CommentServerError('Gagal menghapus komentar.');
     }
+  }
+
+  private commentNotification(
+    menfessId: string,
+    userId: string,
+    authorId: string,
+    authorName: string,
+    content: {
+      message: string;
+      media?: string;
+    },
+  ) {
+    if (userId === authorId) return;
+
+    const notificationEvent = new NotificationEvent(
+      userId,
+      `${authorName} mengomentari menfess kamu.`,
+      'INFO',
+      content.message,
+      `/menfess/${menfessId}`,
+      content.media,
+    );
+
+    this.eventEmitter.emit('notification', notificationEvent);
   }
 }
