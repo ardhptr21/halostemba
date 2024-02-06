@@ -13,10 +13,15 @@ import { UpdateTicketDto } from './dtos/update-ticket.dto';
 import { TicketNotFoundException, TicketServerError } from './ticket.exception';
 import { TicketRepository } from './ticket.repository';
 import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { NotificationEvent } from '../notification/events/notification.event';
 
 @Injectable()
 export class TicketService {
-  constructor(private readonly ticketRepository: TicketRepository) {}
+  constructor(
+    private readonly ticketRepository: TicketRepository,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   async getCurrentUserTickets(userId: string, params: ListTicketParamsDto) {
     const tickets = await this.ticketRepository.getListTicketByReporterId(
@@ -95,6 +100,12 @@ export class TicketService {
 
     if (!updated) throw new TicketServerError('Gagal menanggapi laporan.');
 
+    this.ticketNotification(
+      ticketId,
+      ticket.reporterId,
+      updated.responder.name,
+    );
+
     return { message: 'Berhasil menanggapi laporan.' };
   }
 
@@ -165,5 +176,21 @@ export class TicketService {
 
       throw new TicketServerError('Gagal menghapus balasan laporan.');
     }
+  }
+
+  private ticketNotification(
+    ticketId: string,
+    userId: string,
+    responderName: string,
+  ) {
+    const notificationEvent = new NotificationEvent(
+      userId,
+      'Ticket',
+      'SUCCESS',
+      `Selamat! Ticketmu telah direspon oleh ${responderName}.`,
+      `/ticket/${ticketId}`,
+    );
+
+    this.eventEmitter.emit('notification', notificationEvent);
   }
 }

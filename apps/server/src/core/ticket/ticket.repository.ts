@@ -76,6 +76,7 @@ export class TicketRepository {
     return await this.db.ticket.update({
       data: { responderId, status: TicketStatus.OPEN },
       where: { id: ticketId },
+      include: { responder: { select: { name: true } } },
     });
   }
 
