@@ -41,6 +41,13 @@ export class TicketRepository {
         ...data,
         medias: { create: media },
       },
+      include: {
+        medias: {
+          where: { type: 'IMAGE' },
+          select: { source: true, type: true },
+          take: 1,
+        },
+      },
     });
   }
 

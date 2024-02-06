@@ -15,11 +15,13 @@ import { TicketRepository } from './ticket.repository';
 import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { NotificationEvent } from '../notification/events/notification.event';
+import { UserRepository } from '../user/user.repository';
 
 @Injectable()
 export class TicketService {
   constructor(
     private readonly ticketRepository: TicketRepository,
+    private readonly userRepository: UserRepository,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
@@ -39,6 +41,11 @@ export class TicketService {
     });
 
     if (!ticket) throw new TicketServerError('Gagal membuat laporan.');
+
+    await this.notifyTeacher(ticket.id, {
+      message: ticket.title,
+      media: ticket.medias[0]?.source,
+    });
 
     return { data: ticket };
   }
@@ -192,5 +199,28 @@ export class TicketService {
     );
 
     this.eventEmitter.emit('notification', notificationEvent);
+  }
+
+  private async notifyTeacher(
+    ticketId: string,
+    content: {
+      message: string;
+      media?: string;
+    },
+  ) {
+    const teachers = await this.userRepository.getUserByRole('TEACHER');
+
+    teachers.forEach((teacher) => {
+      const notificationEvent = new NotificationEvent(
+        teacher.id,
+        'New Ticket',
+        'SUCCESS',
+        content.message,
+        `/ticket/${ticketId}`,
+        content.media,
+      );
+
+      this.eventEmitter.emit('notification', notificationEvent);
+    });
   }
 }
