@@ -3,12 +3,17 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { MenfessRepository } from '../menfess/menfess.repository';
 import { VoteDto } from './dtos/vote.dto';
 import { VoteRepository } from './vote.repository';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { NotificationEvent } from '../notification/events/notification.event';
+import { UserRepository } from '../user/user.repository';
 
 @Injectable()
 export class VoteService {
   constructor(
     private readonly voteRepository: VoteRepository,
     private readonly menfessRepository: MenfessRepository,
+    private readonly userRepository: UserRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async vote(voteDto: VoteDto, userId: string) {
@@ -36,7 +41,17 @@ export class VoteService {
 
     if (!existingVote) {
       await this.voteRepository.createVote({ ...voteDto, userId });
+
+      if (voteDto.type === VoteType.UP) {
+        await this.upVoteNotification(
+          voteDto.menfessId,
+          userId,
+          menfess.authorId,
+        );
+      }
+
       score = voteDto.type === VoteType.UP ? score + 1 : score - 1;
+
       message = 'Berhasil vote ' + voteDto.type.toLowerCase();
     } else if (existingVote.type === voteDto.type) {
       await this.voteRepository.deleteVote(existingVote.id);
@@ -48,11 +63,40 @@ export class VoteService {
         type: voteDto.type,
       });
       score = voteDto.type === VoteType.UP ? score + 2 : score - 2;
+
+      if (voteDto.type === VoteType.UP) {
+        await this.upVoteNotification(
+          voteDto.menfessId,
+          userId,
+          menfess.authorId,
+        );
+      }
+
       message = 'Berhasil vote ' + voteDto.type.toLowerCase();
     }
 
     await this.menfessRepository.updateMenfessScore(menfess.id, score);
 
     return { message };
+  }
+
+  private async upVoteNotification(
+    menfessId: string,
+    userId: string,
+    menfessUserId: string,
+  ) {
+    const user = await this.userRepository.findUserById(userId);
+
+    const notificationEvent = new NotificationEvent(
+      menfessUserId,
+      `${user.name} setuju dengan menfess kamu.`,
+      'INFO',
+      'Menfess kamu mendapatkan vote up.',
+      `/menfess/${menfessId}`,
+    );
+
+    if (userId !== menfessUserId) {
+      this.eventEmitter.emit('notification', notificationEvent);
+    }
   }
 }

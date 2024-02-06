@@ -23,7 +23,7 @@ export class NotificationRepository {
         url: true,
         createdAt: true,
       },
-      orderBy: [{ read: 'desc' }, { createdAt: 'desc' }],
+      orderBy: [{ read: 'asc' }, { createdAt: 'desc' }],
     });
   }
 

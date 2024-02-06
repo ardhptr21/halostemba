@@ -213,7 +213,7 @@ model Notification {
   userId    String           @map("user_id")
   image     String?          @db.Text()
   title     String
-  message   String           @db.Text()
+  message   String?          @db.Text()
   type      NotificationType
   read      Boolean          @default(false)
   url       String

@@ -1,10 +1,19 @@
 import { NotificationType } from '@halostemba/db';
 
 export class NotificationEvent {
-  userId: string;
-  image?: string | null;
-  title: string;
-  message?: string | null;
-  type: NotificationType;
-  url?: string | null;
+  constructor(
+    public userId: string,
+    public title: string,
+    public type: NotificationType,
+    public message?: string | null,
+    public url?: string | null,
+    public image?: string | null,
+  ) {
+    this.userId = userId;
+    this.title = title;
+    this.type = type;
+    this.message = message;
+    this.url = url;
+    this.image = image;
+  }
 }
