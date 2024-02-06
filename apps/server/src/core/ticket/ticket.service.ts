@@ -110,7 +110,8 @@ export class TicketService {
     this.ticketNotification(
       ticketId,
       ticket.reporterId,
-      updated.responder.name,
+      'Ticket Telah Direspon',
+      `Selamat! Ticketmu telah direspon oleh ${updated.responder.name}.`,
     );
 
     return { message: 'Berhasil menanggapi laporan.' };
@@ -185,16 +186,44 @@ export class TicketService {
     }
   }
 
+  async closeTicket(ticketId: string, userId: string) {
+    const ticket = await this.ticketRepository.getTicketById(ticketId);
+    const user = await this.userRepository.findUserById(userId);
+
+    if (!ticket) throw new TicketNotFoundException();
+
+    if (ticket.reporterId !== userId && ticket.responderId !== userId)
+      throw new TicketNotFoundException();
+
+    if (ticket.status !== TicketStatus.OPEN)
+      throw new ForbiddenException({
+        error: 'Hanya bisa menutup tiket dengan status OPEN.',
+        statusCode: 403,
+      });
+
+    await this.ticketRepository.closeTicket(ticketId);
+
+    this.ticketNotification(
+      ticketId,
+      ticket.reporterId,
+      'Ticket Ditutup',
+      `Ticket ${ticket.title} telah ditutup oleh ${user.name}.`,
+    );
+
+    return { message: 'Berhasil menutup laporan.' };
+  }
+
   private ticketNotification(
     ticketId: string,
     userId: string,
-    responderName: string,
+    title: string,
+    message: string,
   ) {
     const notificationEvent = new NotificationEvent(
       userId,
-      'Ticket',
+      title,
       'SUCCESS',
-      `Selamat! Ticketmu telah direspon oleh ${responderName}.`,
+      message,
       `/ticket/${ticketId}`,
     );
 

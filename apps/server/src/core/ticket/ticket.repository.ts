@@ -87,6 +87,13 @@ export class TicketRepository {
     });
   }
 
+  async closeTicket(ticketId: string) {
+    return await this.db.ticket.update({
+      data: { status: TicketStatus.CLOSED },
+      where: { id: ticketId },
+    });
+  }
+
   async createTicketReply(
     ticketId: string,
     authorId: string,
