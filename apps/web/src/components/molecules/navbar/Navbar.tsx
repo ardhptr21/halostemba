@@ -57,7 +57,7 @@ export default function Navbar({ className }: Props) {
     <Flex
       direction="column"
       className={clsx([
-        "fixed bottom-0 left-0 w-full border-t border-t-[#FFFFFF55] bg-[#111111] xl:hidden",
+        "fixed bottom-0 left-0 w-full border-t border-t-[#FFFFFF55] bg-[#111111] xl:hidden z-50",
         className,
       ])}
     >
@@ -71,7 +71,10 @@ export default function Navbar({ className }: Props) {
             key={link.label}
           >
             <RLink asChild color="gray">
-              <Link href={link.href}>
+              <Link
+                href={link.href}
+                className="hover:bg-blue-400/50 p-1 rounded-md"
+              >
                 <link.icon width={28} height={"100%"} />
               </Link>
             </RLink>

@@ -27,7 +27,7 @@ export default function UserMenfessList({ username, token }: Props) {
   }, [inView, hasNextPage, fetchNextPage]);
 
   return (
-    <Flex direction="column" gap="4">
+    <Flex direction="column" gap="4" className="mb-20 md:mb-20 xl:mb-0">
       {data?.pages.map((page) =>
         page.data.map((m) => (
           <MenfessCard key={m.id} redirect={true} menfess={m} />

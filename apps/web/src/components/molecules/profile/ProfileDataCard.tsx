@@ -43,7 +43,7 @@ export default function ProfileDataCard({
         <Flex
           direction={{
             initial: "column",
-            xl: "row",
+            md: "row",
           }}
           gap="4"
         >
@@ -94,7 +94,7 @@ export default function ProfileDataCard({
           <Flex
             align={{
               initial: "center",
-              xl: "start",
+              md: "start",
             }}
             justify="center"
           >
@@ -120,10 +120,10 @@ export default function ProfileDataCard({
             <Flex
               direction="row"
               gap="2"
-              justify={{ initial: "center", xl: "between" }}
+              justify={{ initial: "center", md: "between" }}
             >
               <Flex
-                direction={{ initial: "column", xl: "row" }}
+                direction={{ initial: "column", md: "row" }}
                 align="center"
                 gap="2"
               >
@@ -145,7 +145,7 @@ export default function ProfileDataCard({
                   )}
                 </Flex>
               </Flex>
-              <Flex className="hidden xl:flex">
+              <Flex className="hidden md:flex">
                 {self && (
                   <PopoverRoot>
                     <PopoverTrigger>
@@ -199,7 +199,7 @@ export default function ProfileDataCard({
               direction="column"
               align={{
                 initial: "center",
-                xl: "start",
+                md: "start",
               }}
             >
               <Text size="2" className="text-[#EFF5FFB1]">
@@ -215,7 +215,7 @@ export default function ProfileDataCard({
                 <Flex
                   align="center"
                   gap="1"
-                  direction={{ initial: "column", xl: "row" }}
+                  direction={{ initial: "column", md: "row" }}
                 >
                   <Flex direction="row" align="center" gap="2">
                     <InfoCircledIcon color="red" />

@@ -161,7 +161,12 @@ export default function TicketForm({ session }: Props) {
                   {errors.detail?.message}
                 </Text>
               </Flex>
-              <Button size="3" onClick={handleCreate} disabled={isPending}>
+              <Button
+                size="3"
+                onClick={handleCreate}
+                disabled={isPending}
+                className="mb-20 md:mb-20 xl:mb-0"
+              >
                 <Text size="3">Ajukan Formulir</Text>
               </Button>
             </Flex>

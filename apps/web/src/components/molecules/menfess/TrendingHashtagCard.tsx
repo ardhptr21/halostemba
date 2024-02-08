@@ -14,7 +14,7 @@ export default function TrendingHashtagCard({ className }: Props) {
   const { data } = useGetTrendingHashtagApi();
 
   return (
-    <Card className={clsx(["p-4 w-full hidden md:flex", className])}>
+    <Card className={clsx(["p-4 w-full hidden md:hidden lg:flex", className])}>
       <Flex direction="column" gap="4">
         <Text size="5" weight="bold">
           Trending Hashtag 🔥
