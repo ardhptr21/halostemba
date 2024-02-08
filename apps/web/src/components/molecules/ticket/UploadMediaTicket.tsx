@@ -1,4 +1,4 @@
-import { AspectRatio, Flex, Text } from "@radix-ui/themes";
+import { Flex, Text } from "@radix-ui/themes";
 import Image from "next/image";
 import { useSnackbar } from "notistack";
 import { ChangeEvent, useRef } from "react";
@@ -61,11 +61,10 @@ export default function UploadMediaTicket() {
 
   return (
     <>
-      <AspectRatio ratio={21 / 9} asChild>
+      <Flex direction={"column"} p={{ initial: "6", xl: "7" }} asChild>
         <Flex
           justify={"center"}
           align={"center"}
-          p="2"
           className="border-4 border-gray-700/50 border-dashed rounded-xl"
           asChild
         >
@@ -80,18 +79,25 @@ export default function UploadMediaTicket() {
                 onChange={handleChange}
                 ref={inputRef}
               />
-              <Flex direction={"column"} align={"center"} justify={"center"}>
+              <Flex
+                direction={"column"}
+                gap={"2"}
+                align={"center"}
+                justify={"center"}
+              >
                 <Image
                   src={"/assets/images/ticket/form.png"}
                   alt="Form image"
                   width={160}
                   height={160}
-                  className="w-28 h-auto"
+                  className="w-52 xl:w-36 "
                 />
-                <Text weight={"bold"} size={"1"}>
-                  Upload gambar disini!
+                <Text weight={"bold"} size={{ initial: "2", xl: "5" }}>
+                  Upload gambar di sini!
                 </Text>
-                <Text size={"1"}>Seret atau klik untuk upload gambar.</Text>
+                <Text size={{ initial: "1", xl: "3" }} color="gray">
+                  Seret atau klik untuk upload gambar.
+                </Text>
               </Flex>
             </label>
           ) : (
@@ -107,7 +113,7 @@ export default function UploadMediaTicket() {
             </div>
           )}
         </Flex>
-      </AspectRatio>
+      </Flex>
     </>
   );
 }

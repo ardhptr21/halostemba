@@ -13,25 +13,36 @@ export default function MustBeVerifiedModal(props: AlertDialogRootProps) {
           <Image
             src="/assets/images/action/not-verified.png"
             alt="account not verified"
-            className="w-80"
+            className="w-52 xl:w-64"
             width={400}
             height={400}
           />
         </Flex>
-        <AlertDialog.Title>Belum Terverifikasi</AlertDialog.Title>
-        <AlertDialog.Description color="gray">
-          Agar bisa membuat menfessmu sendiri, verifikasi akunmu terlebih dahulu
-          yuk!
-        </AlertDialog.Description>
-        <Flex justify="end" gap="3" mt="5">
-          <AlertDialog.Cancel>
-            <Button size="3" variant="outline">
-              Batal
-            </Button>
-          </AlertDialog.Cancel>
-          <AlertDialog.Action>
-            <Button size="3">Verifikasi</Button>
-          </AlertDialog.Action>
+        <Flex
+          direction="column"
+          align={{ initial: "center", xl: "stretch" }}
+          px={{ initial: "6", xl: "4" }}
+        >
+          <AlertDialog.Title>Belum Terverifikasi</AlertDialog.Title>
+          <AlertDialog.Description
+            color="gray"
+            align={{ initial: "center", xl: "left" }}
+          >
+            Agar bisa membuat menfessmu sendiri, verifikasi akunmu terlebih
+            dahulu yuk!
+          </AlertDialog.Description>
+          <Flex justify="end" gap="3" mt="5">
+            <AlertDialog.Cancel>
+              <Button size="3" variant="outline">
+                Batal
+              </Button>
+            </AlertDialog.Cancel>
+            <AlertDialog.Action>
+              <Button size="3" style={{ cursor: "pointer" }}>
+                Verifikasi
+              </Button>
+            </AlertDialog.Action>
+          </Flex>
         </Flex>
       </AlertDialog.Content>
     </AlertDialog.Root>
