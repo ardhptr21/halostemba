@@ -32,6 +32,7 @@ model User {
   respondTickets      Ticket[]              @relation("responder")
   magicLinks          MagicLink[]
   otps                OTP[]
+  Notification        Notification[]
 
   @@map("users")
 }
@@ -207,6 +208,20 @@ model Media {
   ticketReply TicketReply? @relation(fields: [ticketReplyId], references: [id], onDelete: SetNull)
 }
 
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String           @map("user_id")
+  image     String?          @db.Text()
+  title     String
+  message   String?          @db.Text()
+  type      NotificationType
+  read      Boolean          @default(false)
+  url       String
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 enum Role {
   STUDENT @map("student")
   TEACHER @map("teacher")
@@ -234,4 +249,11 @@ enum VoteType {
 enum MediaType {
   IMAGE @map("image")
   VIDEO @map("video")
+}
+
+enum NotificationType {
+  INFO    @map("info")
+  WARNING @map("warning")
+  DANGER  @map("danger")
+  SUCCESS @map("success")
 }

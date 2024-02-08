@@ -81,6 +81,15 @@ export class TicketController {
   }
 
   @Auth(true, Role.TEACHER, Role.STUDENT)
+  @Patch('/:ticketId/close')
+  async closeTicket(
+    @Param('ticketId', ParseUUIDPipe) ticketId: string,
+    @User() user: UserEntity,
+  ) {
+    return this.ticketService.closeTicket(ticketId, user.id);
+  }
+
+  @Auth(true, Role.TEACHER, Role.STUDENT)
   @Post('/:ticketId/replies')
   async createTicketReply(
     @Param('ticketId', ParseUUIDPipe) ticketId: string,
