@@ -115,7 +115,7 @@ export default function TicketForm({ session }: Props) {
                 Judul Permasalahan
               </Heading>
             </Flex>
-            <Flex direction="column" width="100%" gap="5" pl={{ xl: "8" }}>
+            <Flex direction="column" width="100%" gap="5" pl={{ md: "8" }}>
               <Box style={{ height: "6rem" }}>
                 <TextArea
                   className="w-full "
@@ -143,7 +143,7 @@ export default function TicketForm({ session }: Props) {
                 Detail Permasalahan
               </Heading>
             </Flex>
-            <Flex direction="column" width="100%" gap="5" pl={{ xl: "8" }}>
+            <Flex direction="column" width="100%" gap="5" pl={{ md: "8" }}>
               <UploadMediaTicket />
               <Flex direction="column" gap="1" width="100%">
                 <div className="rt-TextAreaRoot rt-r-size-2 rt-variant-surface w-full">
