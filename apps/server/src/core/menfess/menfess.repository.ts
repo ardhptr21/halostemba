@@ -117,6 +117,7 @@ export class MenfessRepository {
       where: { id: menfessId },
       select: {
         id: true,
+        authorId: true,
         votes: { select: { type: true } },
       },
     });

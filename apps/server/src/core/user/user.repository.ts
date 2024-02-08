@@ -73,4 +73,8 @@ export class UserRepository {
       data: { bannedAt: null, banned: false },
     });
   }
+
+  async getUserByRole(role: Role) {
+    return await this.db.user.findMany({ where: { role } });
+  }
 }
