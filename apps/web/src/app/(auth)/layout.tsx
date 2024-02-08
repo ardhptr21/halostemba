@@ -16,7 +16,7 @@ export default function Layout({ children }: PropsWithChildren) {
           width={315}
           height={63}
           alt="Logo halostemba"
-          className="mb-12"
+          className="mb-12 w-64 xl:w-80"
         />
         {children}
       </main>

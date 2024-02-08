@@ -1,15 +1,20 @@
 "use client";
 
 import { Card, Flex, Text } from "@radix-ui/themes";
+import clsx from "clsx";
 import Link from "next/link";
 import React from "react";
 import { useGetTrendingHashtagApi } from "~/apis/menfess/get-trending-hashtag-api";
 
-export default function TrendingHashtagCard() {
+interface Props {
+  className?: string;
+}
+
+export default function TrendingHashtagCard({ className }: Props) {
   const { data } = useGetTrendingHashtagApi();
 
   return (
-    <Card className="p-4 w-full">
+    <Card className={clsx(["p-4 w-full hidden md:flex", className])}>
       <Flex direction="column" gap="4">
         <Text size="5" weight="bold">
           Trending Hashtag 🔥

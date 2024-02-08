@@ -21,6 +21,7 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import SidebarContainer from "./SidebarContainer";
+import clsx from "clsx";
 
 export type NavLink = {
   href: string;
@@ -58,7 +59,11 @@ const navLinks: ReadonlyArray<NavLink> = [
   },
 ];
 
-export default function Sidebar() {
+interface Props {
+  className?: string;
+}
+
+export default function Sidebar({ className }: Props) {
   const session = useSession();
 
   return (
@@ -66,7 +71,7 @@ export default function Sidebar() {
       <Flex
         direction="column"
         justify="between"
-        className="h-[calc(100vh-100px)]"
+        className={clsx(["h-[calc(100vh-100px)] hidden xl:flex", className])}
       >
         <Flex direction="column">
           <Image
