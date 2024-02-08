@@ -1,16 +1,16 @@
 import { Prisma } from '@halostemba/db';
+import { UserEntity } from '@halostemba/entities';
 import { Injectable } from '@nestjs/common';
-import { CommentRepository } from './comment.repository';
-import { CreateCommentDto } from './dtos/create-comment.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import serializeMenfessUtil from '~/commons/utils/serializeMenfessUtil';
+import { NotificationEvent } from '../notification/events/notification.event';
+import { UserRepository } from '../user/user.repository';
 import {
   CommentNotFoundException,
   CommentServerError,
 } from './comment.exception';
-import { UserRepository } from '../user/user.repository';
-import { UserEntity } from '@halostemba/entities';
-import serializeMenfessUtil from '~/commons/utils/serializeMenfessUtil';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { NotificationEvent } from '../notification/events/notification.event';
+import { CommentRepository } from './comment.repository';
+import { CreateCommentDto } from './dtos/create-comment.dto';
 
 @Injectable()
 export class CommentService {
@@ -93,16 +93,16 @@ export class CommentService {
     },
   ) {
     if (userId === authorId) return;
-
-    const notificationEvent = new NotificationEvent(
-      userId,
-      `${authorName} mengomentari menfess kamu.`,
-      'INFO',
-      content.message,
-      `/menfess/${menfessId}`,
-      content.media,
+    this.eventEmitter.emit(
+      'notification',
+      new NotificationEvent({
+        userId,
+        title: `${authorName} mengomentari menfess kamu.`,
+        type: 'INFO',
+        message: content.message,
+        url: `/menfess/${menfessId}`,
+        image: content.media,
+      }),
     );
-
-    this.eventEmitter.emit('notification', notificationEvent);
   }
 }

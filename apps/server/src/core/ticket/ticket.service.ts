@@ -6,16 +6,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { NotificationEvent } from '../notification/events/notification.event';
+import { UserRepository } from '../user/user.repository';
+import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
 import { GetTicketRepliesParamsDto } from './dtos/get-ticket-replies-params.dto';
 import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
 import { TicketNotFoundException, TicketServerError } from './ticket.exception';
 import { TicketRepository } from './ticket.repository';
-import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { NotificationEvent } from '../notification/events/notification.event';
-import { UserRepository } from '../user/user.repository';
 
 @Injectable()
 export class TicketService {
@@ -219,15 +219,16 @@ export class TicketService {
     title: string,
     message: string,
   ) {
-    const notificationEvent = new NotificationEvent(
-      userId,
-      title,
-      'SUCCESS',
-      message,
-      `/ticket/${ticketId}`,
+    this.eventEmitter.emit(
+      'notification',
+      new NotificationEvent({
+        userId,
+        title,
+        type: 'SUCCESS',
+        message,
+        url: `/ticket/${ticketId}`,
+      }),
     );
-
-    this.eventEmitter.emit('notification', notificationEvent);
   }
 
   private async notifyTeacher(
@@ -240,16 +241,17 @@ export class TicketService {
     const teachers = await this.userRepository.getUserByRole('TEACHER');
 
     teachers.forEach((teacher) => {
-      const notificationEvent = new NotificationEvent(
-        teacher.id,
-        'New Ticket',
-        'SUCCESS',
-        content.message,
-        `/ticket/${ticketId}`,
-        content.media,
+      this.eventEmitter.emit(
+        'notification',
+        new NotificationEvent({
+          userId: teacher.id,
+          title: 'New Ticket',
+          type: 'SUCCESS',
+          message: content.message,
+          url: `/ticket/${ticketId}`,
+          image: content.media,
+        }),
       );
-
-      this.eventEmitter.emit('notification', notificationEvent);
     });
   }
 }

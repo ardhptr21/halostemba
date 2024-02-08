@@ -1,11 +1,11 @@
 import { VoteType } from '@halostemba/db';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { MenfessRepository } from '../menfess/menfess.repository';
-import { VoteDto } from './dtos/vote.dto';
-import { VoteRepository } from './vote.repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { MenfessRepository } from '../menfess/menfess.repository';
 import { NotificationEvent } from '../notification/events/notification.event';
 import { UserRepository } from '../user/user.repository';
+import { VoteDto } from './dtos/vote.dto';
+import { VoteRepository } from './vote.repository';
 
 @Injectable()
 export class VoteService {
@@ -87,16 +87,17 @@ export class VoteService {
   ) {
     const user = await this.userRepository.findUserById(userId);
 
-    const notificationEvent = new NotificationEvent(
-      menfessUserId,
-      `${user.name} setuju dengan menfess kamu.`,
-      'INFO',
-      'Menfess kamu mendapatkan vote up.',
-      `/menfess/${menfessId}`,
-    );
-
     if (userId !== menfessUserId) {
-      this.eventEmitter.emit('notification', notificationEvent);
+      this.eventEmitter.emit(
+        'notification',
+        new NotificationEvent({
+          userId: menfessUserId,
+          title: `${user.name} setuju dengan menfess kamu.`,
+          type: 'INFO',
+          message: 'Menfess kamu mendapatkan up vote.',
+          url: `/menfess/${menfessId}`,
+        }),
+      );
     }
   }
 }

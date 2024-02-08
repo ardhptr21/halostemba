@@ -1,15 +1,15 @@
 import { Role, VerificationStatus } from '@halostemba/db';
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { NotificationEvent } from '../notification/events/notification.event';
 import { UserRepository } from '../user/user.repository';
 import { CreateVerificationDto } from './dtos/create-verification.dto';
 import { RejectVerificationDto } from './dtos/reject-verification.dto';
-import { VerificationRepository } from './verification.repository';
 import {
   VerificationBadRequestException,
   VerificationNotFoundException,
 } from './verification.exception';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { NotificationEvent } from '../notification/events/notification.event';
+import { VerificationRepository } from './verification.repository';
 
 @Injectable()
 export class VerificationService {
@@ -134,14 +134,15 @@ export class VerificationService {
       },
     };
 
-    const notificationEvent = new NotificationEvent(
-      userId,
-      'STEMBA CLUB',
-      statusMessage[status].status,
-      statusMessage[status].message,
-      '/profile',
+    this.eventEmitter.emit(
+      'notification',
+      new NotificationEvent({
+        userId,
+        title: 'STEMBA CLUB',
+        type: statusMessage[status].status,
+        message: statusMessage[status].message,
+        url: `/profile`,
+      }),
     );
-
-    this.eventEmitter.emit('notification', notificationEvent);
   }
 }
