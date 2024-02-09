@@ -209,15 +209,16 @@ model Media {
 }
 
 model Notification {
-  id        String           @id @default(cuid())
-  userId    String           @map("user_id")
-  image     String?          @db.Text()
-  title     String
-  message   String?          @db.Text()
-  type      NotificationType
-  read      Boolean          @default(false)
-  url       String
-  createdAt DateTime         @default(now()) @map("created_at")
+  id         String                  @id @default(cuid())
+  userId     String                  @map("user_id")
+  image      String?                 @db.Text()
+  title      String
+  message    String?                 @db.Text()
+  type       NotificationType
+  read       Boolean                 @default(false)
+  url        String
+  identifier NotificationIdentifier?
+  createdAt  DateTime                @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -256,4 +257,12 @@ enum NotificationType {
   WARNING @map("warning")
   DANGER  @map("danger")
   SUCCESS @map("success")
+}
+
+enum NotificationIdentifier {
+  COMMENT      @map("comment")
+  VOTE         @map("vote")
+  TICKET       @map("ticket")
+  VERIFICATION @map("verification")
+  WARNING      @map("warning")
 }

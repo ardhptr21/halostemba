@@ -96,6 +96,7 @@ export class VoteService {
           type: 'INFO',
           message: 'Menfess kamu mendapatkan up vote.',
           url: `/menfess/${menfessId}`,
+          identifier: 'VOTE',
         }),
       );
     }

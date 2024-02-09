@@ -1,4 +1,8 @@
-import { $Enums, NotificationType } from '@halostemba/db';
+import {
+  $Enums,
+  NotificationIdentifier,
+  NotificationType,
+} from '@halostemba/db';
 
 interface INotificationEvent {
   userId: string;
@@ -7,6 +11,7 @@ interface INotificationEvent {
   url: string | null;
   message?: string | null;
   image?: string | null;
+  identifier?: NotificationIdentifier | null;
 }
 
 export class NotificationEvent implements INotificationEvent {
@@ -16,6 +21,7 @@ export class NotificationEvent implements INotificationEvent {
   public url: string;
   public message?: string;
   public image?: string;
+  public identifier?: $Enums.NotificationIdentifier;
 
   constructor(data: INotificationEvent) {
     this.userId = data.userId;
@@ -24,5 +30,6 @@ export class NotificationEvent implements INotificationEvent {
     this.message = data.message;
     this.url = data.url;
     this.image = data.image;
+    this.identifier = data.identifier;
   }
 }
