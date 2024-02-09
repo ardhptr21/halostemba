@@ -47,7 +47,7 @@ const navLinks: ReadonlyArray<NavLink> = [
     icon: IdCardIcon,
   },
   {
-    href: "/notification",
+    href: "/notifikasi",
     label: "Notification",
     icon: BellIcon,
   },
