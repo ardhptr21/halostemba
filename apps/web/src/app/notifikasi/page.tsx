@@ -2,8 +2,9 @@ import { Flex, Heading } from "@radix-ui/themes";
 import React from "react";
 import NotificationLayout from "~/components/layouts/NotificationLayout";
 import NotificationList from "~/components/organisms/notification/NotificationList";
+import withAuthRequired from "~/guards/auth/withAuthRequired";
 
-export default function page() {
+function page() {
   return (
     <NotificationLayout>
       <Flex direction="column" gap="2" width="100%">
@@ -13,3 +14,5 @@ export default function page() {
     </NotificationLayout>
   );
 }
+
+export default withAuthRequired(page);

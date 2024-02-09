@@ -12,35 +12,29 @@ import React from "react";
 
 interface NotificationCardProps {
   type: "INFO" | "SUCCESS" | "WARNING" | "DANGER";
-  identifier?:
-    | "COMMENT"
-    | "VOTE"
-    | "TICKET"
-    | "VERIFICATION"
-    | "WARNING"
-    | null;
+  identifier: "COMMENT" | "VOTE" | "TICKET" | "VERIFICATION" | "WARNING";
   title: string;
-  message: string;
+  message?: string | null;
   createdAt: string;
-  image?: string;
+  image?: string | null;
 }
 
 const typeBadge = {
   INFO: {
-    bg: "#C2F3FF",
-    text: "#2D87B4",
+    bg: "bg-[#C2F3FF]",
+    text: "text-[#2D87B4]",
   },
   SUCCESS: {
-    bg: "#B1F1CB",
-    text: "#2C8C5E",
+    bg: "bg-[#B1F1CB]",
+    text: "text-[#2C8C5E]",
   },
   WARNING: {
-    bg: "#FFE7B3",
-    text: "#A9762A",
+    bg: "bg-[#FFE7B3]",
+    text: "text-[#A9762A]",
   },
   DANGER: {
-    bg: "#FFD1D9",
-    text: "#D21E24",
+    bg: "bg-[#FFD1D9]",
+    text: "text-[#D21E24]",
   },
 };
 
@@ -53,13 +47,10 @@ export default function NotificationCard({
   createdAt,
 }: NotificationCardProps) {
   return (
-    <Card
-      className="w-full cursor-pointer hover:bg-indigo-500/10  duration-150 ease-in-out 
-    "
-    >
+    <Card className="w-full cursor-pointer hover:bg-indigo-500/10  duration-150 ease-in-out">
       <Flex justify="between" align="start">
         <Flex align="start" gap="2">
-          <IconButton variant="solid" className={`bg-[${typeBadge[type].bg}]`}>
+          <IconButton variant="solid" className={typeBadge[type].bg}>
             <NotificationIcon
               identifier={identifier || "VOTE"}
               textColour={typeBadge[type].text}
@@ -80,11 +71,12 @@ export default function NotificationCard({
                 />
               </div>
             )}
-            <Text size="1">{message}</Text>
+            <Text size="1" className="whitespace-pre-line">
+              {message || "No message"}
+            </Text>
           </Flex>
         </Flex>
         <Text size="1">
-          {" "}
           {formatDistanceToNowStrict(new Date(createdAt), {
             locale: id,
             addSuffix: true,
@@ -102,7 +94,7 @@ const NotificationIcon = ({
   identifier: "COMMENT" | "VOTE" | "TICKET" | "VERIFICATION" | "WARNING";
   textColour?: string;
 }) => {
-  const classes = `text-[${textColour}] cursor-pointer`;
+  const classes = `${textColour} cursor-pointer`;
 
   const iconType = {
     COMMENT: <ChatBubbleIcon className={classes} />,
