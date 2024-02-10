@@ -22,5 +22,6 @@ export class NotificationEntity {
   type: NotificationType;
   url: string;
   identifier?: NotificationIdentifier | null;
+  read: boolean;
   createdAt: string;
 }

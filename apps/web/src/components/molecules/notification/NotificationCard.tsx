@@ -6,6 +6,7 @@ import {
   RocketIcon,
 } from "@radix-ui/react-icons";
 import { Card, Flex, Heading, IconButton, Text } from "@radix-ui/themes";
+import clsx from "clsx";
 import { formatDistanceToNowStrict } from "date-fns";
 import { id } from "date-fns/locale";
 import Image from "next/image";
@@ -36,11 +37,30 @@ const typeBadge = {
 };
 
 export default function NotificationCard({
-  notification: { title, message, createdAt, type, identifier, image, url },
+  notification: {
+    title,
+    message,
+    createdAt,
+    type,
+    identifier,
+    image,
+    url,
+    read,
+  },
 }: NotificationCardProps) {
   return (
     <Link href={url || "/"}>
-      <Card className="w-full cursor-pointer hover:bg-indigo-500/10  duration-150 ease-in-out">
+      <Card
+        className={clsx(
+          [
+            "w-full cursor-pointer  hover:bg-indigo-500/10  duration-150 ease-in-out ",
+          ],
+          {
+            "bg-[#3f64dd25]": !read,
+            "bg-[#18191c]": read,
+          },
+        )}
+      >
         <Flex justify="between" align="start">
           <Flex align="start" gap="2">
             <IconButton variant="solid" className={typeBadge[type].bg}>
