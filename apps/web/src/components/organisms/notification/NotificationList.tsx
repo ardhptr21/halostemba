@@ -12,15 +12,7 @@ export default async function NotificationList() {
   return (
     <Flex direction="column" gap="3">
       {data.map((notification) => (
-        <NotificationCard
-          key={notification.id}
-          title={notification.title}
-          message={notification.message}
-          createdAt={notification.createdAt}
-          type={notification.type}
-          identifier={notification.identifier!}
-          image={notification.image}
-        />
+        <NotificationCard key={notification.id} notification={notification} />
       ))}
     </Flex>
   );

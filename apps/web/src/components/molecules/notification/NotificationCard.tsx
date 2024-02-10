@@ -1,3 +1,4 @@
+import { NotificationEntity } from "@halostemba/entities";
 import {
   ChatBubbleIcon,
   IdCardIcon,
@@ -8,15 +9,11 @@ import { Card, Flex, Heading, IconButton, Text } from "@radix-ui/themes";
 import { formatDistanceToNowStrict } from "date-fns";
 import { id } from "date-fns/locale";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 interface NotificationCardProps {
-  type: "INFO" | "SUCCESS" | "WARNING" | "DANGER";
-  identifier: "COMMENT" | "VOTE" | "TICKET" | "VERIFICATION" | "WARNING";
-  title: string;
-  message?: string | null;
-  createdAt: string;
-  image?: string | null;
+  notification: NotificationEntity;
 }
 
 const typeBadge = {
@@ -39,51 +36,48 @@ const typeBadge = {
 };
 
 export default function NotificationCard({
-  image,
-  identifier,
-  type,
-  message,
-  title,
-  createdAt,
+  notification: { title, message, createdAt, type, identifier, image, url },
 }: NotificationCardProps) {
   return (
-    <Card className="w-full cursor-pointer hover:bg-indigo-500/10  duration-150 ease-in-out">
-      <Flex justify="between" align="start">
-        <Flex align="start" gap="2">
-          <IconButton variant="solid" className={typeBadge[type].bg}>
-            <NotificationIcon
-              identifier={identifier || "VOTE"}
-              textColour={typeBadge[type].text}
-            />
-          </IconButton>
-          <Flex direction="column" gap="2" justify="start">
-            <Heading as="h3" size="2">
-              {title}
-            </Heading>
-            {image && (
-              <div className="relative w-full h-44 rounded-xl overflow-hidden flex items-start justify-start">
-                <Image
-                  src={image}
-                  fill
-                  alt="preview"
-                  objectPosition="center"
-                  objectFit="cover"
-                />
-              </div>
-            )}
-            <Text size="1" className="whitespace-pre-line">
-              {message || "No message"}
-            </Text>
+    <Link href={url || "/"}>
+      <Card className="w-full cursor-pointer hover:bg-indigo-500/10  duration-150 ease-in-out">
+        <Flex justify="between" align="start">
+          <Flex align="start" gap="2">
+            <IconButton variant="solid" className={typeBadge[type].bg}>
+              <NotificationIcon
+                identifier={identifier || "VOTE"}
+                textColour={typeBadge[type].text}
+              />
+            </IconButton>
+            <Flex direction="column" gap="2" justify="start">
+              <Heading as="h3" size="2">
+                {title}
+              </Heading>
+              {image && (
+                <div className="relative w-full h-44 rounded-xl overflow-hidden flex items-start justify-start">
+                  <Image
+                    src={image}
+                    fill
+                    alt="preview"
+                    objectPosition="center"
+                    objectFit="cover"
+                  />
+                </div>
+              )}
+              <Text size="1" className="whitespace-pre-line">
+                {message || "No message"}
+              </Text>
+            </Flex>
           </Flex>
+          <Text size="1">
+            {formatDistanceToNowStrict(new Date(createdAt), {
+              locale: id,
+              addSuffix: true,
+            })}
+          </Text>
         </Flex>
-        <Text size="1">
-          {formatDistanceToNowStrict(new Date(createdAt), {
-            locale: id,
-            addSuffix: true,
-          })}
-        </Text>
-      </Flex>
-    </Card>
+      </Card>
+    </Link>
   );
 }
 
