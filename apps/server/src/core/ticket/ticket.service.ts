@@ -227,6 +227,7 @@ export class TicketService {
         type: 'SUCCESS',
         message,
         url: `/ticket/${ticketId}`,
+        identifier: 'TICKET',
       }),
     );
   }
@@ -250,6 +251,7 @@ export class TicketService {
           message: content.message,
           url: `/ticket/${ticketId}`,
           image: content.media,
+          identifier: 'TICKET',
         }),
       );
     });

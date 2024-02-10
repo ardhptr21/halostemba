@@ -2,6 +2,7 @@
 
 import { AlertDialog, Button, Flex } from "@radix-ui/themes";
 import Image from "next/image";
+import Link from "next/link";
 
 import { AlertDialogRootProps } from "node_modules/@radix-ui/themes/dist/esm/components/alert-dialog";
 
@@ -30,7 +31,9 @@ export default function MustBeVerifiedModal(props: AlertDialogRootProps) {
             </Button>
           </AlertDialog.Cancel>
           <AlertDialog.Action>
-            <Button size="3">Verifikasi</Button>
+            <Link href="/stembaclub">
+              <Button size="3">Verifikasi</Button>
+            </Link>
           </AlertDialog.Action>
         </Flex>
       </AlertDialog.Content>

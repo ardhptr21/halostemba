@@ -122,17 +122,20 @@ export class VerificationService {
       [key: string]: {
         message: string;
         status: 'SUCCESS' | 'WARNING';
+        url?: string;
       };
     } = {
       APPROVED: {
         message: 'Selamat !! Kamu sudah terdaftar menjadi anggota STEMBA CLUB.',
         status: 'SUCCESS',
+        url: `/profile`,
       },
       REJECTED: {
         message: `Maaf, permintaan verifikasi kamu ditolak. ${
           note ? `\nAlasan: ${note}` : ''
         }`,
         status: 'WARNING',
+        url: `/stembaclub`,
       },
     };
 
@@ -143,7 +146,8 @@ export class VerificationService {
         title: 'STEMBA CLUB',
         type: statusMessage[status].status,
         message: statusMessage[status].message,
-        url: `/profile`,
+        url: statusMessage[status].url,
+        identifier: 'VERIFICATION',
       }),
     );
   }
@@ -160,6 +164,7 @@ export class VerificationService {
           type: 'INFO',
           message: 'Ada permintaan verifikasi baru.',
           url: `/admin/verification`,
+          identifier: 'VERIFICATION',
         }),
       );
     });

@@ -102,6 +102,7 @@ export class CommentService {
         message: content.message,
         url: `/menfess/${menfessId}`,
         image: content.media,
+        identifier: 'COMMENT',
       }),
     );
   }
