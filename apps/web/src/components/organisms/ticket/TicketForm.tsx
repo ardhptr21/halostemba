@@ -95,7 +95,7 @@ export default function TicketForm({ session }: Props) {
             Formulir Konsultasi
           </Heading>
         </Flex>
-        <Flex direction="column" gap="6">
+        <Flex direction="column" gap="5">
           <div
             className={clsx([
               "hidden xl:block absolute left-4 top-20 -z-50 transition-colors duration-150 ease-in-out",
@@ -106,7 +106,7 @@ export default function TicketForm({ session }: Props) {
             ])}
           ></div>
 
-          <Flex direction="column" gap="5" width="100%">
+          <Flex direction="column" gap="4" width="100%">
             <Flex direction="row" gap="4" align="center">
               <IconButton radius="full" asChild>
                 <Text weight="bold">1</Text>

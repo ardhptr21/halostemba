@@ -42,9 +42,9 @@ export default function StudentDataForm() {
 
   return (
     <>
-      <Flex direction="column" align="center" justify="center" gap="1">
+      <Flex direction="column" align="center" justify="center" gap="2">
         <Heading>Pengisian Data</Heading>
-        <Text className="max-w-xs text-center">
+        <Text className="max-w-xs text-center px-5">
           Isi data diri kamu terlebih dahulu yuk ! Pastiin data yang kamu isi
           sesuai, ya
         </Text>
