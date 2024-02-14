@@ -6,17 +6,24 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { NotificationEvent } from '../notification/events/notification.event';
+import { UserRepository } from '../user/user.repository';
+import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
 import { GetTicketRepliesParamsDto } from './dtos/get-ticket-replies-params.dto';
 import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
 import { TicketNotFoundException, TicketServerError } from './ticket.exception';
 import { TicketRepository } from './ticket.repository';
-import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
 
 @Injectable()
 export class TicketService {
-  constructor(private readonly ticketRepository: TicketRepository) {}
+  constructor(
+    private readonly ticketRepository: TicketRepository,
+    private readonly userRepository: UserRepository,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   async getCurrentUserTickets(userId: string, params: ListTicketParamsDto) {
     const tickets = await this.ticketRepository.getListTicketByReporterId(
@@ -34,6 +41,11 @@ export class TicketService {
     });
 
     if (!ticket) throw new TicketServerError('Gagal membuat laporan.');
+
+    await this.notifyTeacher(ticket.id, {
+      message: ticket.title,
+      media: ticket.medias[0]?.source,
+    });
 
     return { data: ticket };
   }
@@ -94,6 +106,13 @@ export class TicketService {
     );
 
     if (!updated) throw new TicketServerError('Gagal menanggapi laporan.');
+
+    this.ticketNotification(
+      ticketId,
+      ticket.reporterId,
+      'Ticket Telah Direspon',
+      `Selamat! Ticketmu telah direspon oleh ${updated.responder.name}.`,
+    );
 
     return { message: 'Berhasil menanggapi laporan.' };
   }
@@ -165,5 +184,76 @@ export class TicketService {
 
       throw new TicketServerError('Gagal menghapus balasan laporan.');
     }
+  }
+
+  async closeTicket(ticketId: string, userId: string) {
+    const ticket = await this.ticketRepository.getTicketById(ticketId);
+    const user = await this.userRepository.findUserById(userId);
+
+    if (!ticket) throw new TicketNotFoundException();
+
+    if (ticket.reporterId !== userId && ticket.responderId !== userId)
+      throw new TicketNotFoundException();
+
+    if (ticket.status !== TicketStatus.OPEN)
+      throw new ForbiddenException({
+        error: 'Hanya bisa menutup tiket dengan status OPEN.',
+        statusCode: 403,
+      });
+
+    await this.ticketRepository.closeTicket(ticketId);
+
+    this.ticketNotification(
+      ticketId,
+      ticket.reporterId,
+      'Ticket Ditutup',
+      `Ticket ${ticket.title} telah ditutup oleh ${user.name}.`,
+    );
+
+    return { message: 'Berhasil menutup laporan.' };
+  }
+
+  private ticketNotification(
+    ticketId: string,
+    userId: string,
+    title: string,
+    message: string,
+  ) {
+    this.eventEmitter.emit(
+      'notification',
+      new NotificationEvent({
+        userId,
+        title,
+        type: 'SUCCESS',
+        message,
+        url: `/ticket/${ticketId}`,
+        identifier: 'TICKET',
+      }),
+    );
+  }
+
+  private async notifyTeacher(
+    ticketId: string,
+    content: {
+      message: string;
+      media?: string;
+    },
+  ) {
+    const teachers = await this.userRepository.getUserByRole('TEACHER');
+
+    teachers.forEach((teacher) => {
+      this.eventEmitter.emit(
+        'notification',
+        new NotificationEvent({
+          userId: teacher.id,
+          title: 'New Ticket',
+          type: 'SUCCESS',
+          message: content.message,
+          url: `/ticket/${ticketId}`,
+          image: content.media,
+          identifier: 'TICKET',
+        }),
+      );
+    });
   }
 }

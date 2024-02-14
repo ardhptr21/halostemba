@@ -41,6 +41,13 @@ export class TicketRepository {
         ...data,
         medias: { create: media },
       },
+      include: {
+        medias: {
+          where: { type: 'IMAGE' },
+          select: { source: true, type: true },
+          take: 1,
+        },
+      },
     });
   }
 
@@ -75,6 +82,14 @@ export class TicketRepository {
   async updateTicketResponder(responderId: string, ticketId: string) {
     return await this.db.ticket.update({
       data: { responderId, status: TicketStatus.OPEN },
+      where: { id: ticketId },
+      include: { responder: { select: { name: true } } },
+    });
+  }
+
+  async closeTicket(ticketId: string) {
+    return await this.db.ticket.update({
+      data: { status: TicketStatus.CLOSED },
       where: { id: ticketId },
     });
   }

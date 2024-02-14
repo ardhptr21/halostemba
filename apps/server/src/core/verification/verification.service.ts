@@ -1,19 +1,22 @@
 import { Role, VerificationStatus } from '@halostemba/db';
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { NotificationEvent } from '../notification/events/notification.event';
 import { UserRepository } from '../user/user.repository';
 import { CreateVerificationDto } from './dtos/create-verification.dto';
 import { RejectVerificationDto } from './dtos/reject-verification.dto';
-import { VerificationRepository } from './verification.repository';
 import {
   VerificationBadRequestException,
   VerificationNotFoundException,
 } from './verification.exception';
+import { VerificationRepository } from './verification.repository';
 
 @Injectable()
 export class VerificationService {
   constructor(
     private readonly verificationRepository: VerificationRepository,
     private readonly userRepository: UserRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async createVerification(
@@ -35,6 +38,8 @@ export class VerificationService {
       ...createVerificationDto,
       userId,
     });
+
+    await this.notifyAdmins();
 
     return verification;
   }
@@ -69,6 +74,8 @@ export class VerificationService {
 
     await this.userRepository.updateUserGuestToStudent(userId, verification);
 
+    this.verificationNotification(userId, VerificationStatus.APPROVED);
+
     return {
       message: 'Permintaan verifikasi telah disetujui.',
     };
@@ -97,6 +104,69 @@ export class VerificationService {
       rejectVerificationDto.note,
     );
 
+    this.verificationNotification(
+      userId,
+      VerificationStatus.REJECTED,
+      rejectVerificationDto.note,
+    );
+
     return { message: 'Permintaan verifikasi telah ditolak.' };
+  }
+
+  private verificationNotification(
+    userId: string,
+    status: VerificationStatus,
+    note?: string,
+  ) {
+    const statusMessage: {
+      [key: string]: {
+        message: string;
+        status: 'SUCCESS' | 'WARNING';
+        url?: string;
+      };
+    } = {
+      APPROVED: {
+        message: 'Selamat !! Kamu sudah terdaftar menjadi anggota STEMBA CLUB.',
+        status: 'SUCCESS',
+        url: `/profile`,
+      },
+      REJECTED: {
+        message: `Maaf, permintaan verifikasi kamu ditolak. ${
+          note ? `\nAlasan: ${note}` : ''
+        }`,
+        status: 'WARNING',
+        url: `/stembaclub`,
+      },
+    };
+
+    this.eventEmitter.emit(
+      'notification',
+      new NotificationEvent({
+        userId,
+        title: 'STEMBA CLUB',
+        type: statusMessage[status].status,
+        message: statusMessage[status].message,
+        url: statusMessage[status].url,
+        identifier: 'VERIFICATION',
+      }),
+    );
+  }
+
+  private async notifyAdmins() {
+    const admins = await this.userRepository.getUserByRole(Role.ADMIN);
+
+    admins.forEach((admin) => {
+      this.eventEmitter.emit(
+        'notification',
+        new NotificationEvent({
+          userId: admin.id,
+          title: 'New Verification Request',
+          type: 'INFO',
+          message: 'Ada permintaan verifikasi baru.',
+          url: `/admin/verification`,
+          identifier: 'VERIFICATION',
+        }),
+      );
+    });
   }
 }
