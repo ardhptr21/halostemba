@@ -14,8 +14,9 @@ import {
   TextFieldRoot,
   TextFieldSlot,
 } from "@radix-ui/themes";
+import clsx from "clsx";
 import { Session } from "next-auth";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useListUserTicketApi } from "~/apis/ticket/list-user-ticket-api";
 import TicketChatPreview from "~/components/atoms/ticket/TicketChatPreview";
@@ -26,6 +27,8 @@ interface Props {
 }
 
 export default function TicketList({ session }: Props) {
+  const pathname = usePathname();
+
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<any>(
     searchParams.get("status") || "OPEN",
@@ -52,7 +55,11 @@ export default function TicketList({ session }: Props) {
   };
 
   return (
-    <Box className="sm:max-w-sm w-full xl:shrink-0">
+    <Box
+      className={clsx("sm:max-w-sm w-full xl:shrink-0", {
+        "hidden md:block": pathname !== "/ticket",
+      })}
+    >
       <Flex
         direction={"column"}
         className="sm:max-w-sm sm:border-x w-full h-screen border-gray-500/70"

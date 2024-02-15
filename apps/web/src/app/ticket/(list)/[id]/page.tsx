@@ -1,4 +1,4 @@
-import { Flex } from "@radix-ui/themes";
+import { Box, Flex } from "@radix-ui/themes";
 import { AxiosError } from "axios";
 import { notFound } from "next/navigation";
 import { getTicketApiHandler } from "~/apis/ticket/get-ticket-api";
@@ -28,9 +28,11 @@ export default async function TicketDetailPage({ params: { id } }: Props) {
   const ticket = await getTicket(session!.token, id);
 
   return (
-    <Flex direction="column" gap="5" height="100%" className="">
-      <HeadTicketChat ticket={ticket} />
-      <TicketChatContent session={session!} ticket={ticket} />
-    </Flex>
+    <Box className="relative" width="100%">
+      <Flex direction="column" gap="5" height="100%" className="">
+        <HeadTicketChat ticket={ticket} />
+        <TicketChatContent session={session!} ticket={ticket} />
+      </Flex>
+    </Box>
   );
 }
