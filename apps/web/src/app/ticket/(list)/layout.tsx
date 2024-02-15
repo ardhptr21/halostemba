@@ -1,7 +1,7 @@
 import { Box } from "@radix-ui/themes";
 import { Session } from "next-auth";
 import { PropsWithChildren } from "react";
-import TicketLayout from "~/components/layouts/TicketLayout";
+import ChatLayout from "~/components/layouts/ChatLayout";
 import TicketList from "~/components/molecules/ticket/TicketList";
 import withAuthRequired from "~/guards/auth/withAuthRequired";
 
@@ -11,12 +11,12 @@ interface Props extends PropsWithChildren {
 
 function layout({ children, session }: Props) {
   return (
-    <TicketLayout>
+    <ChatLayout>
       <TicketList session={session} />
-      <Box px="3" className="relative" width="100%">
+      <Box px="3" className="hidden sm:flex relative" width="100%">
         {children}
       </Box>
-    </TicketLayout>
+    </ChatLayout>
   );
 }
 

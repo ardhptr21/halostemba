@@ -98,10 +98,10 @@ export default function TicketForm({ session }: Props) {
         <Flex direction="column" gap="5">
           <div
             className={clsx([
-              "hidden xl:block absolute left-4 top-20 -z-50 transition-colors duration-150 ease-in-out",
+              "hidden lg:block absolute left-4 top-20 -z-50 transition-colors duration-150 ease-in-out",
               {
                 "bg-gray-200/50 w-[0.1rem] h-44": isActive,
-                "bg-gray-500/50 w-[0.05rem] h-48": !isActive,
+                "bg-gray-500/50 w-[0.05rem] h-44": !isActive,
               },
             ])}
           ></div>
@@ -146,26 +146,28 @@ export default function TicketForm({ session }: Props) {
             <Flex direction="column" width="100%" gap="5" pl={{ md: "8" }}>
               <UploadMediaTicket />
               <Flex direction="column" gap="1" width="100%">
-                <div className="rt-TextAreaRoot rt-r-size-2 rt-variant-surface w-full">
-                  <ReactTextareaAutosize
-                    maxRows={12}
-                    minRows={5}
-                    className="rt-TextAreaInput"
-                    placeholder="Ceritakan secara detail masalah atau pertanyaan yang ingin dikonsultasikan..."
-                    style={{ width: "100%" }}
-                    {...register("detail")}
-                  />
-                  <div className="rt-TextAreaChrome"></div>
-                </div>
-                <Text as="p" size="1" color="red">
-                  {errors.detail?.message}
-                </Text>
+                <Box style={{ height: "8rem" }}>
+                  <div className="rt-TextAreaRoot rt-r-size-2 rt-variant-surface w-full">
+                    <ReactTextareaAutosize
+                      maxRows={12}
+                      minRows={5}
+                      className="rt-TextAreaInput"
+                      placeholder="Ceritakan secara detail masalah atau pertanyaan yang ingin dikonsultasikan..."
+                      style={{ width: "100%" }}
+                      {...register("detail")}
+                    />
+                    <div className="rt-TextAreaChrome"></div>
+                  </div>
+                  <Text as="p" size="1" color="red" mt="1">
+                    {errors.detail?.message}
+                  </Text>
+                </Box>
               </Flex>
               <Button
                 size="3"
                 onClick={handleCreate}
                 disabled={isPending}
-                className="mb-20 md:mb-20 xl:mb-0"
+                className="mb-20 md:mb-0"
               >
                 <Text size="3">Ajukan Formulir</Text>
               </Button>

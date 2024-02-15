@@ -26,9 +26,9 @@ export default function VerifyStudentForm() {
         </Link>
         <Heading as="h1">STEMBA CLUB</Heading>
       </Flex>
-      <Flex direction="row" width="100%" align="center" gap="4">
-        <Flex align="center" width="100%">
-          <Flex align="center" gap="4" width="100%">
+      <Flex direction="row" align="center" gap="4">
+        <Flex align="center" gap="4" className="md:w-full">
+          <Flex align="center" gap="4" className="md:w-full">
             <IconButton radius="full" asChild>
               <Text weight="bold">1</Text>
             </IconButton>
@@ -37,35 +37,37 @@ export default function VerifyStudentForm() {
         </Flex>
         <div
           className={clsx([
-            "  transition-colors duration-150 ease-in-out",
+            "  transition-colors duration-150 ease-in-out ",
             {
               "bg-gray-200/50 h-[0.1rem] w-full": step >= 2,
               "bg-gray-500/50 h-[0.05rem] w-full": step === 1,
             },
           ])}
         ></div>
-        <Flex align="center" gap="2" width="100%">
-          <IconButton
-            radius="full"
-            asChild
-            color={step >= 2 ? undefined : "gray"}
-            variant={step >= 2 ? undefined : "soft"}
-            className="transition-colors delay-100 duration-150 ease-in-out "
-          >
-            <Text weight="bold">2</Text>
-          </IconButton>
-          <Text className="hidden md:block w-full">Upload KARPEL</Text>
+        <Flex align="center" gap="2" className="md:w-full">
+          <Flex align="center" gap="2">
+            <IconButton
+              radius="full"
+              asChild
+              color={step >= 2 ? undefined : "gray"}
+              variant={step >= 2 ? undefined : "soft"}
+              className="transition-colors delay-100 duration-150 ease-in-out "
+            >
+              <Text weight="bold">2</Text>
+            </IconButton>
+            <Text className="hidden md:block w-full">Upload KARPEL</Text>
+          </Flex>
         </Flex>
         <div
           className={clsx([
-            " transition-colors duration-150 ease-in-out",
+            " transition-colors duration-150 ease-in-out ",
             {
               "bg-gray-200/50 h-[0.1rem] w-full": step === 3,
               "bg-gray-500/50 h-[0.05rem] w-full": step !== 3,
             },
           ])}
         ></div>
-        <Flex align="center" width="100%" gap="2">
+        <Flex align="center" gap="2" className="md:w-full">
           <IconButton
             radius="full"
             asChild

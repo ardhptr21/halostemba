@@ -52,10 +52,10 @@ export default function TicketList({ session }: Props) {
   };
 
   return (
-    <Box className="max-w-sm w-full shrink-0">
+    <Box className="sm:max-w-sm w-full xl:shrink-0">
       <Flex
         direction={"column"}
-        className="max-w-sm top-0 fixed border-x w-full h-screen border-gray-500/70"
+        className="sm:max-w-sm sm:border-x w-full h-screen border-gray-500/70"
       >
         <TabsRoot
           className="w-full"
@@ -80,7 +80,7 @@ export default function TicketList({ session }: Props) {
               <MagnifyingGlassIcon height="16" width="16" />
             </TextFieldSlot>
             <TextFieldInput
-              placeholder="Cari ticket disini..."
+              placeholder="Cari ticket di sini..."
               size="3"
               style={{ width: "100%" }}
               value={search}
@@ -105,7 +105,7 @@ export default function TicketList({ session }: Props) {
               ) : (
                 <Flex mt="9" direction="column" justify="center" align="center">
                   <Text as="p" size="3" color="gray">
-                    Tidak ada ticket disini
+                    Tidak ada ticket di sini
                   </Text>
                 </Flex>
               )
