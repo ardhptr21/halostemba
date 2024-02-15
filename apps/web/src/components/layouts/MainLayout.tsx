@@ -7,10 +7,10 @@ import TopNavbar from "../molecules/navbar/TopNavbar";
 
 export default function MainLayout({ children }: PropsWithChildren) {
   return (
-    <main className="xl:flex-row w-full xl:py-5 max-w-7xl mx-auto px-4 xl:p-0 gap-5 flex flex-col">
+    <main className="xl:flex-row w-full xl:gap-4 max-w-7xl mx-auto flex flex-col">
       <TopNavbar />
       <Sidebar />
-      <Flex className="w-full">{children}</Flex>
+      <Flex className="w-full p-4">{children}</Flex>
       <Navbar />
       <RightBarSide />
     </main>

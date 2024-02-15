@@ -38,7 +38,7 @@ export default function ProfileTab({ username, token }: Props) {
         <TabsTrigger value="reply">Reply</TabsTrigger>
       </TabsList>
 
-      <Box px="4" pt="3" pb="2">
+      <Box pt="3" pb="2">
         <TabsContent value="post">
           <UserMenfessList username={username} token={token} />
         </TabsContent>

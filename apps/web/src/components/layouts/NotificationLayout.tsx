@@ -5,9 +5,9 @@ import Navbar from "../molecules/navbar/Navbar";
 
 export default function NotificationLayout({ children }: PropsWithChildren) {
   return (
-    <main className="md:flex-row w-full md:py-5 max-w-7xl mx-auto px-4 xl:p-0  gap-5 flex flex-col">
+    <main className="xl:flex-row w-full xl:gap-4 max-w-7xl mx-auto flex flex-col">
       <Sidebar />
-      <Flex className="w-full h-[calc(100vh-40px)]">{children}</Flex>
+      <Flex className="w-full p-4 h-[calc(100vh-40px)]">{children}</Flex>
       <Navbar />
     </main>
   );

@@ -21,8 +21,8 @@ export default function TicketPage() {
         />
         <Text weight="bold">Pesan akan muncul disini</Text>
         <Text size="2" className="max-w-sm text-center">
-          Pilih ticket untuk memunculkan pesan. Belum punya ticket?
-          Konsultasikan sekarang!
+          Pilih tiket untuk memunculkan pesan. Belum punya tiket? Konsultasikan
+          sekarang!
         </Text>
         <Link href="/ticket/formulir" passHref>
           <Button size="2">Formulir Konsultasi</Button>

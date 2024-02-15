@@ -1,4 +1,7 @@
+"use client";
+
 import {
+  ExitIcon,
   InfoCircledIcon,
   LockClosedIcon,
   MixerHorizontalIcon,
@@ -17,6 +20,7 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { Session } from "next-auth";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -47,7 +51,7 @@ export default function ProfileDataCard({
           }}
           gap="4"
         >
-          <Flex justify="end" className="xl:hidden">
+          <Flex justify="end" className="lg:hidden">
             <PopoverRoot>
               <PopoverTrigger>
                 <Flex
@@ -87,6 +91,18 @@ export default function ProfileDataCard({
                       </Text>
                     </Flex>
                   </Link>
+                  <Separator my="1" size="4" />
+                  <Flex
+                    direction="row"
+                    align="center"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => signOut()}
+                  >
+                    <ExitIcon />
+                    <Text size="2" className="ml-2">
+                      Logout
+                    </Text>
+                  </Flex>
                 </Flex>
               </PopoverContent>
             </PopoverRoot>
@@ -127,7 +143,7 @@ export default function ProfileDataCard({
                 align="center"
                 gap="2"
               >
-                <Flex className="xl:hidden">
+                <Flex className="lg:hidden">
                   {self && session!.user.role === "STUDENT" && (
                     <Badge variant="soft" color="green">
                       <Text size="1">🎖️ STEMBA CLUB</Text>
@@ -137,7 +153,7 @@ export default function ProfileDataCard({
                 <Heading size="6" align="center">
                   {name}
                 </Heading>
-                <Flex className="hidden xl:flex">
+                <Flex className="hidden lg:flex">
                   {self && session!.user.role === "STUDENT" && (
                     <Badge variant="soft" color="green">
                       <Text size="1">🎖️ STEMBA CLUB</Text>
@@ -145,7 +161,7 @@ export default function ProfileDataCard({
                   )}
                 </Flex>
               </Flex>
-              <Flex className="hidden md:flex">
+              <Flex className="hidden lg:flex">
                 {self && (
                   <PopoverRoot>
                     <PopoverTrigger>

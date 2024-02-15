@@ -87,7 +87,7 @@ export default function TicketList({ session }: Props) {
               <MagnifyingGlassIcon height="16" width="16" />
             </TextFieldSlot>
             <TextFieldInput
-              placeholder="Cari ticket di sini..."
+              placeholder="Cari tiket di sini..."
               size="3"
               style={{ width: "100%" }}
               value={search}
@@ -112,7 +112,7 @@ export default function TicketList({ session }: Props) {
               ) : (
                 <Flex mt="9" direction="column" justify="center" align="center">
                   <Text as="p" size="3" color="gray">
-                    Tidak ada ticket di sini
+                    Tidak ada tiket di sini
                   </Text>
                 </Flex>
               )
