@@ -55,7 +55,7 @@ export default function EditPasswordForm({ session }: Props) {
   return (
     <>
       <Flex direction="column" className="w-full">
-        <Flex direction="column">
+        <Flex direction="column" gap="4">
           <Flex direction="row" align="center" mb="2" gap="4">
             <Link href="/profile">
               <Cross1Icon className="cursor-pointer" />
@@ -68,11 +68,17 @@ export default function EditPasswordForm({ session }: Props) {
           <Flex direction="row" gap="8" py="4">
             <Flex direction="column" className="w-full">
               <Flex direction="column" gap="4">
-                <Flex direction="column" justify="center" align="center" mb="4">
+                <Flex
+                  direction="column"
+                  justify="center"
+                  align="center"
+                  mb="4"
+                  px="4"
+                >
                   <Heading size="6" weight="bold" mb="1">
                     Kata Sandi
                   </Heading>
-                  <Text>
+                  <Text align="center">
                     Masukkan kata sandi saat ini untuk merubah kata sandimu.
                   </Text>
                   <RLink href="/lupa-sandi">Lupa Kata Sandi?</RLink>
@@ -80,7 +86,7 @@ export default function EditPasswordForm({ session }: Props) {
 
                 <Flex direction="column" gap="5" className="w-full">
                   <Flex direction="row" justify="between" align="center">
-                    <Text as="label" weight="bold" className="w-1/3">
+                    <Text as="label" weight="bold" className="w-1/2 xl:w-1/3">
                       Kata Sandi Baru
                     </Text>
                     <Input
@@ -94,7 +100,7 @@ export default function EditPasswordForm({ session }: Props) {
                     />
                   </Flex>
                   <Flex direction="row" justify="between" align="center">
-                    <Text as="label" weight="bold" className="w-1/3">
+                    <Text as="label" weight="bold" className="w-1/2 xl:w-1/3">
                       Konfirmasi Kata Sandi
                     </Text>
                     <Input
@@ -109,10 +115,15 @@ export default function EditPasswordForm({ session }: Props) {
                   </Flex>
                 </Flex>
 
-                <Flex gap="3" mt="4" justify="end">
+                <Flex
+                  direction={{ initial: "column", xl: "row" }}
+                  gap="3"
+                  mt="4"
+                  justify="end"
+                >
                   <Link href="/profile">
                     <Button
-                      className="cursor-pointer"
+                      className="cursor-pointer w-full "
                       variant="soft"
                       color="gray"
                     >

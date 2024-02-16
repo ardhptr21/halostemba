@@ -88,7 +88,7 @@ export default function ChatField({
   };
 
   return (
-    <div className="w-full absolute -bottom-5 p-2 bg-[#18191B] left-0 right-0 h-auto">
+    <div className="w-full absolute bottom-11 md:-bottom-10 p-2 bg-[#18191B]  left-0 right-0">
       {!!previewMedia?.length ? (
         <ScrollArea scrollbars="horizontal" className="mb-3">
           <Flex className="w-max h-14 mb-2" gap="2">

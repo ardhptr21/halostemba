@@ -44,18 +44,18 @@ export default function IDCardStudentForm() {
 
   return (
     <>
-      <Flex direction="column" align="center" justify="center" gap="1">
+      <Flex direction="column" align="center" justify="center" gap="2">
         <Heading>Upload KARPEL-mu</Heading>
-        <Text className="max-w-sm text-center">
+        <Text className="max-w-sm text-center px-5">
           Data kamu hanya untuk proses verifikasi. Data akan tersimpan dan
           terlindungi dengan aman.
         </Text>
       </Flex>
-      <AspectRatio ratio={16 / 9} asChild>
+      <AspectRatio ratio={3 / 2} asChild>
         <Flex
           justify={"center"}
           align={"center"}
-          p="2"
+          p={{ initial: "2", md: "4" }}
           className="border-4 border-gray-700/50 border-dashed rounded-xl cursor-pointer"
           asChild
         >
@@ -69,18 +69,20 @@ export default function IDCardStudentForm() {
               onChange={handleChange}
             />
             {!preview?.preview && !data.idCard ? (
-              <Flex direction="column" align="center" justify="center">
+              <Flex direction="column" align="center" justify="center" gap="2">
                 <Image
                   src="/assets/images/ticket/form.png"
                   alt="Form image"
                   width={320}
                   height={320}
-                  className="w-48 h-auto"
+                  className="w-20 xl:w-36"
                 />
                 <Text weight="bold" size="3">
                   Upload gambar disini!
                 </Text>
-                <Text size="3">Seret atau klik untuk upload gambar.</Text>
+                <Text size={{ initial: "2", xl: "3" }}>
+                  Seret atau klik untuk upload gambar.
+                </Text>
               </Flex>
             ) : (
               <div className="relative w-full h-full overflow-hidden rounded-md group">
@@ -97,7 +99,7 @@ export default function IDCardStudentForm() {
                   align="center"
                   justify="center"
                 >
-                  <Text size="5" weight="bold">
+                  <Text size={{ initial: "1", xl: "3" }} weight="bold">
                     Seret atau klik untuk mengganti gambar.
                   </Text>
                 </Flex>
@@ -106,22 +108,27 @@ export default function IDCardStudentForm() {
           </label>
         </Flex>
       </AspectRatio>
-      <Flex width="100%" gap="4" mt="2">
+      <Flex
+        direction={{ initial: "column", md: "row-reverse" }}
+        width="100%"
+        gap="4"
+        mt="2"
+      >
+        <Button
+          size="3"
+          onClick={onNext}
+          className="w-full md:w-1/2 cursor-pointer disabled:cursor-not-allowed"
+          disabled={!data.idCard && !preview}
+        >
+          Simpan dan Lanjut
+        </Button>
         <Button
           size="3"
           variant="outline"
           onClick={decremenetStep}
-          className="w-1/2 cursor-pointer"
+          className="w-full md:w-1/2 cursor-pointer"
         >
           Kembali
-        </Button>
-        <Button
-          size="3"
-          onClick={onNext}
-          className="w-1/2 cursor-pointer disabled:cursor-not-allowed"
-          disabled={!data.idCard && !preview}
-        >
-          Simpan dan Lanjut
         </Button>
       </Flex>
     </>

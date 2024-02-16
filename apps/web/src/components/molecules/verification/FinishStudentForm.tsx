@@ -40,17 +40,31 @@ export default function FinishStudentForm() {
         width={970}
         height={308}
         alt="Verifikasi"
-        className="-z-10"
+        className="-z-10 hidden sm:block"
       />
-      <Box className="absolute top-48 -z-10">
+      <Image
+        src="/assets/images/verification/wave-mobile.png"
+        width={970}
+        height={308}
+        alt="Verifikasi"
+        className="-z-10 sm:hidden"
+      />
+      <Box className="absolute top-64 -z-10">
         <Image
           src="/assets/images/verification/rocket.png"
           width={291}
           height={298}
           alt="Rocket"
+          className="w-40 md:w-60"
         />
       </Box>
-      <Flex mt="7">
+      <Flex
+        direction="column"
+        p="4"
+        justify="center"
+        gap={{ initial: "2", md: "0" }}
+        width="100%"
+      >
         <Flex
           direction="column"
           align="center"
@@ -58,7 +72,12 @@ export default function FinishStudentForm() {
           className="z-10"
           gap="2"
         >
-          <Heading as="h2" size="6">
+          <Heading
+            as="h2"
+            size={{ initial: "3", md: "6" }}
+            align="center"
+            mt="4"
+          >
             Yuk, Pastikan Semuanya Sudah Tepat!
           </Heading>
           <Text size="3" className="max-w-md text-center">
@@ -67,48 +86,56 @@ export default function FinishStudentForm() {
           </Text>
         </Flex>
       </Flex>
-      <Flex align="center" justify="center" gap="5">
-        <Image
-          src="/assets/images/verification/comp.png"
-          width={100}
-          height={100}
-          alt="Education"
-          className="bg-indigo-400 rounded-full"
-        />
-        <Flex direction="column" align="start">
-          <Text weight="bold">Kemudahan menemukan solusi</Text>
-          <Text>Dapatkan bantuan atas masalahmu secara anonym</Text>
+      <Flex direction="column" gap="5">
+        <Flex align="center" justify="center" gap="5">
+          <Image
+            src="/assets/images/verification/comp.png"
+            width={100}
+            height={100}
+            alt="Education"
+            className="bg-indigo-400 rounded-full"
+          />
+          <Flex direction="column" align="start">
+            <Text weight="bold">Kemudahan menemukan solusi</Text>
+            <Text>Dapatkan bantuan atas masalahmu secara anonym</Text>
+          </Flex>
         </Flex>
-      </Flex>
-      <Flex align="center" justify="center" gap="5">
-        <Image
-          src="/assets/images/verification/media.png"
-          width={100}
-          height={100}
-          alt="Media"
-          className="bg-indigo-400 rounded-full"
-        />
-        <Flex direction="column" align="start">
-          <Text weight="bold">Akses fitur menfess</Text>
-          <Text>Ekspresikan pikiran dan perasaanmu tanpa batasan</Text>
+        <Flex align="center" justify="center" gap="5">
+          <Image
+            src="/assets/images/verification/media.png"
+            width={100}
+            height={100}
+            alt="Media"
+            className="bg-indigo-400 rounded-full"
+          />
+          <Flex direction="column" align="start">
+            <Text weight="bold">Akses fitur menfess</Text>
+            <Text>Ekspresikan pikiran dan perasaanmu tanpa batasan</Text>
+          </Flex>
         </Flex>
-      </Flex>
-      <Flex align="center" justify="center" gap="3" width="100%">
-        <Button
-          variant="outline"
-          className="cursor-pointer flex-grow"
-          onClick={decremenetStep}
-          size="3"
+        <Flex
+          direction={{ initial: "column", md: "row-reverse" }}
+          align="center"
+          justify="center"
+          gap="3"
+          width="100%"
         >
-          Kembali
-        </Button>
-        <Button
-          size="3"
-          className="cursor-pointer flex-grow"
-          onClick={handleClick}
-        >
-          Kirim
-        </Button>
+          <Button
+            size="3"
+            className="cursor-pointer w-full "
+            onClick={handleClick}
+          >
+            Kirim
+          </Button>
+          <Button
+            variant="outline"
+            className="cursor-pointer w-full "
+            onClick={decremenetStep}
+            size="3"
+          >
+            Kembali
+          </Button>
+        </Flex>
       </Flex>
     </Flex>
   );

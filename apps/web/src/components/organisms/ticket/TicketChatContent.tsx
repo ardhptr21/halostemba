@@ -16,8 +16,8 @@ import { useInView } from "react-intersection-observer";
 import { BeatLoader } from "react-spinners";
 import { useGetListRepliesInfiniteApi } from "~/apis/ticket/get-list-replies-api";
 import ChatBubble from "~/components/atoms/ticket/ChatBubble";
-import ChatField from "~/components/molecules/ticket/ChatField";
 import PreviewTicketIssue from "~/components/atoms/ticket/PreviewTicketIssue";
+import ChatField from "~/components/molecules/ticket/ChatField";
 
 interface Props {
   session: Session;
@@ -84,7 +84,7 @@ export default function TicketChatContent({ ticket, session }: Props) {
       <ScrollArea
         ref={scrollAreaRef}
         scrollbars="vertical"
-        className="h-[calc(100%-150px)]"
+        className="h-[calc(100%-150px)] mb-[6.5rem] md:mb-auto"
       >
         <Flex direction="column" gap="4" justify="end" width="100%">
           <PreviewTicketIssue

@@ -61,11 +61,11 @@ export default function UploadMediaTicket() {
 
   return (
     <>
-      <AspectRatio ratio={21 / 9} asChild>
+      <AspectRatio ratio={3 / 2} asChild>
         <Flex
           justify={"center"}
           align={"center"}
-          p="2"
+          p={{ initial: "2", md: "4" }}
           className="border-4 border-gray-700/50 border-dashed rounded-xl"
           asChild
         >
@@ -80,18 +80,25 @@ export default function UploadMediaTicket() {
                 onChange={handleChange}
                 ref={inputRef}
               />
-              <Flex direction={"column"} align={"center"} justify={"center"}>
+              <Flex
+                direction={"column"}
+                gap={"1"}
+                align={"center"}
+                justify={"center"}
+              >
                 <Image
                   src={"/assets/images/ticket/form.png"}
                   alt="Form image"
                   width={160}
                   height={160}
-                  className="w-28 h-auto"
+                  className="w-24 xl:w-36"
                 />
-                <Text weight={"bold"} size={"1"}>
-                  Upload gambar disini!
+                <Text weight={"bold"} size={{ initial: "2", xl: "5" }}>
+                  Upload gambar di sini!
                 </Text>
-                <Text size={"1"}>Seret atau klik untuk upload gambar.</Text>
+                <Text size={{ initial: "2", xl: "3" }} color="gray">
+                  Seret atau klik untuk upload gambar.
+                </Text>
               </Flex>
             </label>
           ) : (

@@ -4,7 +4,7 @@ import { PropsWithChildren } from "react";
 export default function SidebarContainer({ children }: PropsWithChildren) {
   return (
     <Box className="w-full max-w-xs">
-      <aside className="sticky top-5">{children}</aside>
+      <aside className="pt-4">{children}</aside>
     </Box>
   );
 }

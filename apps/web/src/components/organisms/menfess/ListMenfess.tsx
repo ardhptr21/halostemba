@@ -26,7 +26,7 @@ export default function ListMenfess({ session }: Props) {
   }, [inView, hasNextPage, fetchNextPage]);
 
   return (
-    <Flex direction="column" gap="4">
+    <Flex direction="column" gap="4" className="mb-16 md:mb-16 xl:mb-0">
       {data?.pages.map((page) =>
         page.data.map((m) => (
           <MenfessCard key={m.id} redirect={true} menfess={m} />

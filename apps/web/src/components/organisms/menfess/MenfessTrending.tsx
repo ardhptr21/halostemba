@@ -50,7 +50,7 @@ export default function MenfessTrending({ session }: Props) {
       ) : (
         !isFetching &&
         !isFetchingNextPage && (
-          <Flex direction={"column"} align={"center"}>
+          <Flex direction="column" align="center" className="my-auto" gap="4">
             <Flex justify="center">
               <Image
                 src="/assets/images/menfess/no-trending.png"
@@ -64,9 +64,9 @@ export default function MenfessTrending({ session }: Props) {
             <Text
               as="p"
               color="gray"
-              align={"center"}
-              className="max-w-sm mx-auto"
-              size={"2"}
+              align="center"
+              className="max-w-sm mx-auto xl:px-5 px-16"
+              size="2"
             >
               Kembali beberapa saat lagi untuk melihat ada sesuatu yang baru
             </Text>

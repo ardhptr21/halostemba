@@ -200,7 +200,7 @@ export default function MenfessCreate({ avatar }: Props) {
             </Flex>
           </Flex>
           <Flex direction="row" pt="3" pl="8" justify="between">
-            <Flex direction="row" gap="2" className="mt-2" align={"center"}>
+            <Flex direction="row" gap="2" className="mt-2" align="center">
               <UploadMediaMenfess />
               <FaceIcon
                 width={15}
@@ -211,7 +211,11 @@ export default function MenfessCreate({ avatar }: Props) {
                 content="Jika diaktifkan, menfess akan dikirim tanpa identitas."
                 delayDuration={150}
               >
-                <Text as="label" size="1" color="indigo">
+                <Text
+                  as="label"
+                  className="text-[10px] xl:text-sm"
+                  color="indigo"
+                >
                   <Flex gap="2">
                     <Switch
                       size="1"

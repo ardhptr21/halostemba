@@ -61,7 +61,7 @@ export default function NotificationCard({
           },
         )}
       >
-        <Flex justify="between" align="start">
+        <Flex justify="between" align="start" gap="3">
           <Flex align="start" gap="2">
             <IconButton variant="solid" className={typeBadge[type].bg}>
               <NotificationIcon

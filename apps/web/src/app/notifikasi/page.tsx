@@ -7,8 +7,8 @@ import withAuthRequired from "~/guards/auth/withAuthRequired";
 function page() {
   return (
     <NotificationLayout>
-      <Flex direction="column" gap="2" width="100%">
-        <Heading as="h1">Notifcations</Heading>
+      <Flex direction="column" gap="5" width="100%" py="6">
+        <Heading as="h1">Notifications</Heading>
         <NotificationList />
       </Flex>
     </NotificationLayout>

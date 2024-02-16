@@ -3,11 +3,11 @@ import Sidebar from "../molecules/sidebar/Sidebar";
 import { Flex } from "@radix-ui/themes";
 import Navbar from "../molecules/navbar/Navbar";
 
-export default function TicketLayout({ children }: PropsWithChildren) {
+export default function ChatLayout({ children }: PropsWithChildren) {
   return (
     <main className="xl:flex-row w-full xl:gap-4 max-w-7xl mx-auto flex flex-col">
       <Sidebar />
-      <Flex className="w-full p-4 h-[calc(100vh-40px)] justify-center">
+      <Flex className="w-full h-[calc(100vh-40px)] justify-center">
         {children}
       </Flex>
       <Navbar />
