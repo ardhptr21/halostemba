@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { PreviewMedia } from "~/lib/media";
 
-interface Media {
+export interface Media {
   url?: string | null;
   progress?: number;
   type: "IMAGE" | "VIDEO";

@@ -1,3 +1,6 @@
+import { MediaEntity } from "@halostemba/entities";
+import { Media } from "~/store/media/media-store";
+
 export const allowedMime = {
   images: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/webp"],
   videos: ["video/mp4", "video/quicktime", "video/x-matroska"],
@@ -96,3 +99,9 @@ export const isVideo = (file: File): boolean => {
 export const isImage = (file: File): boolean => {
   return allowedMime.images.includes(file.type);
 };
+
+export const mediaParser = (media: { [key: string]: Media }): MediaEntity[] =>
+  Object.values(media).map((m) => ({
+    source: m.url!,
+    type: m.type,
+  }));

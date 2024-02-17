@@ -6,6 +6,7 @@ import { Box, Button, Flex, Switch, Text, Tooltip } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { KeyboardEvent, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -15,6 +16,7 @@ import { useCreateMenfess } from "~/apis/menfess/create-menfess-api";
 import HashtagsAutoComplete from "~/components/atoms/menfess/HashtagsAutoComplete";
 import MustBeLoginModal from "~/components/atoms/modals/auth/MustBeLoginModal";
 import MustBeVerifiedModal from "~/components/atoms/modals/auth/MustBeVerifiedModal";
+import { mediaParser } from "~/lib/media";
 import { getWordByPosition } from "~/lib/utils";
 import {
   useMediaStoreMenfess,
@@ -41,6 +43,7 @@ export default function MenfessCreate({ avatar }: Props) {
 
   const { enqueueSnackbar: toast } = useSnackbar();
   const queryClient = useQueryClient();
+  const router = useRouter();
   const [media, cleanMedia] = useMediaStoreMenfess((state) => [
     state.media,
     state.cleanMedia,
@@ -66,17 +69,17 @@ export default function MenfessCreate({ avatar }: Props) {
 
   const { mutate: createMenfessHandler, isPending } = useCreateMenfess({
     onError: (error) => {
+      console.log(error);
       const message =
         error.response?.data.error || "Gagal membuat menfess, coba lagi.";
       toast(message, { variant: "error" });
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      queryClient.removeQueries({ queryKey: ["infinite-menfess"] });
+      router.refresh();
       reset();
       cleanMedia();
       setPreviewMedia(null);
-      queryClient.invalidateQueries({
-        queryKey: ["list-menfess"],
-      });
       const message = data.message || "Berhasil membuat menfess.";
       toast(message, { variant: "success" });
     },
@@ -91,10 +94,7 @@ export default function MenfessCreate({ avatar }: Props) {
     handleSubmit((data) => {
       createMenfessHandler({
         ...data,
-        media: Object.values(media).map((m) => ({
-          source: m.url!,
-          type: m.type,
-        })),
+        media: mediaParser(media),
         token: session?.token as string,
       });
     })();
