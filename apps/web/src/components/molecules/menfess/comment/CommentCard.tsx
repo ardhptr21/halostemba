@@ -104,7 +104,7 @@ const CommentCardPopOver = ({
           >
             <Text as="p" color="red">
               <TrashIcon width={20} height={20} />
-              <Text>Delete</Text>
+              <Text>Hapus</Text>
             </Text>
           </Flex>
         </Popover.Content>

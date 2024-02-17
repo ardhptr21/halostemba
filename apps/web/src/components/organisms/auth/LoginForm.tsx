@@ -67,12 +67,7 @@ export default function LoginForm() {
         disabled={isSubmitting}
         {...register("password")}
       />
-      <Button
-        size="3"
-        type="submit"
-        style={{ cursor: "pointer" }}
-        disabled={isSubmitting}
-      >
+      <Button size="3" style={{ cursor: "pointer" }} disabled={isSubmitting}>
         Masuk
       </Button>
       <RLink asChild className="text-center">

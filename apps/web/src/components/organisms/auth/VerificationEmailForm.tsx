@@ -108,7 +108,6 @@ export default function VerificationEmailForm() {
           />
           <div className="text-center w-full">
             <Button
-              type="submit"
               className="w-full"
               size="4"
               style={{ cursor: "pointer" }}

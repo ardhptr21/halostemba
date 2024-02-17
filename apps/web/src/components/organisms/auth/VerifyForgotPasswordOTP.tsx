@@ -82,7 +82,6 @@ export default function VerifyForgotPasswordOTP() {
 
       <Button
         size="3"
-        type="submit"
         style={{ cursor: "pointer" }}
         disabled={isPending || sendForgotPasswordPending}
       >

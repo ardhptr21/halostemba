@@ -49,7 +49,7 @@ const navLinks: ReadonlyArray<NavLink> = [
   },
   {
     href: "/notifikasi",
-    label: "Notification",
+    label: "Notifikasi",
     icon: BellIcon,
   },
   {

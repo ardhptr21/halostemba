@@ -49,7 +49,7 @@ export default function CommentCreate({ menfessId, avatar }: Props) {
     onSuccess: (data) => {
       reset();
       queryClient.invalidateQueries({
-        queryKey: ["detail-menfess", menfessId],
+        queryKey: ["menfess", "detail", menfessId],
       });
       const message = data.message || "Berhasil membuat menfess.";
       toast(message, { variant: "success" });

@@ -40,6 +40,7 @@ export default function MenfessCreate({ avatar }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [showAutoComplete, setShowAutoComplete] = useState(false);
   const [hashtagTyping, setHashtagTyping] = useState<string>("");
+  const [anonymous, setAnonymous] = useState(true);
 
   const { enqueueSnackbar: toast } = useSnackbar();
   const queryClient = useQueryClient();
@@ -220,8 +221,11 @@ export default function MenfessCreate({ avatar }: Props) {
                     <Switch
                       size="1"
                       {...register("anonymous")}
-                      defaultChecked
-                      onCheckedChange={(value) => setValue("anonymous", value)}
+                      checked={anonymous}
+                      onCheckedChange={(value) => {
+                        setAnonymous(value);
+                        setValue("anonymous", value);
+                      }}
                     />{" "}
                     Kirim sebagai anonim?
                   </Flex>
