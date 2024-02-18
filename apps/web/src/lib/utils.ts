@@ -27,3 +27,7 @@ export function formatDateChatDisplay(inputDate: string) {
   if (isYesterday(date)) return "kemarin";
   return format(date, "yyyy/MM/dd");
 }
+
+export function zeroPad(num: number, places: number = 2) {
+  return String(num).padStart(places, "0");
+}

@@ -1,11 +1,15 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Flex, Heading, Text } from "@radix-ui/themes";
+import { Box, Button, Flex, Heading, Text } from "@radix-ui/themes";
 import { useSession } from "next-auth/react";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTimer } from "react-timer-hook";
 import { useEmailVerification } from "~/apis/auth/email-verification-api";
 import Input from "~/components/atoms/form/Input";
+import { zeroPad } from "~/lib/utils";
 import { useVerificationEmailStore } from "~/store/auth/verification-email-store";
 import {
   EmailVerificationValidator,
@@ -17,6 +21,11 @@ export default function VerificationEmailForm() {
   const [state, setState] = useState<"init" | "success" | "error">("init");
   const { enqueueSnackbar: toast } = useSnackbar();
   const { data: session, status } = useSession();
+
+  const { restart, minutes, seconds, isRunning, totalSeconds } = useTimer({
+    expiryTimestamp: new Date(),
+    autoStart: false,
+  });
 
   const {
     handleSubmit,
@@ -37,6 +46,10 @@ export default function VerificationEmailForm() {
       const message = data.message || "Berhasil mengirim email verifikasi.";
       toast(message, { variant: "success" });
       setState("success");
+
+      const time = new Date();
+      time.setSeconds(time.getSeconds() + 60);
+      restart(time);
     },
     onError: (error) => {
       const message =
@@ -119,14 +132,26 @@ export default function VerificationEmailForm() {
         </form>
       ) : null}
       {state !== "init" ? (
-        <Button
-          size="3"
-          style={{ cursor: "pointer" }}
-          disabled={isPending}
-          onClick={() => emailVerificationHandler({ email: email! })}
-        >
-          Kirim Ulang
-        </Button>
+        <Box className="text-center space-y-4">
+          {isRunning && totalSeconds !== 0 ? (
+            <Text as="p" size="1" color="gray">
+              Kirim ulang dalam{" "}
+              <Text as="span" color="iris">
+                {zeroPad(minutes)}:{zeroPad(seconds)}
+              </Text>
+            </Text>
+          ) : (
+            <Button
+              size="3"
+              className="w-full"
+              style={{ cursor: "pointer" }}
+              disabled={isPending || (isRunning && totalSeconds !== 0)}
+              onClick={() => emailVerificationHandler({ email: email! })}
+            >
+              Kirim Ulang
+            </Button>
+          )}
+        </Box>
       ) : null}
     </>
   );

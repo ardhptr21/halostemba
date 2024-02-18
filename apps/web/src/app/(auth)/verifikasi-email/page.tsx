@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, Flex } from "@radix-ui/themes";
 import VerificationEmailForm from "~/components/organisms/auth/VerificationEmailForm";
 

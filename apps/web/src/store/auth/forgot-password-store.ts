@@ -5,6 +5,7 @@ interface ForgotPasswordStore {
   token: string | null;
   setToken: (token: string) => void;
   setEmail: (email: string) => void;
+  reset: () => void;
 }
 
 export const useForgotPasswordStore = create<ForgotPasswordStore>((set) => ({
@@ -12,4 +13,5 @@ export const useForgotPasswordStore = create<ForgotPasswordStore>((set) => ({
   token: null,
   setToken: (token: string) => set({ token }),
   setEmail: (email: string) => set({ email }),
+  reset: () => set({ email: null, token: null }),
 }));

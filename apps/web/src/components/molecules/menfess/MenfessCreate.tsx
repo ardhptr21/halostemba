@@ -148,7 +148,6 @@ export default function MenfessCreate({ avatar }: Props) {
         open={showMustVerified}
         onOpenChange={setShowMustVerified}
       />
-
       <MustBeLoginModal open={showMustLogin} onOpenChange={setShowMustLogin} />
       <Box
         p={"3"}

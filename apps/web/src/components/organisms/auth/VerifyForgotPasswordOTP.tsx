@@ -4,14 +4,22 @@ import { Box, Button, Flex, Text, TextFieldInput } from "@radix-ui/themes";
 import { useSnackbar } from "notistack";
 import { FormEvent, useState } from "react";
 import OtpInput from "react-otp-input";
+import { useTimer } from "react-timer-hook";
 import { useForgotPassword } from "~/apis/auth/forgot-password-api";
 import { useVerifyForgotPasswordOTP } from "~/apis/auth/verify-forgot-password-otp-api";
+import { zeroPad } from "~/lib/utils";
 import { useForgotPasswordStore } from "~/store/auth/forgot-password-store";
 
 export default function VerifyForgotPasswordOTP() {
   const { email, setToken } = useForgotPasswordStore();
   const { enqueueSnackbar: toast } = useSnackbar();
   const [otp, setOtp] = useState("");
+
+  const time = new Date();
+  time.setSeconds(time.getSeconds() + 60);
+  const { restart, minutes, seconds, isRunning, totalSeconds } = useTimer({
+    expiryTimestamp: time,
+  });
 
   const {
     mutate: sendForgotPasswordHandler,
@@ -25,6 +33,9 @@ export default function VerifyForgotPasswordOTP() {
     onSuccess: (data) => {
       const message = data.message || "Berhasil mengirim OTP, cek email kamu.";
       toast(message, { variant: "success" });
+      const time = new Date();
+      time.setSeconds(time.getSeconds() + 60);
+      restart(time);
     },
   });
 
@@ -57,6 +68,11 @@ export default function VerifyForgotPasswordOTP() {
           <Text as="label" htmlFor="email" mb="2" className="block">
             Masukkan Kode Verifikasi
           </Text>
+          {isRunning && totalSeconds !== 0 && (
+            <Text as="p">
+              {zeroPad(minutes)}:{zeroPad(seconds)}
+            </Text>
+          )}
         </Flex>
         <OtpInput
           value={otp}
@@ -87,15 +103,18 @@ export default function VerifyForgotPasswordOTP() {
       >
         Verifikasi OTP
       </Button>
-      <Button
-        variant="outline"
-        size="3"
-        onClick={() => sendForgotPasswordHandler({ email: email as string })}
-        style={{ cursor: "pointer" }}
-        disabled={isPending || sendForgotPasswordPending}
-      >
-        Kirim Ulang
-      </Button>
+      {!isRunning && totalSeconds === 0 && (
+        <Button
+          type="button"
+          variant="outline"
+          size="3"
+          onClick={() => sendForgotPasswordHandler({ email: email as string })}
+          style={{ cursor: "pointer" }}
+          disabled={isPending || sendForgotPasswordPending}
+        >
+          Kirim Ulang
+        </Button>
+      )}
     </form>
   );
 }
