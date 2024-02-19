@@ -1,39 +1,46 @@
 import { MenfessEntity } from "@halostemba/entities";
 import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons";
 import { Button, Flex, IconButton, Text } from "@radix-ui/themes";
-import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useVoteMenfess } from "~/apis/menfess/vote-menfess-api";
-import MustBeLoginModal from "../modals/auth/MustBeLoginModal";
 import { preventBubbling } from "~/lib/utils";
+import MustBeLoginModal from "../modals/auth/MustBeLoginModal";
 
 interface VoteMenfessButtonProps {
   menfess: Pick<MenfessEntity, "voted" | "score" | "id">;
 }
 
 export default function VoteMenfessButton({ menfess }: VoteMenfessButtonProps) {
+  const [vote, setVote] = useState<"UP" | "DOWN" | null>(menfess.voted);
+  const [score, setScore] = useState(menfess.score);
   const [showMustLogin, setShowMustLogin] = useState(false);
   const { enqueueSnackbar: toast } = useSnackbar();
-  const queryClient = useQueryClient();
   const { data: session } = useSession();
 
   const { mutate: handleVoteMenfess } = useVoteMenfess({
     onError: (error) => {
+      setVote(menfess.voted);
       const message =
         error.response?.data.error || "Gagal vote menfess, coba lagi.";
       toast(message, { variant: "error", autoHideDuration: 750 });
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: ["list-menfess"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["detail-menfess", menfess.id],
-      });
       const message = data.message || "Berhasil vote menfess.";
       toast(message, { variant: "success", autoHideDuration: 750 });
+    },
+    onMutate: (data) => {
+      if (data.type === vote) {
+        setVote(null);
+        if (data.type === "UP") return setScore(score - 1);
+        setScore(score + 1);
+      } else {
+        setVote(data.type);
+        const scored = vote !== null ? 2 : 1;
+        if (data.type === "UP") return setScore(score + scored);
+        setScore(score - scored);
+      }
     },
   });
 
@@ -52,22 +59,22 @@ export default function VoteMenfessButton({ menfess }: VoteMenfessButtonProps) {
       <MustBeLoginModal open={showMustLogin} onOpenChange={setShowMustLogin} />
       <Flex align="center" gap="1">
         <Button
-          size={"1"}
+          size="1"
           variant="soft"
-          color={menfess.voted === "UP" ? "iris" : "gray"}
+          color={vote === "UP" ? "iris" : "gray"}
           style={{
             cursor: "pointer",
           }}
           onClick={preventBubbling(handleClick("UP"))}
         >
           <TriangleUpIcon width={20} height={20} />
-          <Text size="2">{menfess.score}</Text>
+          <Text size="2">{score}</Text>
         </Button>
         <IconButton
           onClick={preventBubbling(handleClick("DOWN"))}
-          size={"1"}
+          size="1"
           variant="soft"
-          color={menfess.voted === "DOWN" ? "iris" : "gray"}
+          color={vote === "DOWN" ? "iris" : "gray"}
           style={{
             cursor: "pointer",
           }}

@@ -11,14 +11,14 @@ import { id } from "date-fns/locale";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { ForwardedRef, forwardRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { ForwardedRef, MouseEvent, forwardRef, useState } from "react";
 import VoteMenfessButton from "~/components/atoms/menfess/VoteMenfessButton";
 import DeleteMenfessModal from "~/components/atoms/modals/DeleteMenfessModal";
-import { preventBubbling } from "~/lib/utils";
-import RenderMenfessMedia from "./RenderMenfessMedia";
 import ShowImageModal from "~/components/atoms/modals/ShowImageModal";
 import useParseHashtag from "~/hooks/useParseHashtag";
-import { useRouter } from "next/navigation";
+import { preventBubbling } from "~/lib/utils";
+import RenderMenfessMedia from "./RenderMenfessMedia";
 
 interface MenfessCardProps {
   redirect?: boolean;
@@ -40,7 +40,11 @@ function MenfessCard(
     setOpenImageModal(true);
   };
 
-  const Wrapper = redirect ? Link : "div";
+  const handleClickRedirect = (e: MouseEvent<HTMLDivElement>) => {
+    if (e.target instanceof HTMLAnchorElement) return;
+    router.push(`/menfess/${menfess.id}`);
+  };
+
   return (
     <>
       {menfess.medias.length > 0 ? (
@@ -50,7 +54,12 @@ function MenfessCard(
           onOpenChange={setOpenImageModal}
         />
       ) : null}
-      <Box ref={ref} width="100%">
+      <Box
+        ref={ref}
+        width="100%"
+        className="cursor-pointer"
+        onClick={handleClickRedirect}
+      >
         <Card asChild className="w-full">
           <article>
             <Flex direction="row" gap="2">
@@ -64,10 +73,11 @@ function MenfessCard(
                   width={40}
                   height={40}
                   alt="avatar"
-                  onClick={() =>
-                    !menfess.anonymous &&
-                    router.push(`/${menfess.author?.username}`)
-                  }
+                  onClick={preventBubbling(
+                    () =>
+                      !menfess.anonymous &&
+                      router.push(`/${menfess.author?.username}`),
+                  )}
                   className="rounded-md w-full h-full object-cover aspect-square max-w-[40px] max-h-[40px] cursor-pointer"
                 />
               </Box>
@@ -102,10 +112,7 @@ function MenfessCard(
                   )}
                 </Flex>
                 <Flex direction="column" gap="4">
-                  <Wrapper
-                    href={`/menfess/${menfess.id}`}
-                    className={redirect ? "cursor-pointer" : ""}
-                  >
+                  <div className={redirect ? "cursor-pointer" : ""}>
                     <Text size="2" color="gray" className="whitespace-pre-line">
                       {parser(menfess.content)}
                     </Text>
@@ -115,7 +122,7 @@ function MenfessCard(
                         onPreview={handlePreview}
                       />
                     ) : null}
-                  </Wrapper>
+                  </div>
                   <Flex align="center" gap="3">
                     <Flex align="center" asChild gap="2">
                       <Text as="p" color="gray">
@@ -141,6 +148,7 @@ interface MenfessCardPopOverProps {
 
 const MenfessCardPopOver = ({ menfessId }: MenfessCardPopOverProps) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openPopover, setOpenPopover] = useState(false);
 
   return (
     <>
@@ -149,9 +157,13 @@ const MenfessCardPopOver = ({ menfessId }: MenfessCardPopOverProps) => {
         open={openDeleteModal}
         onOpenChange={setOpenDeleteModal}
       />
-      <Popover.Root>
+      <Popover.Root open={openPopover} onOpenChange={setOpenPopover}>
         <Popover.Trigger>
-          <Button variant="ghost" style={{ cursor: "pointer" }}>
+          <Button
+            variant="ghost"
+            style={{ cursor: "pointer" }}
+            onClick={preventBubbling(() => setOpenPopover(!openPopover))}
+          >
             <DotsHorizontalIcon />
           </Button>
         </Popover.Trigger>
@@ -164,7 +176,7 @@ const MenfessCardPopOver = ({ menfessId }: MenfessCardPopOverProps) => {
           >
             <Text as="p" color="red">
               <TrashIcon width={20} height={20} />
-              <Text>Delete</Text>
+              <Text>Hapus</Text>
             </Text>
           </Flex>
         </Popover.Content>

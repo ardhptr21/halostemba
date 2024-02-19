@@ -8,7 +8,7 @@ function page() {
   return (
     <NotificationLayout>
       <Flex direction="column" gap="5" width="100%" py="6">
-        <Heading as="h1">Notifications</Heading>
+        <Heading as="h1">Notifikasi</Heading>
         <NotificationList />
       </Flex>
     </NotificationLayout>

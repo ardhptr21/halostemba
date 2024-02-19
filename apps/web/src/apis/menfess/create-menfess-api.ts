@@ -1,3 +1,4 @@
+import { MenfessEntity } from "@halostemba/entities";
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import http from "~/lib/axios";
@@ -7,6 +8,7 @@ import { CreateMenfessValidatorType } from "~/validators/menfess/create-menfess-
 
 interface CreateMenfessApiResponse {
   message: string;
+  data: Omit<MenfessEntity, "author" | "medias">;
 }
 
 interface CreateMenfessApiBody extends CreateMenfessValidatorType {

@@ -132,7 +132,6 @@ export default function EditPasswordForm({ session }: Props) {
                   </Link>
                   <Button
                     className="cursor-pointer"
-                    type="submit"
                     onClick={handleEditPassword}
                     disabled={isPending}
                   >

@@ -13,7 +13,7 @@ import {
 } from "~/validators/auth/reset-password.validator";
 
 export default function ResetPasswordForm() {
-  const { token } = useForgotPasswordStore();
+  const { token, reset: resetStore } = useForgotPasswordStore();
   const { enqueueSnackbar: toast } = useSnackbar();
   const router = useRouter();
 
@@ -33,6 +33,7 @@ export default function ResetPasswordForm() {
       const message =
         data.message || "Berhasil mengganti kata sandi, silahkan login.";
       toast(message, { variant: "success" });
+      resetStore();
       router.replace("/masuk");
     },
     onError: (error) => {
@@ -70,12 +71,7 @@ export default function ResetPasswordForm() {
         disabled={isPending}
         {...register("confirmPassword")}
       />
-      <Button
-        size="3"
-        type="submit"
-        style={{ cursor: "pointer" }}
-        disabled={isPending}
-      >
+      <Button size="3" style={{ cursor: "pointer" }} disabled={isPending}>
         Ganti Password
       </Button>
     </form>

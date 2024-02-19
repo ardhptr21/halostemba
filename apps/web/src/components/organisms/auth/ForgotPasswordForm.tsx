@@ -60,12 +60,7 @@ export default function ForgotPasswordForm() {
         disabled={isPending}
         {...register("email")}
       />
-      <Button
-        size="3"
-        type="submit"
-        style={{ cursor: "pointer" }}
-        disabled={isPending}
-      >
+      <Button size="3" style={{ cursor: "pointer" }} disabled={isPending}>
         Kirim OTP
       </Button>
     </form>

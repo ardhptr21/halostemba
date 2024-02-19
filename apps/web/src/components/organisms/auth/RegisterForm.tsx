@@ -97,12 +97,7 @@ export default function RegisterForm() {
         disabled={isPending}
         {...register("confirmPassword")}
       />
-      <Button
-        size="3"
-        type="submit"
-        style={{ cursor: "pointer" }}
-        disabled={isPending}
-      >
+      <Button size="3" style={{ cursor: "pointer" }} disabled={isPending}>
         Daftar
       </Button>
     </form>

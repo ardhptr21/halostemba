@@ -17,11 +17,11 @@ import {
   Link as RLink,
   Text,
 } from "@radix-ui/themes";
+import clsx from "clsx";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import SidebarContainer from "./SidebarContainer";
-import clsx from "clsx";
 
 export type NavLink = {
   href: string;
@@ -49,7 +49,7 @@ const navLinks: ReadonlyArray<NavLink> = [
   },
   {
     href: "/notifikasi",
-    label: "Notification",
+    label: "Notifikasi",
     icon: BellIcon,
   },
   {

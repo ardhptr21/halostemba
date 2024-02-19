@@ -3,8 +3,8 @@ import { PropsWithChildren } from "react";
 
 export default function SidebarContainer({ children }: PropsWithChildren) {
   return (
-    <Box className="w-full max-w-xs">
-      <aside className="pt-4">{children}</aside>
+    <Box className="w-full max-w-xs mt-4">
+      <aside className="sticky top-4">{children}</aside>
     </Box>
   );
 }

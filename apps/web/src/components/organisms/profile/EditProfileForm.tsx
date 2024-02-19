@@ -156,7 +156,6 @@ export default function EditProfileForm({ session }: Props) {
                   </Link>
                   <Button
                     className="cursor-pointer"
-                    type="submit"
                     onClick={handleEditProfile}
                   >
                     Simpan Perubahan
@@ -189,11 +188,7 @@ export default function EditProfileForm({ session }: Props) {
                       Batal
                     </Button>
                   </Link>
-                  <Button
-                    className="cursor-pointer"
-                    type="submit"
-                    onClick={handleEditEmail}
-                  >
+                  <Button className="cursor-pointer" onClick={handleEditEmail}>
                     Simpan Perubahan
                   </Button>
                 </Flex>

@@ -84,7 +84,7 @@ export default function TicketChatContent({ ticket, session }: Props) {
       <ScrollArea
         ref={scrollAreaRef}
         scrollbars="vertical"
-        className="h-[calc(100%-150px)] mb-[6.5rem] md:mb-auto"
+        className="h-[calc(100%-150px)] mb-32 md:mb-auto"
       >
         <Flex direction="column" gap="4" justify="end" width="100%">
           <PreviewTicketIssue

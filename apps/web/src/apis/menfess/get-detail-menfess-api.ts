@@ -22,7 +22,7 @@ export const useDetailMenfessApi = (
   options?: Partial<UseQueryOptions<GetDetailMenfessApiResponse, AxiosError>>,
 ) => {
   return useQuery({
-    queryKey: ["detail-menfess", id],
+    queryKey: ["menfess", "detail", id],
     queryFn: () => getDetailMenfessApiHandler(id, token),
     ...options,
   });

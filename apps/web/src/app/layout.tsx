@@ -1,5 +1,5 @@
-import "./globals.css";
 import "@radix-ui/themes/styles.css";
+import "./globals.css";
 
 import { Theme } from "@radix-ui/themes";
 import GlobalProvider from "~/components/organisms/GlobalProvider";
@@ -11,7 +11,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id">
-      <body>
+      <body className="overflow-y-scroll">
         <Theme appearance="dark">
           <GlobalProvider>{children}</GlobalProvider>
         </Theme>

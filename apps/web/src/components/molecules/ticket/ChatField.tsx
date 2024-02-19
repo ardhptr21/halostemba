@@ -88,7 +88,7 @@ export default function ChatField({
   };
 
   return (
-    <div className="w-full absolute bottom-11 md:-bottom-10 p-2 bg-[#18191B]  left-0 right-0">
+    <div className="w-full absolute bottom-[3.8rem] md:-bottom-10 p-2 bg-[#18191B]  left-0 right-0">
       {!!previewMedia?.length ? (
         <ScrollArea scrollbars="horizontal" className="mb-3">
           <Flex className="w-max h-14 mb-2" gap="2">
@@ -137,7 +137,6 @@ export default function ChatField({
             size="3"
             variant="surface"
             color="gray"
-            type="submit"
           >
             <PaperPlaneIcon />
           </IconButton>

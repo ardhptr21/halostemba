@@ -41,7 +41,7 @@ export const useGetListMenfessApi = (
   >,
 ) => {
   return useQuery({
-    queryKey: ["list-menfess", params],
+    queryKey: ["menfess", "list", params],
     queryFn: () => getListMenfessApiHandler(token, params),
     ...options,
   });
@@ -59,13 +59,14 @@ export const useGetListMenfessInfiniteApi = (
   >,
 ) => {
   return useInfiniteQuery({
-    queryKey: ["list-menfess", params],
+    queryKey: ["infinite-menfess", params],
     queryFn: ({ pageParam }) =>
       getListMenfessApiHandler(token, { ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (current) => {
       return current.meta.next;
     },
+    refetchOnWindowFocus: false,
     ...options,
   });
 };
