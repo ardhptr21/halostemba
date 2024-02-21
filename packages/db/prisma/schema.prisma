@@ -143,7 +143,8 @@ model Ticket {
   status      TicketStatus @default(WAITING)
   createdAt   DateTime     @default(now()) @map("created_at")
   updatedAt   DateTime     @updatedAt @map("updated_at")
-  closedAt    DateTime?
+  closedAt    DateTime?    @map("closed_at")
+  respondedAt DateTime?    @map("responded_at")
 
   ticketReplies TicketReply[]
   reporter      User          @relation("reporter", fields: [reporterId], references: [id], onDelete: Cascade)
@@ -206,6 +207,8 @@ model Media {
   menfess     Menfess?     @relation(fields: [menfessId], references: [id], onDelete: SetNull)
   ticket      Ticket?      @relation(fields: [ticketId], references: [id], onDelete: SetNull)
   ticketReply TicketReply? @relation(fields: [ticketReplyId], references: [id], onDelete: SetNull)
+
+  @@map("medias")
 }
 
 model Notification {
@@ -221,6 +224,8 @@ model Notification {
   createdAt  DateTime                @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
 }
 
 enum Role {

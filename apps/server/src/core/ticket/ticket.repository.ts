@@ -1,5 +1,7 @@
 import { Prisma, TicketStatus } from '@halostemba/db';
 import { Injectable } from '@nestjs/common';
+import { subDays } from 'date-fns';
+import groupingStatisticsCount from '~/commons/utils/groupingStatisticsCount';
 import { paginator } from '~/providers/database/database.paginator';
 import { DatabaseService } from '~/providers/database/database.service';
 import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
@@ -81,7 +83,7 @@ export class TicketRepository {
 
   async updateTicketResponder(responderId: string, ticketId: string) {
     return await this.db.ticket.update({
-      data: { responderId, status: TicketStatus.OPEN },
+      data: { responderId, status: TicketStatus.OPEN, respondedAt: new Date() },
       where: { id: ticketId },
       include: { responder: { select: { name: true } } },
     });
@@ -89,7 +91,7 @@ export class TicketRepository {
 
   async closeTicket(ticketId: string) {
     return await this.db.ticket.update({
-      data: { status: TicketStatus.CLOSED },
+      data: { status: TicketStatus.CLOSED, closedAt: new Date() },
       where: { id: ticketId },
     });
   }
@@ -137,17 +139,41 @@ export class TicketRepository {
     });
   }
 
-  async ticketCount() {
-    return await this.db.ticket.groupBy({
+  async ticketCountByStatus() {
+    const data = await this.db.ticket.groupBy({
       by: ['status'],
-      _count: { id: true },
+      _count: true,
     });
+    return data.reduce(
+      (acc, curr) => ({ ...acc, [curr.status.toLowerCase()]: curr._count }),
+      {},
+    );
   }
 
-  async ticketStatistic() {
-    return await this.db.ticket.groupBy({
-      by: ['createdAt'],
-      _count: { id: true },
+  async ticketStatisticsResponded(userId: string) {
+    const data = await this.db.ticket.findMany({
+      select: { respondedAt: true },
+      where: {
+        responderId: userId,
+        respondedAt: {
+          gte: subDays(new Date(), 7),
+        },
+      },
     });
+
+    return groupingStatisticsCount(data);
+  }
+
+  async ticketStatistics() {
+    const data = await this.db.ticket.findMany({
+      select: { createdAt: true },
+      where: {
+        createdAt: {
+          gte: subDays(new Date(), 7),
+        },
+      },
+    });
+
+    return groupingStatisticsCount(data);
   }
 }

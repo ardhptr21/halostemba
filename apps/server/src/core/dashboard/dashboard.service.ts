@@ -1,41 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { TicketRepository } from '../ticket/ticket.repository';
+import { UserEntity } from '@halostemba/entities';
 
 @Injectable()
 export class DashboardService {
   constructor(private readonly ticketRepository: TicketRepository) {}
 
-  async getSatistic() {
-    const countData = await this.ticketRepository.ticketCount();
+  async getDashboardStatistics(user: UserEntity) {
+    const ticketCount = await this.ticketRepository.ticketCountByStatus();
+    const ticketStatistics =
+      user.role === 'ADMIN'
+        ? await this.ticketRepository.ticketStatistics()
+        : await this.ticketRepository.ticketStatisticsResponded(user.id);
 
     return {
-      ticketCount: this.transformTicketCount(countData),
+      ticket_count: ticketCount,
+      ticket_statistics: ticketStatistics,
     };
-  }
-
-  transformTicketCount(ticketCountData: any[]) {
-    let ticketCount = {
-      waiting: 0,
-      open: 0,
-      closed: 0,
-    };
-
-    ticketCountData.forEach((ticket) => {
-      switch (ticket.status) {
-        case 'WAITING':
-          ticketCount.waiting += ticket._count.id;
-          break;
-        case 'OPEN':
-          ticketCount.open += ticket._count.id;
-          break;
-        case 'CLOSED':
-          ticketCount.closed += ticket._count.id;
-          break;
-        default:
-          break;
-      }
-    });
-
-    return ticketCount;
   }
 }
