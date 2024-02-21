@@ -19,6 +19,7 @@ import { OtpModule } from './providers/otp/otp.module';
 import { MajorModule } from './core/major/major.module';
 import { NotificationModule } from './core/notification/notification.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { DashboardModule } from './core/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     MajorModule,
     NotificationModule,
     EventEmitterModule.forRoot(),
+    DashboardModule,
   ],
   controllers: [],
   providers: [

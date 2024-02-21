@@ -136,4 +136,18 @@ export class TicketRepository {
       where: { id: replyId, authorId },
     });
   }
+
+  async ticketCount() {
+    return await this.db.ticket.groupBy({
+      by: ['status'],
+      _count: { id: true },
+    });
+  }
+
+  async ticketStatistic() {
+    return await this.db.ticket.groupBy({
+      by: ['createdAt'],
+      _count: { id: true },
+    });
+  }
 }
