@@ -3,8 +3,8 @@
 import { CaretDownIcon, ExitIcon } from "@radix-ui/react-icons";
 import {
   Avatar,
-  DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuRoot,
   DropdownMenuTrigger,
   Flex,
@@ -12,7 +12,6 @@ import {
   Text,
 } from "@radix-ui/themes";
 import clsx from "clsx";
-import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -100,19 +99,20 @@ export default function TeacherNavbar({ className }: Props) {
               </Flex>
             </DropdownMenuTrigger>
             <DropdownMenuContent size="2">
-              <DropdownMenu.Item>
-                <Flex
-                  direction="row"
-                  align="center"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => signOut()}
-                >
-                  <ExitIcon />
-                  <Text size="2" className="ml-2">
-                    Logout
-                  </Text>
-                </Flex>
-              </DropdownMenu.Item>
+              <DropdownMenuItem>
+                <Link href="/">
+                  <Flex
+                    direction="row"
+                    align="center"
+                    style={{ cursor: "pointer" }}
+                  >
+                    <ExitIcon />
+                    <Text size="2" className="ml-2">
+                      Back to menu
+                    </Text>
+                  </Flex>
+                </Link>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenuRoot>
         </Flex>

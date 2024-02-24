@@ -3,8 +3,8 @@
 import { CaretDownIcon, ExitIcon } from "@radix-ui/react-icons";
 import {
   Avatar,
-  DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuRoot,
   DropdownMenuTrigger,
   Flex,
@@ -103,7 +103,7 @@ export default function Navbar({ className }: Props) {
               </Flex>
             </DropdownMenuTrigger>
             <DropdownMenuContent size="2">
-              <DropdownMenu.Item>
+              <DropdownMenuItem>
                 <Link href="/">
                   <Flex
                     direction="row"
@@ -116,7 +116,7 @@ export default function Navbar({ className }: Props) {
                     </Text>
                   </Flex>
                 </Link>
-              </DropdownMenu.Item>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenuRoot>
         </Flex>
