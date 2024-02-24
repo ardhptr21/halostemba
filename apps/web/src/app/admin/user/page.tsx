@@ -88,9 +88,12 @@ export default function User() {
               </Flex>
             </TextFieldRoot>
 
-            <Flex gap="2" align="center" className="cursor-pointer">
+            <Flex gap="2" align="center">
               <SelectRoot size="3">
-                <SelectTrigger placeholder="Filter" />
+                <SelectTrigger
+                  placeholder="Filter"
+                  className="cursor-pointer"
+                />
                 <SelectContent>
                   <SelectItem value="user">User</SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>

@@ -30,6 +30,10 @@ const navLinks: ReadonlyArray<NavLink> = [
     label: "User",
   },
   {
+    href: "/admin/ticket",
+    label: "Ticket",
+  },
+  {
     href: "/admin/notification",
     label: "Notification",
   },

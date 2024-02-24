@@ -56,13 +56,13 @@ export default function TicketList({ session }: Props) {
 
   return (
     <Box
-      className={clsx("max-w-xl w-full shrink-0", {
+      className={clsx("sm:max-w-sm w-full xl:shrink-0", {
         "hidden md:block": pathname !== "/ticket",
       })}
     >
       <Flex
         direction={"column"}
-        className="max-w-xl sm:border-x w-full h-screen border-gray-500/70"
+        className="sm:max-w-sm sm:border-x w-full h-screen border-gray-500/70"
       >
         <TabsRoot
           className="w-full"
@@ -70,11 +70,14 @@ export default function TicketList({ session }: Props) {
           onValueChange={(value) => setStatus(value)}
         >
           <TabsList size="2" className="justify-center">
-            <TabsTrigger className="w-1/2" value="OPEN">
+            <TabsTrigger className="w-1/3" value="OPEN">
               Open
             </TabsTrigger>
-            <TabsTrigger className="w-1/2" value="REQUEST">
-              Request
+            <TabsTrigger className="w-1/3" value="WAITING">
+              Pending
+            </TabsTrigger>
+            <TabsTrigger className="w-1/3" value="CLOSED">
+              Closed
             </TabsTrigger>
           </TabsList>
         </TabsRoot>
