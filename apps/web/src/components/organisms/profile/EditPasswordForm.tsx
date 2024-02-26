@@ -86,7 +86,7 @@ export default function EditPasswordForm({ session }: Props) {
 
                 <Flex direction="column" gap="5" className="w-full">
                   <Flex direction="row" justify="between" align="center">
-                    <Text as="label" weight="bold" className="w-1/2 xl:w-1/3">
+                    <Text as="label" weight="bold" className="w-1/2 md:w-1/3">
                       Kata Sandi Baru
                     </Text>
                     <Input
@@ -100,7 +100,7 @@ export default function EditPasswordForm({ session }: Props) {
                     />
                   </Flex>
                   <Flex direction="row" justify="between" align="center">
-                    <Text as="label" weight="bold" className="w-1/2 xl:w-1/3">
+                    <Text as="label" weight="bold" className="w-1/2 md:w-1/3">
                       Konfirmasi Kata Sandi
                     </Text>
                     <Input
@@ -116,7 +116,7 @@ export default function EditPasswordForm({ session }: Props) {
                 </Flex>
 
                 <Flex
-                  direction={{ initial: "column", xl: "row" }}
+                  direction={{ initial: "column", md: "row" }}
                   gap="3"
                   mt="4"
                   justify="end"

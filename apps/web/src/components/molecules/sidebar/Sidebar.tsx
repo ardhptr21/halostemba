@@ -2,6 +2,7 @@
 
 import {
   BellIcon,
+  DashboardIcon,
   ExitIcon,
   HomeIcon,
   IdCardIcon,
@@ -56,6 +57,16 @@ const navLinks: ReadonlyArray<NavLink> = [
     href: "/profile",
     label: "Profile",
     icon: PersonIcon,
+  },
+  {
+    href: "/teacher",
+    label: "Teacher",
+    icon: DashboardIcon,
+  },
+  {
+    href: "/admin",
+    label: "Admin",
+    icon: DashboardIcon,
   },
 ];
 

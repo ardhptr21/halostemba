@@ -11,7 +11,7 @@ interface EditProfileProps {
 function EditProfile({ session }: EditProfileProps) {
   return (
     <ProfileLayout>
-      <Flex direction="column" gap="4" className="w-full">
+      <Flex direction="column" gap="4" width="100%">
         <EditProfileForm session={session} />
       </Flex>
     </ProfileLayout>
