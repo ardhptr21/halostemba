@@ -12,30 +12,42 @@ import {
   Text,
 } from "@radix-ui/themes";
 import clsx from "clsx";
+import { User } from "next-auth";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
 export type NavLink = {
   href: string;
   label: string;
+  role: User["role"] | "ALL";
 };
 
 const navLinks: ReadonlyArray<NavLink> = [
   {
-    href: "/teacher",
+    href: "/dashboard",
     label: "Overview",
+    role: "ALL",
   },
   {
-    href: "/teacher/ticket",
+    href: "/dashboard/user",
+    label: "User",
+    role: "ADMIN",
+  },
+  {
+    href: "/dashboard/ticket",
     label: "Ticket",
+    role: "ALL",
   },
   {
-    href: "/teacher/notification",
-    label: "Notification",
+    href: "/dashboard/notifikasi",
+    label: "Notifikasi",
+    role: "ALL",
   },
   {
-    href: "/teacher/settings",
+    href: "/dashboard/settings",
     label: "Settings",
+    role: "ALL",
   },
 ];
 
@@ -43,7 +55,9 @@ interface Props {
   className?: string;
 }
 
-export default function TeacherNavbar({ className }: Props) {
+export default function DashboardNavbar({ className }: Props) {
+  const { data: session } = useSession();
+
   return (
     <Flex
       direction="column"
@@ -64,21 +78,25 @@ export default function TeacherNavbar({ className }: Props) {
             />
           </Link>
 
-          {navLinks.map((link) => (
-            <Flex
-              direction="column"
-              gap="1"
-              asChild
-              align="center"
-              key={link.label}
-            >
-              <RLink asChild color="gray">
-                <Link href={link.href} className="p-1">
-                  {link.label}
-                </Link>
-              </RLink>
-            </Flex>
-          ))}
+          {navLinks
+            .filter((l) =>
+              l.role === "ALL" ? true : l.role === session?.user.role,
+            )
+            .map((link) => (
+              <Flex
+                direction="column"
+                gap="1"
+                asChild
+                align="center"
+                key={link.label}
+              >
+                <RLink asChild color="gray">
+                  <Link href={link.href} className="p-1">
+                    {link.label}
+                  </Link>
+                </RLink>
+              </Flex>
+            ))}
         </Flex>
         <Flex direction="row">
           <DropdownMenuRoot>
@@ -91,9 +109,12 @@ export default function TeacherNavbar({ className }: Props) {
                 px="4"
                 className="border rounded-lg border-[#D4E4FE31] bg-[#FFFFFF09] cursor-pointer"
               >
-                <Avatar src="/assets/images/avatar.png" fallback="A" />
+                <Avatar
+                  src={session?.user.avatar}
+                  fallback={session?.user.name.at(0) || ""}
+                />
                 <Text weight="regular" size="3">
-                  John Doe
+                  {session?.user.name}
                 </Text>
                 <CaretDownIcon />
               </Flex>

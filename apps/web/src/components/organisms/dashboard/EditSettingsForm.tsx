@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  Button,
-  Flex,
-  SelectContent,
-  SelectItem,
-  SelectRoot,
-  SelectTrigger,
-  Text,
-} from "@radix-ui/themes";
+import { Button, Flex, Text } from "@radix-ui/themes";
 import { Session } from "next-auth";
 import Link from "next/link";
 import Input from "~/components/atoms/form/Input";
@@ -25,26 +17,31 @@ export default function EditSettingsForm({ session }: Props) {
         <Flex direction="column" gap="8" py="4">
           <UploadMediaProfile avatar={session.user.avatar} />
           <Flex direction="column" className="w-full">
-            {/* Ubah Profil */}
             <Flex direction="column" gap="5">
               <Text size="4" weight="bold">
                 Ubah Informasi Akun
               </Text>
 
-              <Flex direction="column">
-                <Input label="Nama" id="name" />
-              </Flex>
+              <Input
+                label="Email"
+                id="email"
+                type="email"
+                value={session.user.email}
+              />
 
-              <Flex direction="column" gap="2">
-                <Text as="label">Jenis Kelamin</Text>
-                <SelectRoot defaultValue="Laki-laki" size="3">
-                  <SelectTrigger />
-                  <SelectContent>
-                    <SelectItem value="Laki-laki">Laki-laki</SelectItem>
-                    <SelectItem value="Perempuan">Perempuan</SelectItem>
-                  </SelectContent>
-                </SelectRoot>
-              </Flex>
+              <Input
+                label="Nama"
+                id="name"
+                type="text"
+                value={session.user.name}
+              />
+
+              <Input
+                label="Username"
+                id="username"
+                type="text"
+                value={session.user.username}
+              />
 
               <Flex gap="3" mt="4" justify="end">
                 <Link href="/profile">
@@ -60,32 +57,17 @@ export default function EditSettingsForm({ session }: Props) {
               </Flex>
             </Flex>
 
-            {/* Ubah Email dan Sandi */}
             <Flex direction="column" gap="5" className="w-full">
               <Text size="4" weight="bold">
-                Ubah Email dan Kata Sandi
+                Ubah Kata Sandi
               </Text>
 
-              <Flex direction="column">
-                <Input label="Email" id="email" />
-              </Flex>
-
-              <Flex direction="column">
-                <Input
-                  type="password"
-                  label="Kata Sandi Baru"
-                  id="newPassword"
-                  className="w-full"
-                />
-              </Flex>
-
-              <Flex direction="column">
-                <Input
-                  type="password"
-                  label="Konfirmasi Kata Sandi"
-                  id="confirmPassword"
-                />
-              </Flex>
+              <Input label="Kata Sandi Baru" id="password" type="password" />
+              <Input
+                label="Konfirmasi Kata Sandi"
+                id="confirmPassword"
+                type="password"
+              />
 
               <Flex gap="3" mt="4" justify="end">
                 <Link href="/profile">

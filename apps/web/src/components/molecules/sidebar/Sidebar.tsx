@@ -19,17 +19,19 @@ import {
   Text,
 } from "@radix-ui/themes";
 import clsx from "clsx";
+import { User } from "next-auth";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import SidebarContainer from "./SidebarContainer";
 
-export type NavLink = {
+type NavLink = {
   href: string;
   label: string;
   icon: React.ForwardRefExoticComponent<
     IconProps & React.RefAttributes<SVGSVGElement>
   >;
+  role: User["role"][] | "ALL";
 };
 
 const navLinks: ReadonlyArray<NavLink> = [
@@ -37,36 +39,37 @@ const navLinks: ReadonlyArray<NavLink> = [
     href: "/",
     label: "Home",
     icon: HomeIcon,
+    role: "ALL",
   },
   {
     href: "/explore",
     label: "Explore",
     icon: MagnifyingGlassIcon,
+    role: "ALL",
   },
   {
     href: "/ticket",
     label: "Ticket",
     icon: IdCardIcon,
+    role: ["STUDENT"],
   },
   {
     href: "/notifikasi",
     label: "Notifikasi",
     icon: BellIcon,
+    role: ["STUDENT"],
   },
   {
     href: "/profile",
     label: "Profile",
     icon: PersonIcon,
+    role: ["STUDENT", "GUEST"],
   },
   {
-    href: "/teacher",
-    label: "Teacher",
+    href: "/dashboard",
+    label: "Dashboard",
     icon: DashboardIcon,
-  },
-  {
-    href: "/admin",
-    label: "Admin",
-    icon: DashboardIcon,
+    role: ["ADMIN", "TEACHER"],
   },
 ];
 
@@ -75,7 +78,7 @@ interface Props {
 }
 
 export default function Sidebar({ className }: Props) {
-  const session = useSession();
+  const { data: session, status } = useSession();
 
   return (
     <SidebarContainer>
@@ -94,27 +97,33 @@ export default function Sidebar({ className }: Props) {
           />
           <Flex direction="column">
             <Flex direction="column" gap="7">
-              {navLinks.map((link) => (
-                <Flex
-                  direction="row"
-                  gap="3"
-                  asChild
-                  align="center"
-                  key={link.label}
-                >
-                  <RLink asChild color="gray">
-                    <Link href={link.href}>
-                      <link.icon width={20} height={"100%"} />
-                      <Text size="4">{link.label}</Text>
-                    </Link>
-                  </RLink>
-                </Flex>
-              ))}
+              {navLinks
+                .filter((l) =>
+                  l.role === "ALL"
+                    ? true
+                    : l.role.includes(session?.user.role as any),
+                )
+                .map((link) => (
+                  <Flex
+                    direction="row"
+                    gap="3"
+                    asChild
+                    align="center"
+                    key={link.label}
+                  >
+                    <RLink asChild color="gray">
+                      <Link href={link.href}>
+                        <link.icon width={20} height={"100%"} />
+                        <Text size="4">{link.label}</Text>
+                      </Link>
+                    </RLink>
+                  </Flex>
+                ))}
             </Flex>
           </Flex>
         </Flex>
         <Flex direction="row" gap="3" align="center" justify="between">
-          {session.status === "authenticated" ? (
+          {status === "authenticated" ? (
             <>
               <Flex direction="row" gap="3" asChild align="center">
                 <Text asChild color="gray">

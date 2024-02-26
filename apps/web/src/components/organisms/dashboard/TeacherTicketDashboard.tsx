@@ -13,23 +13,25 @@ import {
 } from "@radix-ui/themes";
 import clsx from "clsx";
 import Image from "next/image";
-import TeacherDashboardLayout from "~/components/layouts/teacher/TeacherDashboardLayout";
 
-export default function Ticket() {
+export default function TeacherTicketDashboard() {
   return (
-    <TeacherDashboardLayout>
+    <Flex className="w-full">
       <Box className={clsx("sm:max-w-xl w-full xl:shrink-0")}>
         <Flex
           direction="column"
-          className="sm:max-w-xl sm:border-x w-full h-screen border-gray-500/70"
+          className="sm:max-w-xl sm:border-r w-full h-[calc(100vh-180px)] border-gray-500/70"
         >
           <TabsRoot className="w-full" defaultValue="OPEN">
             <TabsList size="2" className="justify-center">
-              <TabsTrigger className="w-1/2" value="OPEN">
+              <TabsTrigger className="w-1/3" value="PENDING">
+                Pending
+              </TabsTrigger>
+              <TabsTrigger className="w-1/3" value="OPEN">
                 Open
               </TabsTrigger>
-              <TabsTrigger className="w-1/2" value="REQUEST">
-                Request
+              <TabsTrigger className="w-1/3" value="CLOSED">
+                Closed
               </TabsTrigger>
             </TabsList>
           </TabsRoot>
@@ -78,6 +80,6 @@ export default function Ticket() {
           </Text>
         </Flex>
       </Box>
-    </TeacherDashboardLayout>
+    </Flex>
   );
 }
