@@ -3,8 +3,9 @@ import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import http from "~/lib/axios";
 import ErrorResponseType from "~/types/error-response-type";
+import WithMetaResponseType from "~/types/with-meta-response-type";
 
-interface GetTicketApiRespone extends Array<TicketEntity> {}
+interface GetTicketApiRespone extends WithMetaResponseType<TicketEntity[]> {}
 
 interface GetTicketApiParams {
   status?: "WAITING" | "OPEN" | "CLOSED";
@@ -24,14 +25,14 @@ export const getTicketListApiHandler = async (
     },
   });
 
-  return data.data;
+  return data;
 };
 
 export const useGetTicketListApi = (
   token: string,
   params?: GetTicketApiParams,
   options?: Partial<
-    UseQueryOptions<TicketEntity[], AxiosError<ErrorResponseType>>
+    UseQueryOptions<GetTicketApiRespone, AxiosError<ErrorResponseType>>
   >,
 ) => {
   return useQuery({
