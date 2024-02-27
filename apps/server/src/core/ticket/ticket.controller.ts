@@ -43,6 +43,15 @@ export class TicketController {
     return this.ticketService.getCurrentUserTickets(user.id, params);
   }
 
+  @Auth(true, Role.TEACHER, Role.ADMIN)
+  @Get('/')
+  async getTicketList(
+    @Query() params: ListTicketParamsDto,
+    @User() user: UserEntity,
+  ) {
+    return this.ticketService.getTicketList(params, user);
+  }
+
   @Auth(true, Role.TEACHER, Role.STUDENT)
   @Get('/:ticketId')
   async getTicket(

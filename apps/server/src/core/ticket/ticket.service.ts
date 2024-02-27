@@ -50,6 +50,14 @@ export class TicketService {
     return { data: ticket };
   }
 
+  async getTicketList(params: ListTicketParamsDto, user: UserEntity) {
+    if (user.role === 'TEACHER') {
+      return this.ticketRepository.getTicketListByResponderId(params, user.id);
+    }
+
+    return this.ticketRepository.getTicketList(params);
+  }
+
   async getTicket(user: UserEntity, ticketId: string) {
     const ticket = await this.ticketRepository.getTicketByIdComplete(ticketId);
 
