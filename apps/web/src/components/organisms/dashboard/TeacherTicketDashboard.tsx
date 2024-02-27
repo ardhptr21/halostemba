@@ -1,13 +1,63 @@
-import { Box, Flex, Text } from "@radix-ui/themes";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import {
+  Box,
+  Flex,
+  ScrollArea,
+  TabsList,
+  TabsRoot,
+  TabsTrigger,
+  Text,
+  TextFieldInput,
+  TextFieldRoot,
+  TextFieldSlot,
+} from "@radix-ui/themes";
 import clsx from "clsx";
 import Image from "next/image";
-import TicketFilter from "~/components/molecules/dashboard/ticket/TicketFilter";
 
 export default function TeacherTicketDashboard() {
   return (
     <Flex className="w-full">
       <Box className={clsx("sm:max-w-xl w-full xl:shrink-0")}>
-        <TicketFilter />
+        <Flex
+          direction="column"
+          className="sm:max-w-xl sm:border-r w-full h-[calc(100vh-180px)] border-gray-500/70"
+        >
+          <TabsRoot className="w-full" defaultValue="OPEN">
+            <TabsList size="2" className="justify-center">
+              <TabsTrigger className="w-1/3" value="PENDING">
+                Pending
+              </TabsTrigger>
+              <TabsTrigger className="w-1/3" value="OPEN">
+                Open
+              </TabsTrigger>
+              <TabsTrigger className="w-1/3" value="CLOSED">
+                Closed
+              </TabsTrigger>
+            </TabsList>
+          </TabsRoot>
+          <Box p={"3"}>
+            <TextFieldRoot className="w-full">
+              <TextFieldSlot>
+                <MagnifyingGlassIcon height="16" width="16" />
+              </TextFieldSlot>
+              <TextFieldInput
+                placeholder="Cari tiket di sini..."
+                size="3"
+                style={{ width: "100%" }}
+              />
+            </TextFieldRoot>
+          </Box>
+
+          <Flex direction={"column"} asChild>
+            <ScrollArea scrollbars="vertical" className="h-full">
+              <Flex mt="9" direction="column" justify="center" align="center">
+                <Text as="p" size="3" color="gray">
+                  Tidak ada tiket di sini
+                </Text>
+              </Flex>
+            </ScrollArea>
+          </Flex>
+        </Flex>
       </Box>
       <Box className="relative hidden md:block" width="100%">
         <Flex
