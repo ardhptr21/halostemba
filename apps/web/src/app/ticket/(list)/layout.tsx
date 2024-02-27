@@ -1,22 +1,14 @@
-import { Session } from "next-auth";
 import { PropsWithChildren } from "react";
 import ChatLayout from "~/components/layouts/ChatLayout";
 import TicketList from "~/components/molecules/ticket/TicketList";
-import withAuthRequired from "~/guards/auth/withAuthRequired";
+import { getAuthServer } from "~/lib/auth";
 
-interface Props extends PropsWithChildren {
-  session: Session;
-}
-
-function Layout({ children, session }: Props) {
+export default async function Layout({ children }: PropsWithChildren) {
+  const session = await getAuthServer();
   return (
     <ChatLayout>
-      <TicketList session={session} />
+      <TicketList session={session!} />
       {children}
     </ChatLayout>
   );
 }
-
-export default withAuthRequired(Layout, {
-  role: ["ADMIN", "STUDENT"],
-});
