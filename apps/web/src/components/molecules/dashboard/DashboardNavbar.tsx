@@ -35,6 +35,11 @@ const navLinks: ReadonlyArray<NavLink> = [
     role: "ADMIN",
   },
   {
+    href: "/dashboard/request",
+    label: "Request",
+    role: "ADMIN",
+  },
+  {
     href: "/dashboard/ticket",
     label: "Ticket",
     role: "ALL",

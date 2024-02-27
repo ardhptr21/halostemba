@@ -8,6 +8,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { VerificationService } from './verification.service';
 import { Auth } from '~/commons/decorators/validators/auth.decorator';
@@ -16,10 +17,18 @@ import { CreateVerificationDto } from './dtos/create-verification.dto';
 import { User } from '~/commons/decorators/requests/user.decorator';
 import { UserEntity } from '@halostemba/entities';
 import { RejectVerificationDto } from './dtos/reject-verification.dto';
+import { ListVerificationParamsDto } from './dtos/list-verification-params.dto';
 
 @Controller('verifications')
 export class VerificationController {
   constructor(private readonly verificationService: VerificationService) {}
+
+  @Auth(true, Role.ADMIN)
+  @HttpCode(HttpStatus.OK)
+  @Get('/')
+  async getVerifications(@Query() params: ListVerificationParamsDto) {
+    return await this.verificationService.getVerifications(params);
+  }
 
   @Auth(true, Role.GUEST)
   @HttpCode(HttpStatus.CREATED)

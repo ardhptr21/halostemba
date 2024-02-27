@@ -2,8 +2,8 @@ import { Prisma, Role, VerificationRequest } from '@halostemba/db';
 import { Injectable } from '@nestjs/common';
 import { paginator } from '~/providers/database/database.paginator';
 import { DatabaseService } from '~/providers/database/database.service';
-import { GetUserParamsDto } from './dtos/get-user-params.dto';
 import { CreateUserDTO } from './dtos/create-user.dto';
+import { GetUserParamsDto } from './dtos/get-user-params.dto';
 
 const paginate = paginator({ perPage: 10 });
 @Injectable()

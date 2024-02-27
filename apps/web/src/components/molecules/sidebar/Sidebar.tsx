@@ -57,7 +57,7 @@ const navLinks: ReadonlyArray<NavLink> = [
     href: "/notifikasi",
     label: "Notifikasi",
     icon: BellIcon,
-    role: ["STUDENT"],
+    role: ["STUDENT", "GUEST"],
   },
   {
     href: "/profile",

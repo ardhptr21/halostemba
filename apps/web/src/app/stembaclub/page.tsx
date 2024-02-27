@@ -1,17 +1,20 @@
 import { Flex } from "@radix-ui/themes";
+import { Session } from "next-auth";
 import { getVerificationDataApiHandler } from "~/apis/verification/get-veirification-data-api";
 import Approved from "~/components/organisms/verification/Approved";
 import Initial from "~/components/organisms/verification/Initial";
 import Pending from "~/components/organisms/verification/Pending";
 import Rejected from "~/components/organisms/verification/Rejected";
-import { getAuthServer } from "~/lib/auth";
+import withAuthRequired from "~/guards/auth/withAuthRequired";
 
 export const dynamic = "force-dynamic";
 
-export default async function VerificationPage() {
-  const session = await getAuthServer();
+interface Props {
+  session: Session;
+}
 
-  const data = await getVerificationDataApiHandler(session?.token as string);
+async function VerificationPage({ session }: Props) {
+  const data = await getVerificationDataApiHandler(session.token);
 
   return (
     <Flex direction="column" align="center" gap="5">
@@ -27,3 +30,7 @@ export default async function VerificationPage() {
     </Flex>
   );
 }
+
+export default withAuthRequired(VerificationPage, {
+  role: ["GUEST", "STUDENT"],
+});

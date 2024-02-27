@@ -1,5 +1,6 @@
 import { UserEntity } from "@halostemba/entities";
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import http from "~/lib/axios";
 import ErrorResponseType from "~/types/error-response-type";
 import { CreateUserValidatorType } from "~/validators/user/create-user-validator";
@@ -25,7 +26,7 @@ const createUserApiHandler = async ({
 export const useCreateUser = (
   options?: UseMutationOptions<
     CreateUserApiResponse,
-    ErrorResponseType,
+    AxiosError<ErrorResponseType>,
     CreateUserValidatorType
   >,
 ) => {

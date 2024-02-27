@@ -21,7 +21,7 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useGetListUsers } from "~/apis/user/get-list-user-api";
 import Pagination from "~/components/atoms/Pagination";
-import DashboardUserModal from "~/components/molecules/dashboard/DashboardUserModal";
+import DashboardUserModal from "~/components/molecules/dashboard/user/UserModal";
 
 interface UserListProps {
   session: Session;
@@ -65,7 +65,7 @@ export default function UserList({ session }: UserListProps) {
                   <Text>{user.name}</Text>
                 </Flex>
               </TableRowHeaderCell>
-              <TableCell>
+              <TableCell className="align-middle">
                 <Text>
                   {user.role === "GUEST" ? (
                     <Badge variant="soft" color="blue">
@@ -86,7 +86,7 @@ export default function UserList({ session }: UserListProps) {
                   ) : null}
                 </Text>
               </TableCell>
-              <TableCell className="space-x-2">
+              <TableCell className="space-x-2 align-middle">
                 <IconButton
                   variant="soft"
                   className="cursor-pointer"

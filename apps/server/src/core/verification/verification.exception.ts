@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 export class VerificationBadRequestException extends BadRequestException {
   constructor(error: string) {
@@ -9,7 +9,7 @@ export class VerificationBadRequestException extends BadRequestException {
   }
 }
 
-export class VerificationNotFoundException extends BadRequestException {
+export class VerificationNotFoundException extends NotFoundException {
   constructor() {
     super({
       error: 'Verifikasi tidak ditemukan.',
