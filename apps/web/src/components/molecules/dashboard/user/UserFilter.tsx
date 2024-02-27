@@ -11,8 +11,14 @@ import {
   TextFieldSlot,
 } from "@radix-ui/themes";
 import { useRouter, useSearchParams } from "next/navigation";
+import UserCreate from "./UserCreate";
+import { Session } from "next-auth";
 
-export default function UserFilter() {
+interface UserFilterProps {
+  session: Session;
+}
+
+export default function UserFilter({ session }: UserFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const role = searchParams.get("role");
@@ -110,6 +116,7 @@ export default function UserFilter() {
           </Flex>
         </Popover.Content>
       </Popover.Root>
+      <UserCreate session={session} />
     </Flex>
   );
 }

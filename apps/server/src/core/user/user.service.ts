@@ -1,4 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { hash } from 'bcryptjs';
+import { UserEntity } from '~/commons/entities/user.entity';
+import { CreateUserDTO } from './dtos/create-user.dto';
 import { GetUserParamsDto } from './dtos/get-user-params.dto';
 import { UserNotFoundException } from './user.exception';
 import { UserRepository } from './user.repository';
@@ -19,6 +22,22 @@ export class UserService {
     const user = await this.userRepository.getUsers(params);
 
     return user;
+  }
+
+  async createUser(createUserDto: CreateUserDTO) {
+    const username =
+      createUserDto.name.toLowerCase().split(' ').slice(0, 2).join('_') +
+      Math.floor(Math.random() * 1000);
+
+    const hashPassword = await hash(createUserDto.password, 10);
+    createUserDto.password = hashPassword;
+
+    const user = await this.userRepository.createUserByAdmin({
+      ...createUserDto,
+      username,
+    });
+
+    return new UserEntity(user);
   }
 
   async banOrUnbanUser(id: string, userId: string) {

@@ -1,7 +1,7 @@
 import { Flex, Heading } from "@radix-ui/themes";
 import { Session } from "next-auth";
-import UserFilter from "~/components/organisms/dashboard/user/UserFilter";
-import UserList from "~/components/organisms/dashboard/user/UserList";
+import UserFilter from "~/components/molecules/dashboard/user/UserFilter";
+import UserList from "~/components/molecules/dashboard/user/UserList";
 import withAuthRequired from "~/guards/auth/withAuthRequired";
 
 interface Props {
@@ -13,7 +13,7 @@ function UserPage({ session }: Props) {
     <>
       <Flex justify="between" align="end">
         <Heading size="8">User List</Heading>
-        <UserFilter />
+        <UserFilter session={session} />
       </Flex>
 
       <UserList session={session} />

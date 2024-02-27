@@ -1,7 +1,7 @@
 "use client";
 
 import { UserEntity } from "@halostemba/entities";
-import { EyeOpenIcon, TrashIcon } from "@radix-ui/react-icons";
+import { EyeOpenIcon } from "@radix-ui/react-icons";
 import {
   Avatar,
   Badge,
@@ -96,13 +96,6 @@ export default function UserList({ session }: UserListProps) {
                   }}
                 >
                   <EyeOpenIcon />
-                </IconButton>
-                <IconButton
-                  variant="soft"
-                  color="red"
-                  className="cursor-pointer"
-                >
-                  <TrashIcon />
                 </IconButton>
               </TableCell>
             </TableRow>

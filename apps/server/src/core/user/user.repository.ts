@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { paginator } from '~/providers/database/database.paginator';
 import { DatabaseService } from '~/providers/database/database.service';
 import { GetUserParamsDto } from './dtos/get-user-params.dto';
+import { CreateUserDTO } from './dtos/create-user.dto';
 
 const paginate = paginator({ perPage: 10 });
 @Injectable()
@@ -77,5 +78,14 @@ export class UserRepository {
 
   async getUserByRole(role: Role) {
     return await this.db.user.findMany({ where: { role } });
+  }
+
+  async createUserByAdmin(createUserDto: CreateUserDTO & { username: string }) {
+    return await this.db.user.create({
+      data: {
+        ...createUserDto,
+        emailVerifiedAt: new Date(),
+      },
+    });
   }
 }
