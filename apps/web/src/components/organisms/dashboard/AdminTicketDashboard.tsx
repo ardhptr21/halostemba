@@ -1,6 +1,5 @@
 "use client";
 
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import {
   Badge,
   Flex,
@@ -14,61 +13,33 @@ import {
   TableRoot,
   TableRowHeaderCell,
   Text,
-  TextFieldInput,
-  TextFieldRoot,
-  TextFieldSlot,
 } from "@radix-ui/themes";
 import { TableBody, TableCell, TableRow } from "@tremor/react";
+import { Session } from "next-auth";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useGetTicketListApi } from "~/apis/ticket/get-list-ticket-api";
+import TicketFilter from "~/components/molecules/dashboard/ticket/TicketFilter";
 
-const data = [
-  {
-    name: "Pendaftaran KIP-k",
-    status: "Open",
-    ticket_id: "TICKET-0001",
-  },
-  {
-    name: "Amherd Viola",
-    status: "Closed",
-    ticket_id: "TICKET-0002",
-  },
-  {
-    name: "Amherd Viola",
-    status: "Request",
-    ticket_id: "TICKET-0003",
-  },
-  {
-    name: "Amherd Viola",
-    status: "Open",
-    ticket_id: "TICKET-0004",
-  },
-];
+interface Props {
+  session?: Session | null;
+}
+export default function AdminTicketDashboard({ session }: Props) {
+  const searchParams = useSearchParams();
 
-export default function AdminTicketDashboard() {
+  const { data } = useGetTicketListApi(session?.token as string, {
+    search: searchParams.get("search") as string,
+    status: searchParams.get("status") as "WAITING" | "OPEN" | "CLOSED",
+    perPage: Number(searchParams.get("perPage")) || 30,
+    page: Number(searchParams.get("page")) || 1,
+  });
+
   return (
     <>
       <Flex direction="row" width="100%" justify="between">
         <Heading size="8">Ticket</Heading>
         <Flex direction="row" gap="4">
-          <TextFieldRoot>
-            <Flex direction="row" align="center">
-              <TextFieldSlot>
-                <MagnifyingGlassIcon height="16" width="16" />
-              </TextFieldSlot>
-              <TextFieldInput radius="large" placeholder="Search" size="3" />
-            </Flex>
-          </TextFieldRoot>
-
-          <Flex gap="2" align="center">
-            <SelectRoot size="3">
-              <SelectTrigger placeholder="Filter" className="cursor-pointer" />
-              <SelectContent>
-                <SelectItem value="request">Request</SelectItem>
-                <SelectItem value="open">Open</SelectItem>
-                <SelectItem value="close">Close</SelectItem>
-              </SelectContent>
-            </SelectRoot>
-          </Flex>
+          <TicketFilter />
         </Flex>
       </Flex>
       <Flex>
@@ -95,38 +66,40 @@ export default function AdminTicketDashboard() {
         </TableHeader>
 
         <TableBody>
-          {data.map((item) => (
-            <TableRow key={item.name}>
-              <TableRowHeaderCell>
-                <Text>{item.name}</Text>
-              </TableRowHeaderCell>
-              <TableCell>
-                <Text>
-                  {item.status === "Open" ? (
-                    <Badge variant="soft" color="green">
-                      {item.status}
-                    </Badge>
-                  ) : item.status === "Closed" ? (
-                    <Badge variant="soft" color="red">
-                      {item.status}
-                    </Badge>
-                  ) : item.status === "Request" ? (
-                    <Badge variant="soft" color="yellow">
-                      {item.status}
-                    </Badge>
-                  ) : null}
-                </Text>
-              </TableCell>
-              <TableCell>
-                <Link
-                  href={`/dashboard/ticket/${item.ticket_id}`}
-                  className="cursor-pointer"
-                >
-                  <Text color="indigo">Lihat Detail</Text>
-                </Link>
-              </TableCell>
-            </TableRow>
-          ))}
+          {data !== undefined
+            ? data.map((item) => (
+                <TableRow key={item.title}>
+                  <TableRowHeaderCell>
+                    <Text>{item.title}</Text>
+                  </TableRowHeaderCell>
+                  <TableCell>
+                    <Text>
+                      {item.status === "OPEN" ? (
+                        <Badge variant="soft" color="green">
+                          {item.status}
+                        </Badge>
+                      ) : item.status === "CLOSED" ? (
+                        <Badge variant="soft" color="red">
+                          {item.status}
+                        </Badge>
+                      ) : item.status === "WAITING" ? (
+                        <Badge variant="soft" color="yellow">
+                          {item.status}
+                        </Badge>
+                      ) : null}
+                    </Text>
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      href={`/dashboard/ticket/${item.id}`}
+                      className="cursor-pointer"
+                    >
+                      <Text color="indigo">Lihat Detail</Text>
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))
+            : null}
         </TableBody>
       </TableRoot>
     </>

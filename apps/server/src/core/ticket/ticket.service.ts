@@ -52,10 +52,16 @@ export class TicketService {
 
   async getTicketList(params: ListTicketParamsDto, user: UserEntity) {
     if (user.role === 'TEACHER') {
-      return this.ticketRepository.getTicketListByResponderId(params, user.id);
+      return this.ticketRepository.getTicketListByResponderId(params, user.id, {
+        status: params.status || undefined,
+        title: params.search || undefined,
+      });
     }
 
-    return this.ticketRepository.getTicketList(params);
+    return this.ticketRepository.getTicketList(params, {
+      status: params.status || undefined,
+      title: params.search || undefined,
+    });
   }
 
   async getTicket(user: UserEntity, ticketId: string) {

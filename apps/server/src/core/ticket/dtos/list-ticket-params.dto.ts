@@ -5,4 +5,13 @@ export class ListTicketParamsDto {
   @IsEnum(TicketStatus)
   @IsOptional()
   status?: TicketStatus;
+
+  @IsOptional()
+  search?: string;
+
+  @IsOptional()
+  page?: number;
+
+  @IsOptional()
+  perPage?: number;
 }
