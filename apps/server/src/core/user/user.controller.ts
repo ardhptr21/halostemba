@@ -1,10 +1,21 @@
-import { Controller, Get, Param, Patch, Query } from '@nestjs/common';
-import { UserService } from './user.service';
-import { Auth } from '~/commons/decorators/validators/auth.decorator';
 import { Role } from '@halostemba/db';
-import { GetUserParamsDto } from './dtos/get-user-params.dto';
-import { User } from '~/commons/decorators/requests/user.decorator';
 import { UserEntity } from '@halostemba/entities';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { User } from '~/commons/decorators/requests/user.decorator';
+import { Auth } from '~/commons/decorators/validators/auth.decorator';
+import { CreateUserDTO } from './dtos/create-user.dto';
+import { GetUserParamsDto } from './dtos/get-user-params.dto';
+import { UserService } from './user.service';
 
 @Controller('users')
 export class UserController {
@@ -14,6 +25,13 @@ export class UserController {
   @Get()
   async getUsers(@Query() params: GetUserParamsDto) {
     return this.userService.getUsers(params);
+  }
+
+  @HttpCode(HttpStatus.CREATED)
+  @Auth(true, Role.ADMIN)
+  @Post()
+  async createUser(@Body() createUserDto: CreateUserDTO) {
+    return this.userService.createUser(createUserDto);
   }
 
   @Auth(true, Role.ADMIN)
