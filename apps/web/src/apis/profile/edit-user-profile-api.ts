@@ -14,6 +14,7 @@ interface EditUserProfileApiBody extends EditProfileValidatorType {
   token: string;
   name: string;
   username: string;
+  email?: string;
 }
 
 interface EditEmailApiBody extends EditEmailValidatorType {
