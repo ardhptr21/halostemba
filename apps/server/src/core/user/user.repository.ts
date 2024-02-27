@@ -39,6 +39,7 @@ export class UserRepository {
       {
         where: {
           name: { contains: params.search || undefined, mode: 'insensitive' },
+          role: params.role || undefined,
         },
         orderBy: { [params.sortBy || 'name']: params.order || 'asc' },
         select: {

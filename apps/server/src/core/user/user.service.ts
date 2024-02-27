@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { GetUserParamsDto } from './dtos/get-user-params.dto';
-import { UserRepository } from './user.repository';
 import { UserNotFoundException } from './user.exception';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
