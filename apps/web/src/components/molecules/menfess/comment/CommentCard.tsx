@@ -1,11 +1,18 @@
 import { CommentEntity } from "@halostemba/entities";
 import { DotsHorizontalIcon, TrashIcon } from "@radix-ui/react-icons";
-import { Box, Button, Card, Flex, Popover, Text } from "@radix-ui/themes";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  Flex,
+  Popover,
+  Text,
+} from "@radix-ui/themes";
 import { formatDistanceToNowStrict } from "date-fns";
 import { id } from "date-fns/locale";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 import DeleteCommentModal from "~/components/atoms/modals/DeleteCommentModal";
 
 interface CommentCardProps {
@@ -25,15 +32,12 @@ export default function CommentCard({
       <Card asChild className="w-full">
         <article>
           <Flex direction="row" gap="2">
-            <Box>
-              <Image
-                src={avatar || "/assets/images/avatar.png"}
-                width={40}
-                height={40}
-                alt="avatar"
-                className="rounded-md"
-              />
-            </Box>
+            <Avatar
+              src={avatar as string}
+              fallback={comment.author.name[0]}
+              alt="avatar"
+            />
+
             <Flex width="100%">
               <Flex
                 width="100%"

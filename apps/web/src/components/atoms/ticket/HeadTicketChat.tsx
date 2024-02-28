@@ -46,32 +46,36 @@ export default function HeadTicketChat({ ticket, session }: Props) {
             {ticket.status === "CLOSED" && <>Ditutup pada {ticket.closedAt}</>}
           </Text>
         </Flex>
-        <Popover.Root open={openPopover} onOpenChange={setOpenPopover}>
-          <Popover.Trigger
-            className={ticket.status === "CLOSED" ? "hidden" : "cursor-pointer"}
-          >
-            <DotsHorizontalIcon
-              width={"20"}
-              height={"20"}
-              className="cursor-pointer"
-            />
-          </Popover.Trigger>
-          <Popover.Content
-            align="end"
-            onClick={() =>
-              handleCloseTicket({
-                token: session.token as string,
-                ticketId: ticket.id,
-              })
-            }
-          >
-            <Flex direction="column" className="min-w-32" gap="3">
-              <Button className="w-full cursor-pointer" color="red">
-                Tutup
-              </Button>
-            </Flex>
-          </Popover.Content>
-        </Popover.Root>
+        {session.user.role === "TEACHER" && (
+          <Popover.Root open={openPopover} onOpenChange={setOpenPopover}>
+            <Popover.Trigger
+              className={
+                ticket.status === "CLOSED" ? "hidden" : "cursor-pointer"
+              }
+            >
+              <DotsHorizontalIcon
+                width={"20"}
+                height={"20"}
+                className="cursor-pointer"
+              />
+            </Popover.Trigger>
+            <Popover.Content
+              align="end"
+              onClick={() =>
+                handleCloseTicket({
+                  token: session.token as string,
+                  ticketId: ticket.id,
+                })
+              }
+            >
+              <Flex direction="column" className="min-w-32" gap="3">
+                <Button className="w-full cursor-pointer" color="red">
+                  Tutup
+                </Button>
+              </Flex>
+            </Popover.Content>
+          </Popover.Root>
+        )}
       </Flex>
     </Box>
   );

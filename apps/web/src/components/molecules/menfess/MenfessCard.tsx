@@ -5,11 +5,18 @@ import {
   DotsHorizontalIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
-import { Box, Button, Card, Flex, Popover, Text } from "@radix-ui/themes";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  Flex,
+  Popover,
+  Text,
+} from "@radix-ui/themes";
 import { formatDistanceToNowStrict } from "date-fns";
 import { id } from "date-fns/locale";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ForwardedRef, MouseEvent, forwardRef, useState } from "react";
@@ -63,24 +70,23 @@ function MenfessCard(
         <Card asChild className="w-full">
           <article>
             <Flex direction="row" gap="2">
-              <Box>
-                <Image
-                  src={
-                    menfess.author?.avatar && !menfess.anonymous
-                      ? menfess.author?.avatar
-                      : "/assets/images/profile/avatar.png"
-                  }
-                  width={40}
-                  height={40}
-                  alt="avatar"
-                  onClick={preventBubbling(
-                    () =>
-                      !menfess.anonymous &&
-                      router.push(`/${menfess.author?.username}`),
-                  )}
-                  className="rounded-md w-full h-full object-cover aspect-square max-w-[40px] max-h-[40px] cursor-pointer"
-                />
-              </Box>
+              <Avatar
+                src={
+                  menfess.author?.avatar && !menfess.anonymous
+                    ? menfess.author.avatar
+                    : undefined
+                }
+                fallback={
+                  menfess.anonymous ? "?" : menfess.author?.name.at(0) || ""
+                }
+                color={menfess.anonymous ? "red" : "indigo"}
+                alt="avatar"
+                onClick={preventBubbling(
+                  () =>
+                    !menfess.anonymous &&
+                    router.push(`/${menfess.author?.username}`),
+                )}
+              />
 
               <Flex width="100%" direction="column">
                 <Flex

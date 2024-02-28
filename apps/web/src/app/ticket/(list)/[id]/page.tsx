@@ -30,7 +30,7 @@ export default async function TicketDetailPage({ params: { id } }: Props) {
   return (
     <Box className="relative" width="100%">
       <Flex direction="column" gap="5" height="100%" className="px-2 md:pl-3">
-        <HeadTicketChat ticket={ticket} />
+        <HeadTicketChat ticket={ticket} session={session!} />
         <TicketChatContent session={session!} ticket={ticket} />
       </Flex>
     </Box>

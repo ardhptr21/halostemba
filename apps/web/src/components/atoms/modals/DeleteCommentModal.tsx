@@ -51,7 +51,7 @@ export default function DeleteCommentModal({
         </AlertDialog.Description>
         <Flex justify="end" gap="3" mt="5">
           <AlertDialog.Cancel>
-            <Button size="3" variant="outline">
+            <Button size="3" variant="outline" className="cursor-pointer">
               Batal
             </Button>
           </AlertDialog.Cancel>
@@ -61,6 +61,8 @@ export default function DeleteCommentModal({
               color="red"
               onClick={handleClick}
               disabled={isPending}
+              type={undefined}
+              className="cursor-pointer"
             >
               Delete
             </Button>

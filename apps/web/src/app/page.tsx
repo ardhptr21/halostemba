@@ -16,8 +16,13 @@ async function Home() {
   return (
     <MainLayout>
       <Flex direction="column" gap="4">
-        <CalloutAction />
-        <MenfessCreate avatar={session?.user.avatar} />
+        <CalloutAction session={session} />
+        {session?.user.role === "STUDENT" && (
+          <MenfessCreate
+            avatar={session?.user.avatar}
+            name={session?.user.name}
+          />
+        )}
         <ListMenfess session={session} />
       </Flex>
     </MainLayout>

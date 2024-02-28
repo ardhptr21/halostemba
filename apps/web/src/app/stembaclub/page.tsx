@@ -33,4 +33,5 @@ async function VerificationPage({ session }: Props) {
 
 export default withAuthRequired(VerificationPage, {
   role: ["GUEST", "STUDENT"],
+  emailVerified: true,
 });

@@ -110,7 +110,10 @@ export default function EditProfileForm({ session }: Props) {
           </Flex>
 
           <Flex direction={{ initial: "column", md: "row" }} gap="8" py="4">
-            <UploadMediaProfile avatar={session.user.avatar} />
+            <UploadMediaProfile
+              avatar={session.user.avatar}
+              name={session.user.name}
+            />
             <Flex direction="column" className="w-full">
               {/* Ubah Profil */}
               <Flex direction="column" gap="4">

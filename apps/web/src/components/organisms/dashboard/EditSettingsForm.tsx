@@ -70,7 +70,10 @@ export default function EditSettingsForm({ session }: Props) {
     <>
       <Flex direction="column" className="w-full">
         <Flex direction="column" gap="8" py="4">
-          <UploadMediaProfile avatar={session.user.avatar} />
+          <UploadMediaProfile
+            avatar={session.user.avatar}
+            name={session.user.name}
+          />
           <Flex direction="column" className="w-full">
             <Flex direction="column" gap="5">
               <Text size="4" weight="bold">

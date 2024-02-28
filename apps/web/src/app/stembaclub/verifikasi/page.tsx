@@ -17,4 +17,4 @@ async function page({ session }: Props) {
   return <VerifyStudentForm />;
 }
 
-export default withAuthRequired(page, { role: ["GUEST"] });
+export default withAuthRequired(page, { role: ["GUEST"], emailVerified: true });

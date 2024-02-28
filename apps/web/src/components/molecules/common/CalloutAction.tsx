@@ -1,8 +1,13 @@
 import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function CalloutAction() {
+interface Props {
+  session: Session | null;
+}
+
+export default function CalloutAction({ session }: Props) {
   return (
     <Card className="w-full">
       <Flex
@@ -14,8 +19,8 @@ export default function CalloutAction() {
       >
         <Image
           src={"/assets/images/cta.png"}
-          width={350}
-          height={350}
+          width={580}
+          height={580}
           alt="cta"
           className="hidden xl:block"
         />
@@ -28,7 +33,7 @@ export default function CalloutAction() {
         />
         <Flex direction="column" gap="2" p="4">
           <Heading size="5">
-            Temukan Solusi Bersama {"'"}halostemba{"'"}
+            Temukan Solusi Bersama <Text color="indigo">halostemba</Text>
           </Heading>
           <Text
             size={{
@@ -41,9 +46,28 @@ export default function CalloutAction() {
             konsultasikan masalah Anda untuk langkah awal menuju solusi yang
             tepat.
           </Text>
-          <Button asChild size="3" className="mt-2 md:mt-5">
-            <Link href="/ticket/formulir">Konsul</Link>
-          </Button>
+          {session?.user ? (
+            <>
+              {!session.user.emailVerifiedAt ? (
+                <Button asChild size="3" className="mt-2 md:mt-5">
+                  <Link href="/ticket/formulir">Verifikasi Email</Link>
+                </Button>
+              ) : (
+                <>
+                  {session.user.role === "STUDENT" && (
+                    <Button asChild size="3" className="mt-2 md:mt-5">
+                      <Link href="/ticket/formulir">Konsul</Link>
+                    </Button>
+                  )}
+                  {session.user.role === "GUEST" && (
+                    <Button asChild size="3" className="mt-2 md:mt-5">
+                      <Link href="/stembaclub">Upgrade STEMBA CLUB</Link>
+                    </Button>
+                  )}
+                </>
+              )}
+            </>
+          ) : null}
         </Flex>
       </Flex>
     </Card>

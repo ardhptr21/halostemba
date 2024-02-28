@@ -32,7 +32,7 @@ export default async function TicketChat({ ticketId }: Props) {
     <Box className="relative" width="100%">
       <Card className="h-full overflow-y-auto">
         <Flex direction="column" gap="5" height="100%" className="px-2 md:pl-3">
-          <HeadTicketChat ticket={ticket} />
+          <HeadTicketChat ticket={ticket} session={session!} />
           <TicketChatContent session={session!} ticket={ticket} />
         </Flex>
       </Card>

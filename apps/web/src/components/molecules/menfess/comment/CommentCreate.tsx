@@ -1,8 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, Card, Flex, Text } from "@radix-ui/themes";
+import { Avatar, Button, Card, Flex, Text } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -85,15 +84,10 @@ export default function CommentCreate({ menfessId, avatar }: Props) {
           }}
         >
           <Flex direction="row" gap="2">
-            <Box>
-              <Image
-                src={avatar || "/assets/images/avatar.png"}
-                width={45}
-                height={45}
-                alt="avatar"
-                className="rounded-md"
-              />
-            </Box>
+            <Avatar
+              src={avatar as string}
+              fallback={session?.user.name.at(0) || ""}
+            />
 
             <Flex direction="column" gap="1" width="100%">
               <div className="rt-TextAreaRoot rt-r-size-2 rt-variant-surface w-full ">

@@ -1,11 +1,10 @@
 import { ImageIcon } from "@radix-ui/react-icons";
-import { Flex, Text } from "@radix-ui/themes";
-import Image from "next/image";
+import { Avatar, Flex, Text } from "@radix-ui/themes";
 import { useSnackbar } from "notistack";
 import React, { useRef } from "react";
 import { uploadMediaCdn } from "~/apis/cdn/upload-media-cdn";
 import PreviewMedia from "~/components/atoms/PreviewMedia";
-import { mediaValidator, PreviewMedia as PreviewMediaType } from "~/lib/media";
+import { PreviewMedia as PreviewMediaType, mediaValidator } from "~/lib/media";
 import {
   useMediaStoreProfile,
   usePreviewMediaStoreProfile,
@@ -13,9 +12,10 @@ import {
 
 interface Props {
   avatar?: string | null;
+  name: string;
 }
 
-export default function UploadMediaProfile({ avatar }: Props) {
+export default function UploadMediaProfile({ avatar, name }: Props) {
   const { enqueueSnackbar: toast } = useSnackbar();
   const inputRef = useRef<HTMLInputElement>(null);
   const { previewMedia, setPreviewMedia } = usePreviewMediaStoreProfile();
@@ -67,12 +67,7 @@ export default function UploadMediaProfile({ avatar }: Props) {
   return (
     <Flex align="center" direction="column" gap="4">
       {!previewMedia?.length ? (
-        <Image
-          src={avatar || "/assets/images/profile/avatar.png"}
-          width={200}
-          height={200}
-          alt="profile"
-        />
+        <Avatar src={avatar as string} fallback={name[0]} />
       ) : (
         <div className="w-[124px] h-[124px] p-1 border border-[#646464] rounded-md">
           <PreviewMedia

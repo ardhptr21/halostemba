@@ -8,6 +8,7 @@ import {
   PersonIcon,
 } from "@radix-ui/react-icons";
 import {
+  Avatar,
   Badge,
   Button,
   Card,
@@ -21,7 +22,6 @@ import {
 } from "@radix-ui/themes";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
 
 interface ProfileDataCardProps {
@@ -114,23 +114,12 @@ export default function ProfileDataCard({
             }}
             justify="center"
           >
-            {avatar ? (
-              <Image
-                src={avatar}
-                width={100}
-                height={100}
-                alt="profile"
-                className="w-32"
-              />
-            ) : (
-              <Image
-                src="/assets/images/profile/avatar.png"
-                width={100}
-                height={100}
-                alt="profile"
-                className="w-32"
-              />
-            )}
+            <Avatar
+              src={avatar as string}
+              size="7"
+              fallback={name[0]}
+              alt={name}
+            />
           </Flex>
           <Flex direction="column" gap="2" className="w-full">
             <Flex
@@ -252,13 +241,15 @@ export default function ProfileDataCard({
                 </Flex>
               )}
             </Flex>
-            {self && session!.user.role === "GUEST" && (
-              <Link href={"/stembaclub"} className="w-full">
-                <Button className="cursor-pointer w-full">
-                  UPGRADE KE STEMBA CLUB
-                </Button>
-              </Link>
-            )}
+            {self &&
+              session!.user.role === "GUEST" &&
+              session!.user.emailVerifiedAt && (
+                <Link href={"/stembaclub"} className="w-full">
+                  <Button className="cursor-pointer w-full">
+                    UPGRADE KE STEMBA CLUB
+                  </Button>
+                </Link>
+              )}
           </Flex>
         </Flex>
       </Flex>

@@ -2,10 +2,17 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FaceIcon } from "@radix-ui/react-icons";
-import { Box, Button, Flex, Switch, Text, Tooltip } from "@radix-ui/themes";
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  Switch,
+  Text,
+  Tooltip,
+} from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { KeyboardEvent, useRef, useState } from "react";
@@ -31,9 +38,10 @@ import UploadMediaMenfess from "./UploadMediaMenfess";
 
 interface Props {
   avatar?: string | null;
+  name?: string;
 }
 
-export default function MenfessCreate({ avatar }: Props) {
+export default function MenfessCreate({ avatar, name }: Props) {
   const { data: session } = useSession();
   const [showMustVerified, setShowMustVerified] = useState(false);
   const [showMustLogin, setShowMustLogin] = useState(false);
@@ -161,15 +169,11 @@ export default function MenfessCreate({ avatar }: Props) {
           }}
         >
           <Flex direction="row" gap="2">
-            <Box>
-              <Image
-                src={avatar || "/assets/images/avatar.png"}
-                width={45}
-                height={45}
-                alt="avatar"
-                className="rounded-md"
-              />
-            </Box>
+            <Avatar
+              asChild
+              fallback={name?.at(0) || ""}
+              src={avatar as string}
+            />
 
             <Flex direction="column" gap="1" width="100%" className="relative">
               <div className="rt-TextAreaRoot rt-r-size-2 rt-variant-surface w-full ">
