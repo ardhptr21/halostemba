@@ -27,4 +27,10 @@ export class NotificationRepository {
   async createNotification(data: NotificationEvent) {
     return this.db.notification.create({ data });
   }
+
+  async unreadNotificationsCount(userId: string) {
+    return this.db.notification.count({
+      where: { userId, read: false },
+    });
+  }
 }

@@ -24,6 +24,7 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import SidebarContainer from "./SidebarContainer";
+import { useNotificationCountApi } from "~/apis/notification/get-notification-count-api";
 
 type NavLink = {
   href: string;
@@ -80,6 +81,8 @@ interface Props {
 export default function Sidebar({ className }: Props) {
   const { data: session, status } = useSession();
 
+  const { data } = useNotificationCountApi(session?.token as string);
+
   return (
     <SidebarContainer>
       <Flex
@@ -113,7 +116,16 @@ export default function Sidebar({ className }: Props) {
                   >
                     <RLink asChild color="gray">
                       <Link href={link.href}>
-                        <link.icon width={20} height={"100%"} />
+                        {link.label === "Notifikasi" && data?.count ? (
+                          <div className="relative">
+                            <div className="absolute w-2 h-2 p-2 rounded-full bg-red-500 left-2 bottom-2 flex justify-center items-center">
+                              <Text size="1">{data.count}</Text>
+                            </div>
+                            <link.icon width={20} height={"100%"} />
+                          </div>
+                        ) : (
+                          <link.icon width={20} height={"100%"} />
+                        )}
                         <Text size="4">{link.label}</Text>
                       </Link>
                     </RLink>

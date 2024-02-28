@@ -12,4 +12,10 @@ export class NotificationService {
 
     return this.notificationRepository.getUserNotifications(userId);
   }
+
+  async unreadNotificationsCount(userId: string) {
+    return {
+      count: await this.notificationRepository.unreadNotificationsCount(userId),
+    };
+  }
 }
