@@ -10,6 +10,7 @@ import {
   VerificationNotFoundException,
 } from './verification.exception';
 import { VerificationRepository } from './verification.repository';
+import { ListVerificationParamsDto } from './dtos/list-verification-params.dto';
 
 @Injectable()
 export class VerificationService {
@@ -18,6 +19,10 @@ export class VerificationService {
     private readonly userRepository: UserRepository,
     private readonly eventEmitter: EventEmitter2,
   ) {}
+
+  async getVerifications(params: ListVerificationParamsDto) {
+    return await this.verificationRepository.getVerifications(params);
+  }
 
   async createVerification(
     createVerificationDto: CreateVerificationDto,
@@ -110,7 +115,7 @@ export class VerificationService {
       rejectVerificationDto.note,
     );
 
-    return { message: 'Permintaan verifikasi telah ditolak.' };
+    return { message: 'Penolakan verifikasi berhasil.' };
   }
 
   private verificationNotification(

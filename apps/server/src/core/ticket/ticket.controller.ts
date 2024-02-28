@@ -16,10 +16,10 @@ import { User } from '~/commons/decorators/requests/user.decorator';
 import { Auth } from '~/commons/decorators/validators/auth.decorator';
 import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
+import { GetTicketRepliesParamsDto } from './dtos/get-ticket-replies-params.dto';
 import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
 import { TicketService } from './ticket.service';
-import { GetTicketRepliesParamsDto } from './dtos/get-ticket-replies-params.dto';
 
 @Controller('tickets')
 export class TicketController {
@@ -43,7 +43,16 @@ export class TicketController {
     return this.ticketService.getCurrentUserTickets(user.id, params);
   }
 
-  @Auth(true, Role.TEACHER, Role.STUDENT)
+  @Auth(true, Role.TEACHER, Role.ADMIN)
+  @Get('/')
+  async getTicketList(
+    @Query() params: ListTicketParamsDto,
+    @User() user: UserEntity,
+  ) {
+    return this.ticketService.getTicketList(params, user);
+  }
+
+  @Auth(true, Role.TEACHER, Role.STUDENT, Role.ADMIN)
   @Get('/:ticketId')
   async getTicket(
     @Param('ticketId', ParseUUIDPipe) ticketId: string,
@@ -103,14 +112,14 @@ export class TicketController {
     );
   }
 
-  @Auth(true, Role.TEACHER, Role.STUDENT)
+  @Auth(true, Role.TEACHER, Role.STUDENT, Role.ADMIN)
   @Get('/:ticketId/replies')
   async getTicketReplies(
     @Param('ticketId', ParseUUIDPipe) ticketId: string,
     @User() user: UserEntity,
     @Query() params: GetTicketRepliesParamsDto,
   ) {
-    return this.ticketService.getTicketReplies(ticketId, user.id, params);
+    return this.ticketService.getTicketReplies(ticketId, user, params);
   }
 
   @Auth(true, Role.TEACHER, Role.STUDENT)

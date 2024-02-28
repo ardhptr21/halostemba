@@ -1,3 +1,4 @@
+import { Role } from '@halostemba/db';
 import { Transform } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
 import { validatorMapper } from '~/commons/lang/id/validator';
@@ -49,4 +50,13 @@ export class GetUserParamsDto {
     message: validatorMapper('isEnum'),
   })
   readonly order?: 'asc' | 'desc';
+
+  @IsOptional()
+  @IsString({
+    message: validatorMapper('isString'),
+  })
+  @IsEnum(Role, {
+    message: validatorMapper('isEnum'),
+  })
+  readonly role?: Role;
 }

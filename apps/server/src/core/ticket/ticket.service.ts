@@ -50,14 +50,29 @@ export class TicketService {
     return { data: ticket };
   }
 
+  async getTicketList(params: ListTicketParamsDto, user: UserEntity) {
+    if (user.role === 'TEACHER') {
+      return this.ticketRepository.getTicketListByResponderId(params, user.id);
+    }
+
+    return this.ticketRepository.getTicketList(params, {
+      status: params.status || undefined,
+      title: params.search || undefined,
+    });
+  }
+
   async getTicket(user: UserEntity, ticketId: string) {
     const ticket = await this.ticketRepository.getTicketByIdComplete(ticketId);
 
     if (!ticket) throw new TicketNotFoundException();
 
+    if (user.role === 'ADMIN') return { data: ticket };
+
     if (
       (user.role === 'STUDENT' && ticket.reporterId !== user.id) ||
-      (user.role === 'TEACHER' && ticket.responderId !== user.id)
+      (user.role === 'TEACHER' &&
+        ticket.responderId !== user.id &&
+        ticket.responderId !== null)
     ) {
       throw new NotFoundException();
     }
@@ -148,12 +163,16 @@ export class TicketService {
 
   async getTicketReplies(
     ticketId: string,
-    userId: string,
+    user: UserEntity,
     params: GetTicketRepliesParamsDto,
   ) {
     const ticket = await this.ticketRepository.getTicketById(ticketId);
 
-    if (ticket.reporterId !== userId && ticket.responderId !== userId)
+    if (
+      ticket.reporterId !== user.id &&
+      ticket.responderId !== user.id &&
+      user.role !== 'ADMIN'
+    )
       throw new TicketNotFoundException();
 
     const replies = await this.ticketRepository.getTicketReplies(

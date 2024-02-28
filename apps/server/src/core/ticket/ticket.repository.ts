@@ -34,6 +34,47 @@ export class TicketRepository {
     });
   }
 
+  async getTicketList(
+    params: ListTicketParamsDto,
+    where: Prisma.TicketFindManyArgs['where'],
+  ) {
+    return await paginate<any, Prisma.TicketFindManyArgs>(
+      this.db.ticket,
+      {
+        where: where,
+        select: {
+          id: true,
+          title: true,
+          status: true,
+        },
+        orderBy: { createdAt: 'desc' },
+      },
+      {
+        page: params.page,
+        perPage: params.perPage,
+      },
+    );
+  }
+
+  async getTicketListByResponderId(
+    params: ListTicketParamsDto,
+    responderId: string,
+  ) {
+    return await this.db.ticket.findMany({
+      where: {
+        status: params.status || undefined,
+        title: params.search || undefined,
+        OR: [{ responderId }, { status: TicketStatus.WAITING }],
+      },
+      include: {
+        responder: { select: { name: true, avatar: true } },
+        ticketReplies: { take: 1, orderBy: { createdAt: 'desc' } },
+        medias: { select: { source: true, type: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   async createTicket({
     media,
     ...data

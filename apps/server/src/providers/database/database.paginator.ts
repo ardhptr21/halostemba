@@ -30,6 +30,7 @@ export const paginator = (
       model.findMany({ ...args, take: perPage, skip }),
     ]);
     const lastPage = Math.ceil(total / perPage);
+    const totalPages = Math.ceil(total / perPage);
 
     return {
       data,
@@ -38,6 +39,7 @@ export const paginator = (
         lastPage,
         currentPage: page,
         perPage,
+        totalPages,
         prev: page > 1 ? page - 1 : null,
         next: page < lastPage ? page + 1 : null,
       },

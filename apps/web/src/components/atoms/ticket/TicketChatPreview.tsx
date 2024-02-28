@@ -7,9 +7,14 @@ import { formatDateChatDisplay } from "~/lib/utils";
 interface Props {
   ticket: TicketEntity;
   active?: boolean;
+  path?: string;
 }
 
-export default function TicketChatPreview({ ticket, active }: Props) {
+export default function TicketChatPreview({
+  ticket,
+  active,
+  path = "/ticket",
+}: Props) {
   const latestReply = ticket.ticketReplies?.at(0);
 
   return (
@@ -24,7 +29,7 @@ export default function TicketChatPreview({ ticket, active }: Props) {
       })}
     >
       <Link
-        href={`/ticket/${ticket.id}?status=${ticket.status}`}
+        href={`${path}/${ticket.id}?status=${ticket.status}`}
         className="inline-block"
       >
         <Flex justify="between" width="100%" gap="3">

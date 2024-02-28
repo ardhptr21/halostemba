@@ -8,3 +8,4 @@ export * from "./ticket.entity";
 export * from "./major.entity";
 export * from "./verification.entity";
 export * from "./notification.entity";
+export * from "./dashboard.entity";

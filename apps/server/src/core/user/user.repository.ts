@@ -2,6 +2,7 @@ import { Prisma, Role, VerificationRequest } from '@halostemba/db';
 import { Injectable } from '@nestjs/common';
 import { paginator } from '~/providers/database/database.paginator';
 import { DatabaseService } from '~/providers/database/database.service';
+import { CreateUserDTO } from './dtos/create-user.dto';
 import { GetUserParamsDto } from './dtos/get-user-params.dto';
 
 const paginate = paginator({ perPage: 10 });
@@ -39,6 +40,7 @@ export class UserRepository {
       {
         where: {
           name: { contains: params.search || undefined, mode: 'insensitive' },
+          role: params.role || undefined,
         },
         orderBy: { [params.sortBy || 'name']: params.order || 'asc' },
         select: {
@@ -76,5 +78,14 @@ export class UserRepository {
 
   async getUserByRole(role: Role) {
     return await this.db.user.findMany({ where: { role } });
+  }
+
+  async createUserByAdmin(createUserDto: CreateUserDTO & { username: string }) {
+    return await this.db.user.create({
+      data: {
+        ...createUserDto,
+        emailVerifiedAt: new Date(),
+      },
+    });
   }
 }
