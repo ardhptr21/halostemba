@@ -7,7 +7,7 @@ export default async function TicketDashboard() {
   return (
     <>
       {session?.user.role === "ADMIN" ? (
-        <AdminTicketDashboard />
+        <AdminTicketDashboard session={session} />
       ) : (
         <TeacherTicketDashboard />
       )}

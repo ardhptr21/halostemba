@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FaceIcon, PaperPlaneIcon } from "@radix-ui/react-icons";
 import { Flex, IconButton, ScrollArea } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import { Session } from "next-auth";
 import { useSnackbar } from "notistack";
 import { KeyboardEvent } from "react";
@@ -88,7 +89,12 @@ export default function ChatField({
   };
 
   return (
-    <div className="w-full absolute bottom-[3.8rem] md:-bottom-10 p-2 bg-[#18191B]  left-0 right-0">
+    <div
+      className={clsx(
+        "w-full absolute bottom-[3.8rem] md:-bottom-10 p-2 bg-[#18191B]  left-0 right-0",
+        { hidden: session.user.role === "ADMIN" },
+      )}
+    >
       {!!previewMedia?.length ? (
         <ScrollArea scrollbars="horizontal" className="mb-3">
           <Flex className="w-max h-14 mb-2" gap="2">

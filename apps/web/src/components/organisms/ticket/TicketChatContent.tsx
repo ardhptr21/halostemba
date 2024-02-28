@@ -110,7 +110,11 @@ export default function TicketChatContent({ ticket, session }: Props) {
                 page.data.map((reply) => (
                   <ChatBubble
                     key={reply.id}
-                    self={reply.authorId === session.user.id}
+                    self={
+                      session.user.role === "ADMIN"
+                        ? reply.authorId === ticket.responderId
+                        : reply.authorId === session.user.id
+                    }
                     reply={reply}
                   />
                 )),
