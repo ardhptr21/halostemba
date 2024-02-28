@@ -16,10 +16,10 @@ import { User } from '~/commons/decorators/requests/user.decorator';
 import { Auth } from '~/commons/decorators/validators/auth.decorator';
 import { CreateTicketReplyDto } from './dtos/create-ticket-reply.dto';
 import { CreateTicketDto } from './dtos/create-ticket.dto';
+import { GetTicketRepliesParamsDto } from './dtos/get-ticket-replies-params.dto';
 import { ListTicketParamsDto } from './dtos/list-ticket-params.dto';
 import { UpdateTicketDto } from './dtos/update-ticket.dto';
 import { TicketService } from './ticket.service';
-import { GetTicketRepliesParamsDto } from './dtos/get-ticket-replies-params.dto';
 
 @Controller('tickets')
 export class TicketController {

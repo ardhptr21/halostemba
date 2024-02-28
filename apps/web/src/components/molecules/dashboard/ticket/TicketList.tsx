@@ -16,7 +16,10 @@ import { Session } from "next-auth";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React from "react";
-import { useGetTicketListApi } from "~/apis/ticket/get-list-ticket-api";
+import {
+  IsTicketAdmin,
+  useGetTicketListApi,
+} from "~/apis/ticket/get-list-ticket-api";
 import Pagination from "~/components/atoms/Pagination";
 
 interface TicketListProps {
@@ -26,12 +29,15 @@ interface TicketListProps {
 export default function TicketList({ session }: TicketListProps) {
   const searchParams = useSearchParams();
 
-  const { data, isFetching } = useGetTicketListApi(session?.token as string, {
-    search: searchParams.get("search") as string,
-    status: searchParams.get("status") as "WAITING" | "OPEN" | "CLOSED",
-    perPage: Number(searchParams.get("perPage")) || 10,
-    page: Number(searchParams.get("page")) || 1,
-  });
+  const { data, isFetching } = useGetTicketListApi<IsTicketAdmin>(
+    session?.token as string,
+    {
+      search: searchParams.get("search") as string,
+      status: searchParams.get("status") as "WAITING" | "OPEN" | "CLOSED",
+      perPage: Number(searchParams.get("perPage")) || 10,
+      page: Number(searchParams.get("page")) || 1,
+    },
+  );
 
   if (isFetching) return "Loading...";
 

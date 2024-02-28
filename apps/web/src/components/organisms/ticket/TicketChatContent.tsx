@@ -1,15 +1,8 @@
 "use client";
 
 import { TicketEntity } from "@halostemba/entities";
-import { InfoCircledIcon } from "@radix-ui/react-icons";
-import {
-  CalloutIcon,
-  CalloutRoot,
-  CalloutText,
-  Flex,
-  ScrollArea,
-  Text,
-} from "@radix-ui/themes";
+import { Flex, ScrollArea } from "@radix-ui/themes";
+import clsx from "clsx";
 import { Session } from "next-auth";
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -17,6 +10,7 @@ import { BeatLoader } from "react-spinners";
 import { useGetListRepliesInfiniteApi } from "~/apis/ticket/get-list-replies-api";
 import ChatBubble from "~/components/atoms/ticket/ChatBubble";
 import PreviewTicketIssue from "~/components/atoms/ticket/PreviewTicketIssue";
+import ActionTicketStatus from "~/components/molecules/ticket/ActionTicketStatus";
 import ChatField from "~/components/molecules/ticket/ChatField";
 
 interface Props {
@@ -84,7 +78,9 @@ export default function TicketChatContent({ ticket, session }: Props) {
       <ScrollArea
         ref={scrollAreaRef}
         scrollbars="vertical"
-        className="h-[calc(100%-150px)] mb-32 md:mb-auto"
+        className={clsx("md:mb-auto", {
+          "h-[calc(100%-120px)] mb-32": ticket.status === "OPEN",
+        })}
       >
         <Flex direction="column" gap="4" justify="end" width="100%">
           <PreviewTicketIssue
@@ -122,16 +118,7 @@ export default function TicketChatContent({ ticket, session }: Props) {
             </Flex>
           )}
           {ticket.status === "WAITING" && (
-            <CalloutRoot variant="soft" color="cyan">
-              <CalloutIcon>
-                <InfoCircledIcon />
-              </CalloutIcon>
-              <CalloutText>Ticket-mu sedang di proses</CalloutText>
-              <Text as="p" size="2" color="gray">
-                Ticket-mu saat ini sedang dalam antrian untuk ditinjau oleh
-                guru. Stay tuned, ya!
-              </Text>
-            </CalloutRoot>
+            <ActionTicketStatus session={session} ticketId={ticket.id} />
           )}
         </Flex>
       </ScrollArea>

@@ -52,10 +52,7 @@ export class TicketService {
 
   async getTicketList(params: ListTicketParamsDto, user: UserEntity) {
     if (user.role === 'TEACHER') {
-      return this.ticketRepository.getTicketListByResponderId(params, user.id, {
-        status: params.status || undefined,
-        title: params.search || undefined,
-      });
+      return this.ticketRepository.getTicketListByResponderId(params, user.id);
     }
 
     return this.ticketRepository.getTicketList(params, {
@@ -73,7 +70,9 @@ export class TicketService {
 
     if (
       (user.role === 'STUDENT' && ticket.reporterId !== user.id) ||
-      (user.role === 'TEACHER' && ticket.responderId !== user.id)
+      (user.role === 'TEACHER' &&
+        ticket.responderId !== user.id &&
+        ticket.responderId !== null)
     ) {
       throw new NotFoundException();
     }
