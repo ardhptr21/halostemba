@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Link as RLink } from "@radix-ui/themes";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useForm } from "react-hook-form";
 import Input from "~/components/atoms/form/Input";
@@ -26,7 +25,7 @@ export default function LoginForm() {
     mode: "onChange",
     resolver: zodResolver(LoginValidator),
   });
-  const router = useRouter();
+
   const { enqueueSnackbar: toast } = useSnackbar();
 
   const onSubmit = handleSubmit(async (data) => {
@@ -35,10 +34,7 @@ export default function LoginForm() {
       redirect: false,
     });
     if (status?.ok) {
-      router.push("/");
-      toast("Berhasil masuk, selamat datang di halostemba.", {
-        variant: "success",
-      });
+      window.location.href = "/";
       return;
     }
 
