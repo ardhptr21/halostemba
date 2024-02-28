@@ -74,7 +74,7 @@ export default function NotificationCard({
                 {title}
               </Heading>
               {image && (
-                <div className="relative w-full h-44 rounded-xl overflow-hidden flex items-start justify-start">
+                <div className="relative w-64 h-44 rounded-xl overflow-hidden flex items-start justify-start">
                   <Image
                     src={image}
                     fill

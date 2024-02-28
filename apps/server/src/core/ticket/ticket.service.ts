@@ -268,7 +268,7 @@ export class TicketService {
           title: 'New Ticket',
           type: 'SUCCESS',
           message: content.message,
-          url: `/ticket/${ticketId}`,
+          url: `/dashboard/ticket/${ticketId}`,
           image: content.media,
           identifier: 'TICKET',
         }),
