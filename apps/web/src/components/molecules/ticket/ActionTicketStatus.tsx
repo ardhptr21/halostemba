@@ -27,7 +27,7 @@ export default function ActionTicketStatus({ session, ticketId }: Props) {
         message: "Berhasil menanggapi ticket.",
         variant: "success",
       });
-      router.push(`/dashboard/teacher/${ticketId}?status=OPEN`);
+      router.push(`/dashboard/ticket/${ticketId}?status=OPEN`);
     },
     onError: () => {
       toast({
