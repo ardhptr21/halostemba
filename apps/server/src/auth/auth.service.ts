@@ -1,5 +1,5 @@
 import { JwtPayloadEntity } from '@halostemba/entities';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcryptjs';
 import { plainToClass } from 'class-transformer';
@@ -27,6 +27,7 @@ export class AuthService {
     private readonly mailService: MailService,
     private readonly magicLinkRepository: MagicLinkRepository,
     private readonly otpRepository: OtpRepository,
+    private readonly logger: Logger,
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -60,6 +61,9 @@ export class AuthService {
       ...registerDto,
       username,
     });
+
+    this.logger.log(`User ${user.id}-${user.email} has been registered.`);
+
     return new UserEntity(user);
   }
 
@@ -147,6 +151,10 @@ export class AuthService {
       await this.authRepository.resetPassword(payload.sub, password);
 
       await this.otpRepository.deleteOtpByUserId(payload.sub);
+
+      this.logger.log(
+        `User ${payload.sub} has forgot and reset their password.`,
+      );
 
       return {
         message: 'Password telah diubah.',

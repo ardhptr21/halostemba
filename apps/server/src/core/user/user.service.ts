@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { hash } from 'bcryptjs';
 import { UserEntity } from '~/commons/entities/user.entity';
 import { CreateUserDTO } from './dtos/create-user.dto';
@@ -8,7 +8,10 @@ import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly logger: Logger,
+  ) {}
 
   async findUser(username: string) {
     return await this.userRepository.findUser(username);
@@ -37,6 +40,8 @@ export class UserService {
       username,
     });
 
+    this.logger.log(`User ${user.id}-${user.email} has been created.`);
+
     return new UserEntity(user);
   }
 
@@ -56,10 +61,16 @@ export class UserService {
 
     if (user.banned) {
       await this.userRepository.unbanUser(id);
+
+      this.logger.log(`User ${user.id}-${user.email} has been unbanned.`);
+
       return { message: 'Blokir telah dicabut' };
     }
 
     await this.userRepository.banUser(id);
+
+    this.logger.log(`User ${user.id}-${user.email} has been banned.`);
+
     return { message: 'User telah diblokir' };
   }
 }

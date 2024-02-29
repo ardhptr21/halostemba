@@ -4,11 +4,19 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
+import { WinstonModule } from 'nest-winston';
 import { AppModule } from './app.module';
 import parseErrorUtil from './commons/utils/parseErrorUtil';
+import { instance as winstonInstance } from './lib/logger/winston.logger';
+
+const PORT = process.env.PORT || 5001;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger({
+      instance: winstonInstance,
+    }),
+  });
   app.enableCors();
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalPipes(
@@ -24,6 +32,6 @@ async function bootstrap() {
       },
     }),
   );
-  await app.listen(5001);
+  await app.listen(PORT);
 }
 bootstrap();
