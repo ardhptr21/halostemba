@@ -65,6 +65,8 @@ export class MajorService {
       );
     }
 
+    await this.majorRepository.deleteMajor(id);
+
     return { message: 'Major berhasil dihapus.' };
   }
 }

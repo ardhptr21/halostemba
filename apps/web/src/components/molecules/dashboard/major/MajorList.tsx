@@ -1,7 +1,10 @@
 "use client";
 
-import { TrashIcon } from "@radix-ui/react-icons";
+import { MajorEntity } from "@halostemba/entities";
+import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import {
+  Avatar,
+  Flex,
   IconButton,
   TableBody,
   TableCell,
@@ -11,31 +14,38 @@ import {
   TableRow,
   Text,
 } from "@radix-ui/themes";
+import { Session } from "next-auth";
+import { useState } from "react";
+import { useGetListMajors } from "~/apis/majors/get-list-majors";
+import DeleteMajorModal from "./MajorDelete";
+import EditMajorModal from "./MajorEdit";
 
-const data = {
-  data: [
-    {
-      id: 1,
-      major: "SIJA",
-    },
-    {
-      id: 2,
-      major: "KGSP",
-    },
-    {
-      id: 3,
-      major: "TFLM",
-    },
-    {
-      id: 4,
-      major: "TMPO",
-    },
-  ],
-};
+interface Props {
+  session: Session;
+}
 
-export default function MajorList() {
+export default function MajorList({ session }: Props) {
+  const { data, isFetching } = useGetListMajors();
+  const [majorEdit, setMajorEdit] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [major, setMajor] = useState<MajorEntity | null>(null);
+
+  if (isFetching) return "Loading...";
+
   return (
     <>
+      <EditMajorModal
+        open={majorEdit}
+        onOpenChange={setMajorEdit}
+        major={major || null}
+        session={session}
+      />
+      <DeleteMajorModal
+        open={deleteModal}
+        onOpenChange={setDeleteModal}
+        majorId={major?.id || null}
+        session={session}
+      />
       <TableRoot variant="surface">
         <TableHeader>
           <TableRow>
@@ -44,19 +54,36 @@ export default function MajorList() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.data.map((user) => (
-            <TableRow key={user.id}>
+          {data?.data.map((major) => (
+            <TableRow key={major.id}>
               <TableCell className="align-middle">
-                <Text>{user.major}</Text>
+                <Flex direction="row" align="center" gap="2">
+                  <Avatar size="3" src={major.logo} fallback={major.name[0]} />
+                  <Text>{major.name}</Text>
+                </Flex>
               </TableCell>
               <TableCell className="space-x-2 align-middle">
                 <IconButton
                   variant="soft"
                   className="cursor-pointer"
-                  onClick={() => {}}
+                  onClick={() => {
+                    setDeleteModal(true);
+                    setMajor(major);
+                  }}
                   color="red"
                 >
                   <TrashIcon />
+                </IconButton>
+                <IconButton
+                  variant="soft"
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setMajorEdit(true);
+                    setMajor(major);
+                  }}
+                  color="blue"
+                >
+                  <Pencil1Icon />
                 </IconButton>
               </TableCell>
             </TableRow>

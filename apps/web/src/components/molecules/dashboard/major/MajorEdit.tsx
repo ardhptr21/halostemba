@@ -1,76 +1,85 @@
 "use client";
 
+import { MajorEntity } from "@halostemba/entities";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Button, Dialog, Flex } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
+import { DialogRootProps } from "node_modules/@radix-ui/themes/dist/esm/components/dialog";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useCreateMajor } from "~/apis/majors/create-major-api";
+import { useEditMajor } from "~/apis/majors/edit-major-api";
 import Input from "~/components/atoms/form/Input";
 import {
   CreateMajorValidator,
   CreateMajorValidatorType,
 } from "~/validators/major/create-major-validator";
 
-interface MajorCreateProps {
+interface Props extends DialogRootProps {
+  major?: MajorEntity | null;
   session: Session;
 }
 
-export default function MajorCreate({ session }: MajorCreateProps) {
+export default function EditMajorModal({
+  major,
+  session,
+  onOpenChange,
+  ...props
+}: Props) {
   const { enqueueSnackbar: toast } = useSnackbar();
-  const [open, setOpen] = useState<boolean>(false);
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const {
     reset,
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<CreateMajorValidatorType>({
     defaultValues: {
-      name: "",
+      name: major?.name as string,
     },
     mode: "onChange",
     resolver: zodResolver(CreateMajorValidator),
   });
 
-  const { mutate, isPending } = useCreateMajor({
+  console.log(major);
+
+  const { mutate: EditMajor, isPending } = useEditMajor({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["majors"] });
+      router.push("/dashboard/major");
+      router.refresh();
       reset();
-      setOpen(false);
-      toast({ message: "Berhasil membuat major.", variant: "success" });
+      toast({ message: "Berhasil mengedit major.", variant: "success" });
+      onOpenChange && onOpenChange(false);
     },
     onError: () => {
-      toast({ message: "Gagal membuat major.", variant: "error" });
+      toast({ message: "Gagal mengedit major.", variant: "error" });
     },
   });
 
   const onSubmit = handleSubmit((data) => {
-    mutate({
-      token: session.token,
+    EditMajor({
+      token: session.token as string,
+      id: major?.id as string,
       ...data,
     });
   });
 
+  useEffect(() => {
+    setValue("name", major?.name as string);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [major]);
+
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger>
-        <Button
-          variant="outline"
-          size="3"
-          color="gray"
-          className="cursor-pointer"
-        >
-          <PlusCircledIcon />
-          Tambah
-        </Button>
-      </Dialog.Trigger>
+    <Dialog.Root onOpenChange={onOpenChange} {...props}>
       <Dialog.Content>
-        <Dialog.Title>Tambah Jurusan</Dialog.Title>
+        <Dialog.Title>Edit Jurusan</Dialog.Title>
         <Flex asChild direction="column" gap="5">
           <form onSubmit={onSubmit}>
             <Input
@@ -82,12 +91,12 @@ export default function MajorCreate({ session }: MajorCreateProps) {
               {...register("name")}
             />
             <Button className="cursor-pointer" size="3">
-              Simpan dan Tambah
+              Simpan
             </Button>
           </form>
         </Flex>
 
-        <Dialog.Close type={undefined} disabled={isPending}>
+        <Dialog.Close>
           <Button className="w-full cursor-pointer" mt="3" color="red" size="3">
             Batal
           </Button>
