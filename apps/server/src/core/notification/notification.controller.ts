@@ -13,4 +13,10 @@ export class NotificationController {
   async getUserNotifications(@User() user: UserEntity) {
     return this.notificationService.getNotifications(user.id);
   }
+
+  @Auth(false)
+  @Get('/unread')
+  async unreadNotificationsCount(@User() user: UserEntity) {
+    return this.notificationService.unreadNotificationsCount(user.id);
+  }
 }

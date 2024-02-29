@@ -1,5 +1,3 @@
-"use client";
-
 import { CaretDownIcon, ExitIcon } from "@radix-ui/react-icons";
 import {
   Avatar,
@@ -13,9 +11,10 @@ import {
 } from "@radix-ui/themes";
 import clsx from "clsx";
 import { User } from "next-auth";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import BadgeNotification from "~/components/atoms/notification/BadgeNotification";
+import { getAuthServer } from "~/lib/auth";
 
 export type NavLink = {
   href: string;
@@ -32,6 +31,11 @@ const navLinks: ReadonlyArray<NavLink> = [
   {
     href: "/dashboard/user",
     label: "User",
+    role: "ADMIN",
+  },
+  {
+    href: "/dashboard/major",
+    label: "Major",
     role: "ADMIN",
   },
   {
@@ -60,8 +64,8 @@ interface Props {
   className?: string;
 }
 
-export default function DashboardNavbar({ className }: Props) {
-  const { data: session } = useSession();
+export default async function DashboardNavbar({ className }: Props) {
+  const session = await getAuthServer();
 
   return (
     <Flex
@@ -77,8 +81,8 @@ export default function DashboardNavbar({ className }: Props) {
             <Image
               src="/assets/images/logo.png"
               alt="Logo"
-              width={240}
-              height={80}
+              width={315}
+              height={63}
               className="w-36"
             />
           </Link>
@@ -88,19 +92,17 @@ export default function DashboardNavbar({ className }: Props) {
               l.role === "ALL" ? true : l.role === session?.user.role,
             )
             .map((link) => (
-              <Flex
-                direction="column"
-                gap="1"
-                asChild
-                align="center"
-                key={link.label}
-              >
-                <RLink asChild color="gray">
-                  <Link href={link.href} className="p-1">
-                    {link.label}
-                  </Link>
-                </RLink>
-              </Flex>
+              <RLink asChild color="gray" key={link.label} className="relative">
+                <Link href={link.href} className="p-1 inline-block">
+                  {link.label === "Notifikasi" && (
+                    <div className="relative bg-red-200">
+                      <BadgeNotification />
+                      {/* <link.icon width={20} height={"100%"} /> */}
+                    </div>
+                  )}
+                  {link.label}
+                </Link>
+              </RLink>
             ))}
         </Flex>
         <Flex direction="row">
