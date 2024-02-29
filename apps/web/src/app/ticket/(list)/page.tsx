@@ -25,7 +25,9 @@ export default function TicketPage() {
           sekarang!
         </Text>
         <Link href="/ticket/formulir" passHref>
-          <Button size="2">Formulir Konsultasi</Button>
+          <Button size="2" className="cursor-pointer">
+            Formulir Konsultasi
+          </Button>
         </Link>
       </Flex>
     </Box>

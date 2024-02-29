@@ -1,14 +1,30 @@
+"use client";
+
 import { Flex, Text } from "@radix-ui/themes";
+import { useQueryClient } from "@tanstack/react-query";
+import { Session } from "next-auth";
 import Image from "next/image";
-import React from "react";
-import { getListNotificationApiHandler } from "~/apis/notification/get-list-notification-api";
+import { useEffect } from "react";
+import { useListNotificationApi } from "~/apis/notification/get-list-notification-api";
 import NotificationCard from "~/components/molecules/notification/NotificationCard";
-import { getAuthServer } from "~/lib/auth";
 
-export default async function NotificationList() {
-  const session = await getAuthServer();
+interface Props {
+  session: Session;
+}
 
-  const data = await getListNotificationApiHandler(session?.token as string);
+export default function NotificationList({ session }: Props) {
+  const { data, isFetching, isSuccess, isFetched } = useListNotificationApi(
+    session.token,
+  );
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["notification-count"] });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, isFetched]);
+
+  if (isFetching || !data) return null;
 
   return (
     <Flex direction="column" gap="3" height="100%">
