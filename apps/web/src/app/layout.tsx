@@ -10,7 +10,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className="antialiased">
+    <html lang="id" className="antialiased dark">
       <body className="overflow-y-scroll">
         <Theme appearance="dark">
           <GlobalProvider>{children}</GlobalProvider>

@@ -29,7 +29,7 @@ test:
 
 deps:
 	@echo "---- RUNNING DEPS STAGE ----" 
-	@pnpm install
+	@pnpm install --frozen-lockfile
 	@echo "---- DEPS COMPLETED ----"
 
 prepare:
@@ -46,9 +46,11 @@ prepare:
 
 db:
 	@echo "---- RUNNING DB STAGE ----" 
-	@cd docker/database
-	@docker-compose up -d --build
-
+	@cd docker/database && sudo docker compose up -d --build
+	
+	@echo "[i] Waiting for the database to start..."
+	@sleep 10
+	
 	@cd packages/db && pnpm prisma migrate deploy
 	@cd packages/db && pnpm prisma generate
 	@cd packages/db && pnpm prisma db seed production

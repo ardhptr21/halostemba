@@ -54,7 +54,7 @@ export default function MajorList({ session }: Props) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.data.map((major) => (
+          {data?.map((major) => (
             <TableRow key={major.id}>
               <TableCell className="align-middle">
                 <Flex direction="row" align="center" gap="2">
