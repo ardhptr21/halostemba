@@ -13,7 +13,7 @@ export class MajorService {
 
   async listMajors() {
     const majors = await this.majorRepository.listMajors();
-    return { data: majors };
+    return majors;
   }
 
   async createMajor(createMajorDto: CreateMajorDto) {
