@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@halostemba/ts-config/base.json",
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "noEmit": false,
+    "module": "CommonJS",
+    "target": "ES2022",
+    "declaration": true
+  }
+}

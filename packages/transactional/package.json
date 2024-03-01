@@ -1,0 +1,21 @@
+{
+  "name": "@halostemba/transactional",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rimraf ./dist && tsc",
+    "build:watch": "rimraf dist && tsc -w --preserveWatchOutput",
+    "dev": "concurrently \"pnpm:build:watch\" \"pnpm:dev:watch\"",
+    "dev:watch": "email dev --port 8080 --dir src/emails",
+    "export": "email export"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.14",
+    "react-email": "1.10.1"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  }
+}

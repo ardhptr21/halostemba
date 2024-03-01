@@ -2,9 +2,10 @@
   "extends": ["@halostemba/ts-config/nestjs.json"],
   "compilerOptions": {
     "baseUrl": ".",
+    "jsx": "react",
     "outDir": "./dist",
     "paths": {
-      "~/*": ["src/*"],
+      "~/*": ["src/*"]
     }
   }
 }

@@ -3,25 +3,47 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --max-warnings 0 --fix"
   },
   "dependencies": {
-    "next": "14.0.4",
-    "react": "^18",
-    "react-dom": "^18"
+    "@halostemba/entities": "workspace:*",
+    "@headlessui/react": "^1.7.18",
+    "@headlessui/tailwindcss": "^0.2.0",
+    "@hookform/resolvers": "^3.3.4",
+    "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/themes": "^2.0.3",
+    "@tanstack/react-query": "^5.24.1",
+    "@tremor/react": "^3.14.0",
+    "axios": "^1.6.7",
+    "clsx": "^2.1.0",
+    "date-fns": "^3.3.1",
+    "next": "14.1.0",
+    "next-auth": "^4.24.6",
+    "notistack": "^3.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.50.1",
+    "react-intersection-observer": "^9.8.1",
+    "react-otp-input": "^3.1.1",
+    "react-spinners": "^0.13.8",
+    "react-textarea-autosize": "^8.5.3",
+    "react-timer-hook": "^3.0.7",
+    "use-debounce": "^10.0.0",
+    "zod": "^3.22.4",
+    "zustand": "^4.5.1"
   },
   "devDependencies": {
     "@halostemba/eslint-config": "workspace:*",
     "@halostemba/ts-config": "workspace:*",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10.0.1",
-    "postcss": "^8",
-    "prettier-plugin-tailwindcss": "^0.5.10",
-    "tailwindcss": "^3.3.0"
+    "@types/node": "^20.11.21",
+    "@types/react": "^18.2.60",
+    "@types/react-dom": "^18.2.19",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35",
+    "prettier-plugin-tailwindcss": "^0.5.11",
+    "tailwindcss": "^3.4.1"
   }
 }

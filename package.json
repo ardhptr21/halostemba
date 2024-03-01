@@ -2,22 +2,24 @@
   "name": "halostemba",
   "version": "0.0.1",
   "scripts": {
-    "start": "turbo start",
+    "start": "turbo start --filter=@halostemba/*",
     "prepare": "husky install",
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "test": "turbo run test",
-    "lint": "turbo run lint",
-    "format": "turbo run format"
+    "dev": "turbo run dev --filter=@halostemba/*",
+    "build": "turbo run build --filter=@halostemba/*",
+    "test": "turbo run test --filter=@halostemba/*",
+    "lint": "turbo run lint --filter=@halostemba/*",
+    "format": "turbo run format --filter=@halostemba/*",
+    "db:migrate": "turbo run db:migrate",
+    "db:generate": "turbo run db:generate -- "
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@commitlint/cli": "^18.4.3",
-    "@commitlint/config-conventional": "^18.4.3",
-    "eslint": "^8.56.0",
-    "husky": "^8.0.3",
-    "turbo": "^1.11.2"
+    "@commitlint/cli": "^19.0.1",
+    "@commitlint/config-conventional": "^19.0.0",
+    "eslint": "^8.57.0",
+    "husky": "^9.0.11",
+    "turbo": "^1.12.4"
   }
 }

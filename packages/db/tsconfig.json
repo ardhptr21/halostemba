@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@halostemba/ts-config/base",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "rootDir": "./src",
+    "noEmit": false,
+    "module": "CommonJS",
+    "target": "ES2022",
+    "declaration": true
+  },
+  "exclude": ["node_modules", "dist", "prisma"]
+}

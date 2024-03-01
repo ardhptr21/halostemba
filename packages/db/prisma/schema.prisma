@@ -6,3 +6,268 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id              String    @id @default(uuid())
+  avatar          String?   @db.Text()
+  name            String
+  username        String    @unique
+  email           String    @unique
+  password        String
+  banned          Boolean   @default(false)
+  role            Role      @default(GUEST)
+  bio             String?   @db.Text()
+  emailVerifiedAt DateTime? @map("email_verified_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  bannedAt        DateTime? @map("banned_at")
+
+  student             Student?
+  verificationRequest VerificationRequest[]
+  menfesses           Menfess[]
+  votes               Vote[]
+  comments            Comment[]
+  ticketReplies       TicketReply[]
+  reportTickets       Ticket[]              @relation("reporter")
+  respondTickets      Ticket[]              @relation("responder")
+  magicLinks          MagicLink[]
+  otps                OTP[]
+  Notification        Notification[]
+
+  @@map("users")
+}
+
+model Student {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  majorId   String   @map("major_id")
+  idCard    String   @map("id_card") @db.Text()
+  nis       String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  major Major @relation(fields: [majorId], references: [id])
+
+  @@map("students")
+}
+
+model VerificationRequest {
+  id        String             @id @default(uuid())
+  userId    String             @map("user_id")
+  majorId   String             @map("major_id")
+  nis       String
+  idCard    String             @map("id_card") @db.Text()
+  note      String?            @db.Text()
+  status    VerificationStatus @default(PENDING)
+  createdAt DateTime           @default(now()) @map("created_at")
+  updatedAt DateTime           @updatedAt @map("updated_at")
+
+  user  User  @relation(fields: [userId], references: [id])
+  major Major @relation(fields: [majorId], references: [id])
+
+  @@map("verify_requests")
+}
+
+model Major {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  logo      String?  @db.Text()
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  students             Student[]
+  verificationRequests VerificationRequest[]
+
+  @@map("majors")
+}
+
+model Menfess {
+  id        String   @id @default(uuid())
+  authorId  String   @map("author_id")
+  content   String   @db.Text()
+  anonymous Boolean  @default(true)
+  score     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  votes    Vote[]
+  comments Comment[]
+  hashtags Hashtag[]
+  medias   Media[]
+
+  @@map("menfesses")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  authorId  String   @map("author_id")
+  menfessId String   @map("menfess_id")
+  content   String   @db.Text()
+  createdAt DateTime @default(now()) @map("created_at")
+
+  author  User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  menfess Menfess @relation(fields: [menfessId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
+model Vote {
+  id        Int      @id @default(autoincrement())
+  userId    String   @map("user_id")
+  menfessId String   @map("menfess_id")
+  type      VoteType
+
+  menfess Menfess @relation(fields: [menfessId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@unique([userId, menfessId])
+  @@map("votes")
+}
+
+model Hashtag {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  score     Int       @default(0)
+  menfesses Menfess[]
+
+  @@map("hashtags")
+}
+
+model Ticket {
+  id          String       @id @default(uuid())
+  reporterId  String       @map("reporter_id")
+  responderId String?      @map("responder_id")
+  title       String
+  detail      String       @db.Text()
+  status      TicketStatus @default(WAITING)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  closedAt    DateTime?    @map("closed_at")
+  respondedAt DateTime?    @map("responded_at")
+
+  ticketReplies TicketReply[]
+  reporter      User          @relation("reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  responder     User?         @relation("responder", fields: [responderId], references: [id], onDelete: Cascade)
+  medias        Media[]
+
+  @@map("tickets")
+}
+
+model TicketReply {
+  id        String   @id @default(cuid())
+  authorId  String   @map("author_id")
+  ticketId  String   @map("ticket_id")
+  message   String   @db.Text()
+  createdAt DateTime @default(now()) @map("created_at")
+
+  ticket Ticket  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  medias Media[]
+
+  @@map("ticket_replies")
+}
+
+model MagicLink {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  type      String
+  expiredAt DateTime @map("expired_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("magic_links")
+}
+
+model OTP {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  value     String   @unique
+  type      String
+  expiredAt DateTime @map("expired_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("otps")
+}
+
+model Media {
+  id            String  @id @default(cuid())
+  menfessId     String? @map("menfess_id")
+  ticketId      String? @map("ticket_id")
+  ticketReplyId String? @map("ticket_reply_id")
+
+  source    String    @db.Text()
+  type      MediaType
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  menfess     Menfess?     @relation(fields: [menfessId], references: [id], onDelete: SetNull)
+  ticket      Ticket?      @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+  ticketReply TicketReply? @relation(fields: [ticketReplyId], references: [id], onDelete: SetNull)
+
+  @@map("medias")
+}
+
+model Notification {
+  id         String                  @id @default(cuid())
+  userId     String                  @map("user_id")
+  image      String?                 @db.Text()
+  title      String
+  message    String?                 @db.Text()
+  type       NotificationType
+  read       Boolean                 @default(false)
+  url        String
+  identifier NotificationIdentifier?
+  createdAt  DateTime                @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+enum Role {
+  STUDENT @map("student")
+  TEACHER @map("teacher")
+  ADMIN   @map("admin")
+  GUEST   @map("guest")
+}
+
+enum VerificationStatus {
+  PENDING  @map("pending")
+  APPROVED @map("approved")
+  REJECTED @map("rejected")
+}
+
+enum TicketStatus {
+  WAITING @map("waiting")
+  OPEN    @map("open")
+  CLOSED  @map("closed")
+}
+
+enum VoteType {
+  UP   @map("up")
+  DOWN @map("down")
+}
+
+enum MediaType {
+  IMAGE @map("image")
+  VIDEO @map("video")
+}
+
+enum NotificationType {
+  INFO    @map("info")
+  WARNING @map("warning")
+  DANGER  @map("danger")
+  SUCCESS @map("success")
+}
+
+enum NotificationIdentifier {
+  COMMENT      @map("comment")
+  VOTE         @map("vote")
+  TICKET       @map("ticket")
+  VERIFICATION @map("verification")
+  WARNING      @map("warning")
+}
