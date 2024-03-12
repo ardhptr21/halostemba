@@ -1,13 +1,18 @@
+"use client";
+
 import { MoonIcon } from "@radix-ui/react-icons";
 import { Flex } from "@radix-ui/themes";
 import clsx from "clsx";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface Props {
   className?: string;
 }
 
 export default function TopNavbar({ className }: Props) {
+  const router = useRouter();
+
   return (
     <Flex
       direction="column"
@@ -18,6 +23,7 @@ export default function TopNavbar({ className }: Props) {
     >
       <Flex direction="row" justify="between" align="center">
         <Image
+          onClick={() => router.push("/")}
           src="/assets/images/logo.png"
           alt="Logo"
           width={94}
