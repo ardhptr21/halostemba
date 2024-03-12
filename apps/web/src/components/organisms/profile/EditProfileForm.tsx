@@ -115,7 +115,6 @@ export default function EditProfileForm({ session }: Props) {
               name={session.user.name}
             />
             <Flex direction="column" className="w-full">
-              {/* Ubah Profil */}
               <Flex direction="column" gap="4">
                 <Text size="3" weight="bold">
                   Ubah Informasi Akun

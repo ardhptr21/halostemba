@@ -6,13 +6,14 @@ import {
   PersonIcon,
 } from "@radix-ui/react-icons";
 import { IconProps } from "@radix-ui/react-icons/dist/types";
-import { Flex, Link as RLink } from "@radix-ui/themes";
+import { Flex } from "@radix-ui/themes";
 import clsx from "clsx";
-import Link from "next/link";
+import BadgeNotification from "~/components/atoms/notification/BadgeNotification";
+import BarLink from "../BarLink";
 
 export type NavLink = {
   href: string;
-  label: string;
+
   icon: React.ForwardRefExoticComponent<
     IconProps & React.RefAttributes<SVGSVGElement>
   >;
@@ -21,27 +22,27 @@ export type NavLink = {
 const navLinks: ReadonlyArray<NavLink> = [
   {
     href: "/",
-    label: "Home",
+
     icon: HomeIcon,
   },
   {
     href: "/explore",
-    label: "Explore",
+
     icon: MagnifyingGlassIcon,
   },
   {
     href: "/ticket",
-    label: "Ticket",
+
     icon: IdCardIcon,
   },
   {
     href: "/notifikasi",
-    label: "Notifikasi",
+
     icon: BellIcon,
   },
   {
     href: "/profile",
-    label: "Profile",
+
     icon: PersonIcon,
   },
 ];
@@ -60,24 +61,15 @@ export default function Navbar({ className }: Props) {
       ])}
     >
       <Flex direction="row" gap="6" p="5" className="justify-evenly">
-        {navLinks.map((link) => (
-          <Flex
-            direction="column"
-            gap="1"
-            asChild
-            align="center"
-            key={link.label}
-          >
-            <RLink asChild color="gray">
-              <Link
-                href={link.href}
-                className="hover:bg-blue-400/50 p-1 rounded-md"
-              >
-                <link.icon width={28} height={"100%"} />
-              </Link>
-            </RLink>
-          </Flex>
-        ))}
+        {navLinks.map((link) =>
+          link.href === "/notifikasi" ? (
+            <BarLink link={link} key={link.href}>
+              <BadgeNotification />
+            </BarLink>
+          ) : (
+            <BarLink link={link} key={link.href} />
+          ),
+        )}
       </Flex>
     </Flex>
   );

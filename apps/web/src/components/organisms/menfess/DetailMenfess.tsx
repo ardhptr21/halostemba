@@ -22,7 +22,7 @@ export default function DetailMenfess({ id, session }: Props) {
   if (error?.response?.status === 404) return <MenfessNotFound />;
 
   return (
-    <Flex width="100%" direction="column" gap="4">
+    <Flex width="100%" direction="column" className="mb-20" gap="4">
       {!isPending ? (
         <>
           <MenfessCard menfess={data!} redirect={false} />

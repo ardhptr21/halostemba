@@ -4,6 +4,7 @@ import { MediaEntity } from "@halostemba/entities";
 import { AspectRatio, Box, Flex } from "@radix-ui/themes";
 import Image from "next/image";
 import { MouseEventHandler } from "react";
+import AppVideo from "~/components/atoms/AppVideo";
 import { preventBubbling } from "~/lib/utils";
 
 interface Props {
@@ -16,11 +17,11 @@ export default function RenderMenfessMedia({ media, onPreview }: Props) {
     <Box mt="3">
       <AspectRatio ratio={16 / 9}>
         {media.length === 1 && media[0].type === "VIDEO" ? (
-          <video
-            src={media[0].source}
+          <AppVideo
+            url={media[0].source}
             controls
             className="w-full h-full rounded-xl"
-          ></video>
+          />
         ) : (
           <Flex className="w-full h-full" gap="2">
             {media?.length > 2

@@ -19,8 +19,8 @@ const Snackbar = forwardRef(
       <CalloutRoot
         ref={ref}
         color={colorVariants[props.variant]}
-        variant="surface"
         size="2"
+        style={{ zIndex: 99999 }}
       >
         <CalloutText>{props.message}</CalloutText>
       </CalloutRoot>

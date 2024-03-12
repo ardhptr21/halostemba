@@ -17,7 +17,9 @@ async function bootstrap() {
       instance: winstonInstance,
     }),
   });
-  app.enableCors();
+  app.enableCors({
+    origin: process.env.NODE_ENV === 'production' ? process.env.ORIGIN : '*',
+  });
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalPipes(
     new ValidationPipe({

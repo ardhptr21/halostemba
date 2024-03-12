@@ -169,11 +169,7 @@ export default function MenfessCreate({ avatar, name }: Props) {
           }}
         >
           <Flex direction="row" gap="2">
-            <Avatar
-              asChild
-              fallback={name?.at(0) || ""}
-              src={avatar as string}
-            />
+            <Avatar fallback={name?.at(0) || ""} src={avatar as string} />
 
             <Flex direction="column" gap="1" width="100%" className="relative">
               <div className="rt-TextAreaRoot rt-r-size-2 rt-variant-surface w-full ">
