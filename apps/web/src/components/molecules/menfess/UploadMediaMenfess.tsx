@@ -13,7 +13,7 @@ export default function UploadMediaMenfess() {
   const { enqueueSnackbar: toast } = useSnackbar();
   const inputRef = useRef<HTMLInputElement>(null);
   const { previewMedia, setPreviewMedia } = usePreviewMediaStoreMenfess();
-  const { addOrUpdateMedia } = useMediaStoreMenfess();
+  const { addOrUpdateMedia, cleanMedia } = useMediaStoreMenfess();
 
   const handleClick = () => {
     inputRef.current?.click();
@@ -50,12 +50,18 @@ export default function UploadMediaMenfess() {
             type: m.type,
           });
         },
-      }).then((data) => {
-        addOrUpdateMedia(m.preview, {
-          url: data.url,
-          type: m.type,
+      })
+        .then((data) => {
+          addOrUpdateMedia(m.preview, {
+            url: data.url,
+            type: m.type,
+          });
+        })
+        .catch(() => {
+          toast("Upload gagal, coba lagi", { variant: "error" });
+          setPreviewMedia([]);
+          cleanMedia();
         });
-      });
     }
   };
 

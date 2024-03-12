@@ -11,12 +11,13 @@ import {
   PersonIcon,
 } from "@radix-ui/react-icons";
 import { IconProps } from "@radix-ui/react-icons/dist/types";
-import { Button, Flex, Link as RLink, Text } from "@radix-ui/themes";
+import { Button, Flex } from "@radix-ui/themes";
 import { User } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import SignOut from "~/components/atoms/auth/SignOut";
 import BadgeNotification from "~/components/atoms/notification/BadgeNotification";
+import BarLink from "../BarLink";
 
 type NavLink = {
   href: string;
@@ -97,30 +98,15 @@ export default async function Sidebar({ className }: Props) {
                   ? true
                   : l.role.includes(session?.user.role as any),
               )
-              .map((link) => (
-                <Flex
-                  direction="row"
-                  gap="3"
-                  asChild
-                  align="center"
-                  key={link.label}
-                >
-                  <RLink asChild color="gray">
-                    <Link href={link.href}>
-                      {link.label === "Notifikasi" ? (
-                        <div className="relative">
-                          <BadgeNotification />
-                          <link.icon width={20} height={"100%"} />
-                        </div>
-                      ) : (
-                        <link.icon width={20} height={"100%"} />
-                      )}
-
-                      <Text size="4">{link.label}</Text>
-                    </Link>
-                  </RLink>
-                </Flex>
-              ))}
+              .map((link) =>
+                link.label === "Notifikasi" ? (
+                  <BarLink link={link} key={link.href}>
+                    <BadgeNotification />
+                  </BarLink>
+                ) : (
+                  <BarLink link={link} key={link.href} />
+                ),
+              )}
           </Flex>
         </Flex>
 

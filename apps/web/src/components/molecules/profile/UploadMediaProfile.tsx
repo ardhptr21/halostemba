@@ -50,12 +50,18 @@ export default function UploadMediaProfile({ avatar, name }: Props) {
             type: m.type,
           });
         },
-      }).then((data) => {
-        addOrUpdateMedia(m.preview, {
-          url: data.url,
-          type: m.type,
+      })
+        .then((data) => {
+          addOrUpdateMedia(m.preview, {
+            url: data.url,
+            type: m.type,
+          });
+        })
+        .catch(() => {
+          toast("Upload gagal, coba lagi.", { variant: "error" });
+          cleanMedia();
+          setPreviewMedia([]);
         });
-      });
     }
   };
 
@@ -67,7 +73,7 @@ export default function UploadMediaProfile({ avatar, name }: Props) {
   return (
     <Flex align="center" direction="column" gap="4">
       {!previewMedia?.length ? (
-        <Avatar src={avatar as string} fallback={name[0]} />
+        <Avatar src={avatar as string} fallback={name[0]} size="7" />
       ) : (
         <div className="w-[124px] h-[124px] p-1 border border-[#646464] rounded-md">
           <PreviewMedia

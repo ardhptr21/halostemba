@@ -45,12 +45,18 @@ export default function UploadMediaTicket() {
             type: m.type,
           });
         },
-      }).then((data) => {
-        addOrUpdateMedia(m.preview, {
-          url: data.url,
-          type: m.type,
+      })
+        .then((data) => {
+          addOrUpdateMedia(m.preview, {
+            url: data.url,
+            type: m.type,
+          });
+        })
+        .catch(() => {
+          toast("Upload gagal, coba lagi", { variant: "error" });
+          setPreviewMedia([]);
+          cleanMedia();
         });
-      });
     }
   };
 

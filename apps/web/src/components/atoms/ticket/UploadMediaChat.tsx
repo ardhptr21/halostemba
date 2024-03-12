@@ -12,7 +12,7 @@ import {
 export default function UploadMediaChat() {
   const { enqueueSnackbar: toast } = useSnackbar();
   const { previewMedia, setPreviewMedia } = usePreviewMediaStoreChat();
-  const { addOrUpdateMedia } = useMediaStoreChat();
+  const { addOrUpdateMedia, cleanMedia } = useMediaStoreChat();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -45,12 +45,18 @@ export default function UploadMediaChat() {
             type: m.type,
           });
         },
-      }).then((data) => {
-        addOrUpdateMedia(m.preview, {
-          url: data.url,
-          type: m.type,
+      })
+        .then((data) => {
+          addOrUpdateMedia(m.preview, {
+            url: data.url,
+            type: m.type,
+          });
+        })
+        .catch(() => {
+          toast("Upload gagal, coba lagi", { variant: "error" });
+          setPreviewMedia([]);
+          cleanMedia();
         });
-      });
     }
   };
 

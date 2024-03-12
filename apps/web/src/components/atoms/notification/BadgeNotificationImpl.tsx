@@ -19,7 +19,9 @@ export default function BadgeNotificationImpl({ count, session }: Props) {
 
   return (
     <div className="absolute w-2 h-2 p-2 rounded-full bg-red-500/85 -right-1 -top-1 flex justify-center items-center">
-      <Text size="1">{data.count}</Text>
+      <Text as="p" size="1">
+        {data.count}
+      </Text>
     </div>
   );
 }

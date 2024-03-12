@@ -1,12 +1,14 @@
-import { Box, Card, Flex, Text } from "@radix-ui/themes";
-import Image from "next/image";
-import { useState } from "react";
-import RenderMenfessMedia from "../menfess/RenderMenfessMedia";
-import { ChatBubbleIcon } from "@radix-ui/react-icons";
-import VoteMenfessButton from "~/components/atoms/menfess/VoteMenfessButton";
-import useParseHashtags from "~/hooks/useParseHashtag";
 import { CommentEntity, MenfessEntity } from "@halostemba/entities";
+import { ChatBubbleIcon } from "@radix-ui/react-icons";
+import { Avatar, Box, Card, Flex, Text } from "@radix-ui/themes";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import VoteMenfessButton from "~/components/atoms/menfess/VoteMenfessButton";
 import ShowImageModal from "~/components/atoms/modals/ShowImageModal";
+import useParseHashtags from "~/hooks/useParseHashtag";
+import { preventBubbling } from "~/lib/utils";
+import RenderMenfessMedia from "../menfess/RenderMenfessMedia";
 
 interface Props {
   menfess: MenfessEntity;
@@ -17,6 +19,7 @@ export default function MenfessWithCommentCard({ menfess, comment }: Props) {
   const { parser } = useParseHashtags();
   const [src, setSrc] = useState("");
   const [openImageModal, setOpenImageModal] = useState(false);
+  const router = useRouter();
 
   const handlePreview = (src: string) => {
     setSrc(src);
@@ -36,16 +39,23 @@ export default function MenfessWithCommentCard({ menfess, comment }: Props) {
           <Box width="100%">
             <article>
               <Flex direction="row" gap="2" className="min-h-full">
-                <Box className="relative ">
-                  <Image
-                    src={"/assets/images/avatar.png"}
-                    width={40}
-                    height={40}
-                    alt="avatar"
-                    className="rounded-md"
-                  />
-                  <div className="absolute left-5 -z-50 transition-colors duration-150 ease-in-out bg-gray-200/50 w-[0.1rem] h-[calc(100%)] overflow-hidden"></div>
-                </Box>
+                <Avatar
+                  src={
+                    menfess.author?.avatar && !menfess.anonymous
+                      ? menfess.author.avatar
+                      : undefined
+                  }
+                  fallback={
+                    menfess.anonymous ? "?" : menfess.author?.name.at(0) || ""
+                  }
+                  color={menfess.anonymous ? "red" : "indigo"}
+                  alt="avatar"
+                  onClick={preventBubbling(
+                    () =>
+                      !menfess.anonymous &&
+                      router.push(`/${menfess.author?.username}`),
+                  )}
+                />
 
                 <Flex width="100%" direction="column">
                   <Flex
