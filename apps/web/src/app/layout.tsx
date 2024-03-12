@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={`antialiased dark ${montserrat.variable}`}>
+    <html lang="id" className={`antialiased ${montserrat.variable} dark`}>
       <body className="overflow-y-scroll font-montserrat">
         <Theme appearance="dark">
           <GlobalProvider>{children}</GlobalProvider>

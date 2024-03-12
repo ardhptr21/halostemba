@@ -91,7 +91,7 @@ export default function ChatField({
   return (
     <div
       className={clsx(
-        "w-full absolute bottom-[3.8rem] md:-bottom-10 p-2 bg-[#18191B]  left-0 right-0",
+        "w-full absolute bottom-[2.9rem] md:-bottom-10 p-2 bg-[#18191B]  left-0 right-0",
         { hidden: session.user.role === "ADMIN" },
       )}
     >
