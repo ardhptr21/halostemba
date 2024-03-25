@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES2022",
+    "sourceMap": true,
+    "allowJs": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "noEmit": false,
+    "noImplicitAny": true
+  }
+}
